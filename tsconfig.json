@@ -1,0 +1,7 @@
+{
+  "extends": "./configs/base.tsconfig",
+  "compilerOptions": {
+    "baseUrl": "."
+    }
+  }
+}
