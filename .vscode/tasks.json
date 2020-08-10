@@ -4,9 +4,12 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build all",
+      "label": "Build all packages",
       "type": "shell",
-      "group": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "command": "yarn",
       "presentation": {
         "reveal": "always",
@@ -15,10 +18,31 @@
       "problemMatcher": []
     },
     {
-      "label": "Watch all",
+      "label": "Start Theia Browser Backend",
+      "type": "shell",
+      "command": "cd example/browser-app && yarn start",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Watch all packages",
       "type": "shell",
       "group": "build",
       "command": "yarn watch",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Open Theia Example in Browser",
+      "type": "shell",
+      "group": "test",
+      "command": "google-chrome 127.0.0.1:3000",
       "presentation": {
         "reveal": "always",
         "panel": "new"

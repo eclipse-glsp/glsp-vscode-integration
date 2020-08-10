@@ -1,0 +1,50 @@
+{
+  "name": "workflow-glsp-webview",
+  "version": "0.0.0",
+  "description": "Example of the Workflow GLSP diagram in a VS Code extensions (WebView part)",
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "keywords": [
+    "vscode",
+    "graph",
+    "diagram",
+    "layout",
+    "glsp",
+    "sprotty"
+  ],
+  "homepage": "https://github.com/eclipsesource/glsp-vscode-integration",
+  "bugs": "https://github.com/eclipsesource/glsp-vscode-integration/issues",
+  "author": {
+    "name": "Eclipse GLSP"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipsesource/glsp-vscode-integration.git"
+  },
+  "files": [
+    "lib",
+    "src",
+    "css"
+  ],
+  "dependencies": {
+    "@eclipse-glsp/vscode-webview": "0.0.0",
+    "@eclipse-glsp-examples/workflow-sprotty": "next"
+  },
+  "devDependencies": {
+    "circular-dependency-plugin": "^5.0.2",
+    "css-loader": "^2.1.0",
+    "rimraf": "latest",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.23.1",
+    "typescript": "latest",
+    "webpack": "^4.28.1",
+    "webpack-cli": "^3.2.1",
+    "yargs": "^12.0.5"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib pack",
+    "build": "tsc && webpack --mode=development && yarn run lint",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
+    "watch": "tsc -w"
+  }
+}

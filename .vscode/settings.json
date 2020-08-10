@@ -6,13 +6,12 @@
 {
   "typescriptHero.imports.organizeOnSave": true,
   "typescriptHero.imports.disableImportsSorting": false,
-  "typescriptHero.imports.stringQuoteStyle": "\"",
+  "typescriptHero.imports.stringQuoteStyle": "'",
   "typescriptHero.imports.insertSemicolons": true,
   "typescriptHero.imports.multiLineTrailingComma": false,
-  "tslint.alwaysShowRuleFailuresAsWarnings": false,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
+    "source.fixAll.eslint": true
   },
   "search.exclude": {
     "**/node_modules": true,
@@ -25,6 +24,40 @@
   "[json]": {
     "editor.tabSize": 2
   },
-  "task.autoDetect": "off",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "html",
+    "typescript",
+    "typescriptreact"
+  ],
+  "workbench.colorCustomizations": {
+    "activityBarBadge.background": "#80CBC4",
+    "activityBar.activeBorder": "#80CBC4",
+    "list.activeSelectionForeground": "#80CBC4",
+    "list.inactiveSelectionForeground": "#80CBC4",
+    "list.highlightForeground": "#80CBC4",
+    "scrollbarSlider.activeBackground": "#80CBC450",
+    "editorSuggestWidget.highlightForeground": "#80CBC4",
+    "textLink.foreground": "#80CBC4",
+    "progressBar.background": "#80CBC4",
+    "pickerGroup.foreground": "#80CBC4",
+    "tab.activeBorder": "#80CBC4",
+    "notificationLink.foreground": "#80CBC4",
+    "editorWidget.resizeBorder": "#80CBC4",
+    "editorWidget.border": "#80CBC4",
+    "settings.modifiedItemIndicator": "#80CBC4",
+    "settings.headerForeground": "#80CBC4",
+    "panelTitle.activeBorder": "#80CBC4",
+    "breadcrumb.activeSelectionForeground": "#80CBC4",
+    "menu.selectionForeground": "#80CBC4",
+    "menubar.selectionForeground": "#80CBC4",
+    "editor.findMatchBorder": "#80CBC4",
+    "selection.background": "#80CBC440",
+    "activityBar.background": "#1E2C50",
+    "titleBar.activeBackground": "#293E70",
+    "titleBar.activeForeground": "#FBFBFD"
+  }
 }

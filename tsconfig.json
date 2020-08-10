@@ -1,7 +1,12 @@
 {
   "extends": "./configs/base.tsconfig",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@eclipse-glsp/vscode-extension": [
+        "vscode-extension/src/*"
+      ]
     }
   }
+}
 }
