@@ -37,7 +37,7 @@ export class GLSPWebView extends SprottyWebview {
     protected async connect(): Promise<void> {
         super.connect();
         this.extension.glspClient.onReady().then(() => {
-            this.disposables.push(this.extension.onMessageFromGLPSServer(message => this.sendToWebview(message)));
+            this.disposables.push(this.extension.onMessageFromGLSPServer(message => this.sendToWebview(message)));
             super.sendDiagramIdentifier();
         });
     }

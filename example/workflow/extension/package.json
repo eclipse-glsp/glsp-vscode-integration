@@ -1,6 +1,6 @@
 {
   "name": "@eclipse-glsp-examples/workflow-vscode",
-  "displayName": "Workflow GLPS Example",
+  "displayName": "Workflow GLSP Example",
   "description": "An example graphical language used for modeling workflows",
   "publisher": "TypeFox",
   "repository": {

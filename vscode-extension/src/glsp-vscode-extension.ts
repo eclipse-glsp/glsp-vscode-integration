@@ -46,7 +46,7 @@ export abstract class GLSPVscodeExtension extends SprottyVscodeExtension {
         });
     }
 
-    onMessageFromGLPSServer(listener: ActionMessageHandler): vscode.Disposable {
+    onMessageFromGLSPServer(listener: ActionMessageHandler): vscode.Disposable {
         return this.onMessageFromGLSPServerEmmiter.event(listener);
     }
     deactiveGLSPCLient(): Thenable<void> {
