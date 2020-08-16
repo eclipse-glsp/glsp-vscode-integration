@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { DiagramServer, KeyTool, TYPES } from '@eclipse-glsp/client';
+import { DiagramServer, TYPES } from '@eclipse-glsp/client';
 import { Container } from 'inversify';
 import {
     SprottyDiagramIdentifier,
@@ -22,7 +22,6 @@ import {
     VscodeDiagramWidget,
     VscodeDiagramWidgetFactory
 } from 'sprotty-vscode-webview';
-import { DisabledKeyTool } from 'sprotty-vscode-webview/lib/disabled-keytool';
 
 import { GLSPVscodeDiagramWidget } from './glsp-vscode-diagram-widget';
 import { GLSPVscodeDiagramServer } from './glsp-vscode-diagramserver';
@@ -38,6 +37,5 @@ export abstract class GLSPStarter extends SprottyStarter {
         container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);
         container.bind(TYPES.ModelSource).toService(GLSPVscodeDiagramServer);
         container.bind(DiagramServer).toService(GLSPVscodeDiagramServer);
-        container.rebind(KeyTool).to(DisabledKeyTool);
     }
 }
