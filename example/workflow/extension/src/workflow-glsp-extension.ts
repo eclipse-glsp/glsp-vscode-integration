@@ -13,13 +13,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import {
-    ConnectionProvider,
-    createSocketConnection,
-    getPort,
-    GLSPVscodeExtension,
-    GLSPWebView
-} from '@eclipse-glsp/vscode-extension';
+import { ConnectionProvider, getPort } from '@eclipse-glsp/protocol';
+import { createSocketConnection, GLSPVscodeExtension, GLSPWebView } from '@eclipse-glsp/vscode-extension';
 import * as net from 'net';
 import { SprottyDiagramIdentifier, SprottyWebview } from 'sprotty-vscode';
 import * as vscode from 'vscode';

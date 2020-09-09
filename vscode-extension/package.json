@@ -28,7 +28,8 @@
   "main": "lib/index",
   "types": "lib/index",
   "dependencies": {
-    "sprotty-vscode": "latest"
+    "sprotty-vscode": "0.1.1",
+    "@eclipse-glsp/protocol": "next"
   },
   "devDependencies": {
     "@types/node": "^8.0.0",

@@ -13,9 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import { GLSPClient } from '@eclipse-glsp/protocol';
 import { isActionMessage, SprottyWebview, SprottyWebviewOptions } from 'sprotty-vscode';
 
-import { GLSPClient } from './glsp-client/glsp-client';
 import { GLSPVscodeExtension } from './glsp-vscode-extension';
 
 export class GLSPWebView extends SprottyWebview {
@@ -30,16 +30,14 @@ export class GLSPWebView extends SprottyWebview {
         }
     }
 
-    protected get glspClient(): GLSPClient {
-        return this.extension.glspClient;
+    protected glspClient(): Promise<GLSPClient> {
+        return this.extension.glspClient();
     }
 
     protected async connect(): Promise<void> {
         super.connect();
-        this.extension.glspClient.onReady().then(() => {
-            this.disposables.push(this.extension.onMessageFromGLSPServer(message => this.sendToWebview(message)));
-            super.sendDiagramIdentifier();
-        });
+        this.disposables.push(this.extension.onMessageFromGLSPServer(message => this.sendToWebview(message)));
+        super.sendDiagramIdentifier();
     }
 
     protected async sendDiagramIdentifier(): Promise<void> {
@@ -51,7 +49,7 @@ export class GLSPWebView extends SprottyWebview {
         if (shouldPropagate) {
             if (isActionMessage(message)) {
                 console.log('Send to the client:', message);
-                this.glspClient.sendActionMessage(message);
+                this.glspClient().then(client => client.sendActionMessage(message));
             }
         }
         return false;

@@ -28,8 +28,8 @@
   "main": "lib/index",
   "types": "lib/index",
   "dependencies": {
+    "@eclipse-glsp/client": "0.8.0-next.197cba73",
     "reflect-metadata": "^0.1.12",
-    "@eclipse-glsp/client": "next",
     "sprotty-vscode-webview": "latest"
   },
   "devDependencies": {

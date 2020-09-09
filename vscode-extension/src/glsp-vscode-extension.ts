@@ -13,16 +13,27 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import {
+    ActionMessageHandler,
+    ApplicationIdProvider,
+    BaseJsonrpcGLSPClient,
+    ConnectionProvider,
+    GLSPClient
+} from '@eclipse-glsp/protocol';
+import * as net from 'net';
 import { ActionMessage, SprottyVscodeExtension } from 'sprotty-vscode';
 import * as vscode from 'vscode';
-import { Emitter } from 'vscode-jsonrpc';
-
-import { GLSPClient } from './glsp-client/glsp-client';
-import { ConnectionProvider, JsonRpcGLSPClient } from './glsp-client/glsp-jsonrpc-client';
-import { ActionMessageHandler } from './glsp-client/types';
+import {
+    createMessageConnection,
+    Emitter,
+    MessageConnection,
+    SocketMessageReader,
+    SocketMessageWriter
+} from 'vscode-jsonrpc';
 
 export abstract class GLSPVscodeExtension extends SprottyVscodeExtension {
-    protected _glspClient: JsonRpcGLSPClient;
+    protected _glspClient: BaseJsonrpcGLSPClient;
+    protected onReady: Promise<void> = Promise.resolve();
 
     protected onMessageFromGLSPServerEmmiter = new Emitter<ActionMessage>();
 
@@ -35,13 +46,13 @@ export abstract class GLSPVscodeExtension extends SprottyVscodeExtension {
     protected abstract getConnectionProvider(): ConnectionProvider;
 
     initalizeGLSPClient(): void {
-        this._glspClient = new JsonRpcGLSPClient({
+        this._glspClient = new BaseJsonrpcGLSPClient({
             id: this.id,
             name: this.extensionPrefix,
             connectionProvider: this.getConnectionProvider()
         });
-        this._glspClient.start();
-        this._glspClient.onReady().then(() => {
+        this.onReady = this._glspClient.start().then(() => {
+            this._glspClient.initializeServer({ applicationId: ApplicationIdProvider.get() });
             this._glspClient.onActionMessage(message => this.onMessageFromGLSPServerEmmiter.fire(message));
         });
     }
@@ -57,18 +68,14 @@ export abstract class GLSPVscodeExtension extends SprottyVscodeExtension {
         // return this.glspClient.stop();
     }
 
-    get glspClient(): GLSPClient {
+    async glspClient(): Promise<GLSPClient> {
+        await this.onReady;
         return this._glspClient;
     }
 }
 
-export function getPort(argKey: string): number {
-    argKey = `${argKey.replace('=', '')}=`;
-    const portArg = process.argv.filter(arg => arg.startsWith(argKey))[0];
-    if (!portArg) {
-        return NaN;
-    } else {
-        return Number.parseInt(portArg.substring('--WORKFLOW_LSP='.length), 10);
-    }
+export function createSocketConnection(outSocket: net.Socket, inSocket: net.Socket): MessageConnection {
+    const reader = new SocketMessageReader(inSocket);
+    const writer = new SocketMessageWriter(outSocket);
+    return createMessageConnection(reader, writer);
 }
-

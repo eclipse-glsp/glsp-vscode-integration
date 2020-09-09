@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "@eclipse-glsp/vscode-webview": "0.0.0",
-    "@eclipse-glsp-examples/workflow-sprotty": "next"
+    "@eclipse-glsp-examples/workflow-sprotty": "0.8.0-next.197cba73"
   },
   "devDependencies": {
     "circular-dependency-plugin": "^5.0.2",
