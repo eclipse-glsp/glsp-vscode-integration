@@ -18,7 +18,9 @@ First, you need to build the VSCode integration packages:
 yarn install
 ```
 
-Then, you need to build and run the Workflow Diagram Server example. See [`glsp-server`](https://github.com/eclipse-glsp/glsp-server#building-the-workflow-diagram-example-server) for instructions. Now you can start the VSCode extension by opening this repository in VSCode and executing the "Workflow GLSP Example Extension" launch configuration, provided with this project.
+Then, you need to build and run the Workflow Diagram Server example. See [`glsp-server`](https://github.com/eclipse-glsp/glsp-server#building-the-workflow-diagram-example-server) for instructions on how to build and run the server.
+
+Now you can start the VSCode extension by opening this repository in VSCode and executing the "Workflow GLSP Example Extension" launch configuration, provided with this project.
 
 ### Where to find the sources?
 
