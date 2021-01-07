@@ -8,7 +8,8 @@
     "test": "lerna run test",
     "publish": "yarn && yarn publish:latest",
     "publish:latest": "lerna publish",
-    "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes"
+    "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
+    "download:exampleServer": "ts-node example/workflow/scripts/download.ts"
   },
   "devDependencies": {
     "@types/vscode": "^1.46.0",
@@ -19,7 +20,8 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-no-null": "^1.0.2",
     "lerna": "^3.20.2",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "mvn-artifact-download": "5.1.0"
   },
   "resolutions": {
     "**/sprotty": "0.9.0"
@@ -28,5 +30,8 @@
     "vscode-extension",
     "vscode-webview",
     "example/workflow/*"
-  ]
+  ],
+  "dependencies": {
+    "ts-node": "^9.1.1"
+  }
 }
