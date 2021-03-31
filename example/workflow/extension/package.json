@@ -1,85 +1,74 @@
 {
-  "name": "@eclipse-glsp-examples/workflow-vscode",
+  "name": "workflow-vscode-example",
   "displayName": "Workflow GLSP Example",
   "description": "An example graphical language used for modeling workflows",
-  "publisher": "TypeFox",
+  "publisher": "Eclipse GLSP",
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipsesource/glsp-vscode-integration"
   },
-  "version": "0.0.0",
+  "version": "0.0.1",
   "engines": {
-    "vscode": "^1.46.0"
+    "vscode": "^1.54.0"
   },
   "categories": [
     "Programming Languages"
   ],
   "contributes": {
-    "commands": [
+    "customEditors": [
       {
-        "command": "workflow.diagram.open",
-        "title": "Open Workflow diagram",
-        "category": "Workflow Diagram"
-      },
-      {
-        "command": "workflow.diagram.fit",
-        "title": "Fit to Screen",
-        "category": "Workflow Diagram"
-      },
-      {
-        "command": "workflow.diagram.center",
-        "title": "Center selection",
-        "category": "Workflow Diagram"
-      },
-      {
-        "command": "workflow.diagram.delete",
-        "title": "Delete selected element",
-        "category": "Workflow Diagram"
-      },
-      {
-        "command": "workflow.diagram.export",
-        "title": "Export diagram to SVG",
-        "category": "Workflow Diagram"
+        "viewType": "workflow.glspDiagram",
+        "displayName": "Workflow Diagram Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.wf"
+          }
+        ]
       }
     ],
-    "menus": {
-      "explorer/context": [
-        {
-          "when": "resourceExtname == '.wf'",
-          "command": "workflow.diagram.open",
-          "group": "navigation"
-        }
-      ]
-    },
+    "commands": [
+      {
+        "command": "workflow.glsp.diagram.fit",
+        "title": "Fit to Screen",
+        "category": "Workflow Diagram",
+        "enablement": "glsp-workflow-diagram-focused"
+      },
+      {
+        "command": "workflow.glsp.diagram.center",
+        "title": "Center selection",
+        "category": "Workflow Diagram",
+        "enablement": "glsp-workflow-diagram-focused"
+      },
+      {
+        "command": "workflow.glsp.diagram.layout",
+        "title": "Layout diagram",
+        "category": "Workflow Diagram",
+        "enablement": "glsp-workflow-diagram-focused"
+      }
+    ],
     "keybindings": [
       {
         "key": "alt+f",
         "mac": "alt+f",
-        "command": "workflow.diagram.fit",
-        "when": "workflow-diagram-focused"
+        "command": "workflow.glsp.diagram.fit",
+        "when": "glsp-workflow-diagram-focused"
       },
       {
         "key": "alt+c",
         "mac": "alt+c",
-        "command": "workflow.diagram.center",
-        "when": "workflow-diagram-focused"
+        "command": "workflow.glsp.diagram.center",
+        "when": "glsp-workflow-diagram-focused"
       },
       {
-        "key": "alt+e",
-        "mac": "alt+e",
-        "command": "workflow.diagram.export",
-        "when": "workflow-diagram-focused"
-      },
-      {
-        "key": "delete",
-        "mac": "delete",
-        "command": "workflow.diagram.delete",
-        "when": "workflow-diagram-focused"
+        "key": "alt+l",
+        "mac": "alt+l",
+        "command": "workflow.glsp.diagram.layout",
+        "when": "glsp-workflow-diagram-focused"
       }
     ]
   },
   "activationEvents": [
-    "onCommand:workflow.diagram.open"
+    "*"
   ],
   "files": [
     "lib",
@@ -87,26 +76,25 @@
     "server",
     "webview"
   ],
-  "main": "./pack/workflow-extension",
+  "main": "./lib/workflow-extension",
   "devDependencies": {
     "@types/node": "^8.0.0",
     "path": "^0.12.7",
     "rimraf": "^2.6.3",
-    "@eclipse-glsp/vscode-extension": "0.0.0",
-    "workflow-glsp-webview": "0.0.0",
+    "@eclipse-glsp/vscode-integration": "0.0.1",
     "ts-loader": "^6.2.1",
     "tslint": "^5.11.0",
+    "workflow-glsp-webview": "0.0.1",
     "typescript": "^3.1.3",
-    "vscode": "^1.1.21",
-    "webpack": "^4.28.1",
-    "webpack-cli": "^3.2.1"
+    "vscode": "^1.1.21"
   },
   "scripts": {
-    "clean": "rimraf extension/lib extension/pack",
+    "clean": "rimraf extension/lib extension/pack extension/server",
     "watch": "tsc -w",
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
     "prepare": "npx vscode-install && yarn run build",
-    "build": "tsc && webpack --mode=development && yarn run lint",
-    "publish": "vsce publish"
+    "build": "tsc  && yarn run lint && yarn download:Server",
+    "publish": "vsce publish",
+    "download:Server": "ts-node ../scripts/download.ts"
   }
 }

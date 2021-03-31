@@ -9,10 +9,10 @@
     "publish": "yarn && yarn publish:latest",
     "publish:latest": "lerna publish",
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
-    "download:exampleServer": "ts-node example/workflow/scripts/download.ts"
+    "update:next": "yarn upgrade -p \"@eclipse-glsp.*|sprotty\" --next "
   },
   "devDependencies": {
-    "@types/vscode": "^1.46.0",
+    "@types/vscode": "^1.54.0",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "eslint": "^6.8.0",
@@ -20,16 +20,17 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-no-null": "^1.0.2",
     "lerna": "^3.20.2",
-    "typescript": "^3.9.7",
-    "mvn-artifact-download": "5.1.0"
+    "mvn-artifact-download": "5.1.0",
+    "typescript": "^3.9.7"
   },
   "resolutions": {
     "**/sprotty": "0.9.0"
   },
   "workspaces": [
-    "vscode-extension",
-    "vscode-webview",
-    "example/workflow/*"
+    "vscode-integration",
+    "vscode-integration-webview",
+    "example/workflow/extension",
+    "example/workflow/webview"
   ],
   "dependencies": {
     "ts-node": "^9.1.1"

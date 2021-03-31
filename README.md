@@ -17,15 +17,13 @@ Clone this repository and build the VSCode integration packages:
 ```
 yarn install
 ```
-Next, download a pre-built version of the Workflow Example Diagram Server and start it (replace X.X.X with the current version, the download script will print out the correct command on the console):
-```
-yarn download:exampleServer
-java -jar org.eclipse.glsp.example.workflow-X.X.X-SNAPSHOT-glsp.jar org.eclipse.glsp.example.workflow.launch.ExampleServerLauncher
-```
+
 Now you can start the VSCode extension by opening this repository in VSCode and executing the "Workflow GLSP Example Extension" launch configuration, provided with this project.
 
 ### How to start the Workflow Diagram example server from the sources
-If you want to explore or change the Workflow Diagram Server too, you can clone, build and start the [`workflow example glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) from your IDE instead of using the pre-built version of the Workflow Diagram Server. See [`workflow example glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) for instructions on building and running the Workflow Diagram Server example.
+If you want to explore or change the Workflow Diagram Server too, you can clone, build and start the [`workflow example glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) from your IDE instead of using the embedded pre-built version of the Workflow Diagram Server. See [`workflow example glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) for instructions on building and running the Workflow Diagram Server example.
+
+To test the VSCode extension with an external server (e.g started from your IDE) the launch configuration "Workflow GLSP Example Extension (External GLSP Server)" can be used.
 ### Where to find the sources?
 
 In addition to this repository, the related source code can be found here:

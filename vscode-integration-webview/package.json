@@ -1,0 +1,46 @@
+{
+  "name": "@eclipse-glsp/vscode-integration-webview",
+  "version": "0.0.1",
+  "description": "Integration of a GLSP diagram in a VS Code extensions (WebView part)",
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "keywords": [
+    "vscode",
+    "graph",
+    "diagram",
+    "layout",
+    "sprotty",
+    "glsp"
+  ],
+  "homepage": "https://github.com/eclipsesource/glsp-vscode-integration",
+  "bugs": "https://github.com/eclipsesource/glsp-vscode-integration/issues",
+  "author": {
+    "name": "Eclipse GLSP"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipsesource/glsp-vscode-integration.git"
+  },
+  "files": [
+    "lib",
+    "src",
+    "css"
+  ],
+  "main": "lib/index",
+  "types": "lib/index",
+  "dependencies": {
+    "@eclipse-glsp/client": "next",
+    "reflect-metadata": "^0.1.12",
+    "sprotty-vscode-webview": "latest"
+  },
+  "devDependencies": {
+    "rimraf": "latest",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "build": "tsc && yarn run lint",
+    "watch": "tsc -w",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src"
+  }
+}

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@eclipse-glsp/vscode-extension": [
+      "@eclipse-glsp/vscode-integration": [
         "vscode-extension/src/*"
       ]
     }
