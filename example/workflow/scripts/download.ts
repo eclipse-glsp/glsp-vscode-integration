@@ -14,9 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 import download from 'mvn-artifact-download';
-import { join, resolve } from 'path';
+import { join } from 'path';
 
-const downloadDir = resolve(join(__dirname)) + '/../extension/server';
+const downloadDir = join(__dirname, '../extension/server');
 const mavenRepository = 'https://oss.sonatype.org/content/repositories/snapshots/';
 const groupId = 'org.eclipse.glsp.example';
 const artifactId = 'org.eclipse.glsp.example.workflow';
@@ -26,4 +26,5 @@ const classifier = 'glsp';
 console.log('Downloading latest version of the Workflow Example Java Server from the maven repository...');
 download({ groupId, artifactId, version, classifier, isSnapShot: true }, downloadDir, mavenRepository)
     .then(() => console.log('Download completed. Start the server using this command: \njava -jar org.eclipse.glsp.example.workflow-'
-        + version + '-SNAPSHOT-glsp.jar org.eclipse.glsp.example.workflow.launch.ExampleServerLauncher\n\n'));
+        + version + '-SNAPSHOT-glsp.jar org.eclipse.glsp.example.workflow.launch.ExampleServerLauncher\n\n'))
+    .catch(err => console.error(err));
