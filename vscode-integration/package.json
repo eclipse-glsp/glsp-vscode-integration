@@ -28,9 +28,9 @@
   "main": "lib/index",
   "types": "lib/index",
   "dependencies": {
-    "sprotty-vscode-protocol": "latest",
-    "vscode-jsonrpc": "^4.0.0",
-    "@eclipse-glsp/protocol": "next"
+    "@eclipse-glsp/protocol": "^0.9.0-next.9bc904f3",
+    "sprotty-vscode-protocol": "0.0.5",
+    "vscode-jsonrpc": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^8.0.0",
@@ -43,6 +43,7 @@
     "build": "tsc && yarn run lint",
     "watch": "tsc -w",
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
-    "prepare": "yarn clean && yarn build"
+    "prepare": "yarn clean && yarn build",
+    "upgrade:next": "yarn upgrade @eclipse-glsp/protocol@next"
   }
 }

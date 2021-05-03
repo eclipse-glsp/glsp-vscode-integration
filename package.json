@@ -9,7 +9,7 @@
     "publish": "yarn && yarn publish:latest",
     "publish:latest": "lerna publish",
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
-    "update:next": "yarn upgrade -p \"@eclipse-glsp.*|sprotty\" --next "
+    "upgrade:next": "lerna run upgrade:next"
   },
   "devDependencies": {
     "@types/vscode": "^1.54.0",
