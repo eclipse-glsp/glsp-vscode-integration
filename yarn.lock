@@ -31,7 +31,7 @@
     "@eclipse-glsp/client" "0.9.0-next.d9bed812"
     balloon-css "^0.5.0"
 
-"@eclipse-glsp/client@0.9.0-next.d9bed812", "@eclipse-glsp/client@next":
+"@eclipse-glsp/client@0.9.0-next.d9bed812":
   version "0.9.0-next.d9bed812"
   resolved "https://registry.yarnpkg.com/@eclipse-glsp/client/-/client-0.9.0-next.d9bed812.tgz#b96dd5c1c967f1d28263f3836aa8743866a58afd"
   integrity sha512-CYFwwHk7qYmirquOjcEZB5+AOrjAx8xcBECUamllLWWhFZBUxZg6KTwncSgqSoCiv02PbdWSlAMtqy+OjxF3Tg==
@@ -39,6 +39,23 @@
     "@eclipse-glsp/protocol" "0.9.0-next.d9bed812"
     autocompleter "5.1.0"
     sprotty next
+
+"@eclipse-glsp/client@^0.9.0-next.9bc904f3":
+  version "0.9.0-next.9bc904f3"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/client/-/client-0.9.0-next.9bc904f3.tgz#f1cd75825090a7c72ccd8a8ed24030b806f6c9dd"
+  integrity sha512-ydAENd+x5kCnv6WCf4aA47FxEecugEQTNxOJVcFIyL83ozry6PopFHiXG3HwRfmZEAdV8ybvPoYz/zBOUJSEhQ==
+  dependencies:
+    "@eclipse-glsp/protocol" "0.9.0-next.9bc904f3"
+    autocompleter "5.1.0"
+    sprotty next
+
+"@eclipse-glsp/protocol@0.9.0-next.9bc904f3":
+  version "0.9.0-next.9bc904f3"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/protocol/-/protocol-0.9.0-next.9bc904f3.tgz#2aae9e69b28729da94a65e292015f972eada860a"
+  integrity sha512-Z685Pa3d84bT8/PhoOL3J2ZYVMazPaffTzh0FggGSTv1raEx2nf3tNxjJVbOrPgpGe1CO6leN1VZ+Lveaq9/Ig==
+  dependencies:
+    uuid "7.0.3"
+    vscode-ws-jsonrpc "0.2.0"
 
 "@eclipse-glsp/protocol@0.9.0-next.d9bed812", "@eclipse-glsp/protocol@next":
   version "0.9.0-next.d9bed812"
@@ -3892,6 +3909,11 @@ inversify@5.0.1:
   resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.0.1.tgz#500d709b1434896ce5a0d58915c4a4210e34fb6e"
   integrity sha512-Ieh06s48WnEYGcqHepdsJUIJUXpwH5o5vodAX+DK2JA/gjy4EbEcQZxw+uFfzysmKjiLXGYwNG3qDZsKVMcINQ==
 
+inversify@^5.0.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.1.1.tgz#6fbd668c591337404e005a1946bfe0d802c08730"
+  integrity sha512-j8grHGDzv1v+8T1sAQ+3boTCntFPfvxLCkNcxB1J8qA0lUN+fAlSyYd+RXKvaPRL4AGyPxViutBEJHNXOyUdFQ==
+
 invert-kv@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
@@ -6611,7 +6633,7 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-sprotty-vscode-protocol@^0.0.5, sprotty-vscode-protocol@latest:
+sprotty-vscode-protocol@0.0.5, sprotty-vscode-protocol@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/sprotty-vscode-protocol/-/sprotty-vscode-protocol-0.0.5.tgz#6d0578d0094b224ea50549786ebd59dadace7fcf"
   integrity sha512-nhuOLHgWEczQRjYgHE3C8oHv7cxGsv2mAacdETkMYnnBkLG3t28N68ydIt9a/lv6EhMJDwh9dLqyDBbvHPA3Wg==
@@ -6619,7 +6641,7 @@ sprotty-vscode-protocol@^0.0.5, sprotty-vscode-protocol@latest:
     path "^0.12.7"
     vscode-languageserver-protocol "^3.14.1"
 
-sprotty-vscode-webview@latest:
+sprotty-vscode-webview@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/sprotty-vscode-webview/-/sprotty-vscode-webview-0.1.2.tgz#ecac70be52a7d631f269c6444f12f6586ea58f1d"
   integrity sha512-1fEi/ipyWGiTvT1Nm7H9n0f8w1N4/ZJ9+cblM5qFSMPWLdAQOajZQfBFa4nF4/ll6voa2m+b0BDSRwUP/CJteg==
@@ -6629,7 +6651,7 @@ sprotty-vscode-webview@latest:
     sprotty-vscode-protocol "^0.0.5"
     vscode-uri "2.1.1"
 
-sprotty@0.9.0, sprotty@next:
+sprotty@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/sprotty/-/sprotty-0.9.0.tgz#5644cdb239c43e878705fe76d71ffc73f27cd27b"
   integrity sha512-kPcXVgspNnMq/ysFFOVfjBkrNK/w9LXSiX1mx3mkEiEVbthjEiKicw+l9uwW9RJH+QvqrK8LrXqEZzKGERUQyA==
@@ -6637,6 +6659,18 @@ sprotty@0.9.0, sprotty@next:
     autocompleter "5.1.0"
     file-saver "2.0.2"
     inversify "5.0.1"
+    snabbdom "0.7.3"
+    snabbdom-jsx "0.4.2"
+    snabbdom-virtualize "0.7.0"
+
+sprotty@next:
+  version "0.10.0-next.0bb1094"
+  resolved "https://registry.yarnpkg.com/sprotty/-/sprotty-0.10.0-next.0bb1094.tgz#01189a1d956bdcbb3b9ffaa9db943af779a3b21c"
+  integrity sha512-YFsh6UvKAmf8HjnuknHUNX9Jh/PXzr78VmhuimcL+2dnE75Lp7jY2Xa5F2Cwm4TVT7XSIMsh+GmZazLTpzMDhw==
+  dependencies:
+    autocompleter "5.1.0"
+    file-saver "2.0.2"
+    inversify "^5.0.1"
     snabbdom "0.7.3"
     snabbdom-jsx "0.4.2"
     snabbdom-virtualize "0.7.0"
