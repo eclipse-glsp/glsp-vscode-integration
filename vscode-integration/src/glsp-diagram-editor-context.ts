@@ -16,7 +16,7 @@
 import { ActionMessageHandler, ApplicationIdProvider, BaseJsonrpcGLSPClient, GLSPClient } from '@eclipse-glsp/protocol';
 import * as net from 'net';
 import * as path from 'path';
-import { ActionMessage, SprottyDiagramIdentifier } from 'sprotty-vscode-protocol';
+import { Action, ActionMessage, SprottyDiagramIdentifier } from 'sprotty-vscode-protocol';
 import * as vscode from 'vscode';
 import {
     createMessageConnection,
@@ -26,6 +26,8 @@ import {
     SocketMessageWriter
 } from 'vscode-jsonrpc';
 
+import { CenterAction, FitToScreenAction, LayoutOperation } from './action';
+import { GLSPCommand } from './glsp-commands';
 import { GlspDiagramEditorProvider } from './glsp-diagram-editor-provider';
 import { GLSPWebView } from './glsp-webview';
 import { ServerConnectionProvider } from './server-connection-provider';
@@ -35,31 +37,35 @@ export abstract class GlspDiagramEditorContext extends Disposable {
     protected _glspClient: BaseJsonrpcGLSPClient;
     protected onReady: Promise<void> = Promise.resolve();
 
-    protected onMessageFromGLSPServerEmmiter = new Emitter<ActionMessage>();
+    protected onMessageFromGLSPServerEmitter = new Emitter<ActionMessage>();
 
     public abstract readonly id: string;
     public abstract readonly diagramType: string;
+    public abstract readonly extensionPrefix: string;
 
-    constructor(readonly extensionPrefix: string, readonly context: vscode.ExtensionContext) {
+    private editorProvider: GlspDiagramEditorProvider;
+
+    constructor(readonly context: vscode.ExtensionContext) {
         super();
         this.addDisposable(this.registerEditorProvider());
-        this.initalizeGLSPClient();
+        this.initializeGLSPClient();
+        this.registerCommands();
     }
 
     protected abstract getConnectionProvider(): ServerConnectionProvider;
 
     protected registerEditorProvider(): vscode.Disposable {
-        const provider = new GlspDiagramEditorProvider(this.context, this);
+        this.editorProvider = new GlspDiagramEditorProvider(this.context, this);
         const viewType = `${this.extensionPrefix}.${GlspDiagramEditorProvider.VIEW_TYPE}`;
         return vscode.window.registerCustomEditorProvider(viewType,
-            provider
+            this.editorProvider
             , {
                 webviewOptions: { retainContextWhenHidden: true },
                 supportsMultipleEditorsPerDocument: false
             });
     }
 
-    initalizeGLSPClient(): void {
+    protected initializeGLSPClient(): void {
         this._glspClient = new BaseJsonrpcGLSPClient({
             id: this.id,
             name: this.extensionPrefix,
@@ -67,11 +73,15 @@ export abstract class GlspDiagramEditorContext extends Disposable {
         });
         this.onReady = this._glspClient.start().then(() => {
             this._glspClient.initializeServer({ applicationId: ApplicationIdProvider.get() });
-            this._glspClient.onActionMessage(message => this.onMessageFromGLSPServerEmmiter.fire(message));
+            this._glspClient.onActionMessage(message => this.onMessageFromGLSPServerEmitter.fire(message));
         });
     }
 
     abstract createWebview(webviewPanel: vscode.WebviewPanel, identifier: SprottyDiagramIdentifier): GLSPWebView;
+
+    registerActionHandlers(webview: GLSPWebView): void {
+        // e.g. webview.addActionHandler(myHandler);
+    }
 
     getExtensionFileUri(...segments: string[]): vscode.Uri {
         return vscode.Uri
@@ -79,10 +89,10 @@ export abstract class GlspDiagramEditorContext extends Disposable {
     }
 
     onMessageFromGLSPServer(listener: ActionMessageHandler): vscode.Disposable {
-        return this.onMessageFromGLSPServerEmmiter.event(listener);
+        return this.onMessageFromGLSPServerEmitter.event(listener);
     }
 
-    deactiveGLSPCLient(): Thenable<void> {
+    deactivateGLSPClient(): Thenable<void> {
         this.dispose();
         return Promise.resolve(undefined);
     }
@@ -91,6 +101,27 @@ export abstract class GlspDiagramEditorContext extends Disposable {
         await this.onReady;
         return this._glspClient;
     }
+
+    protected registerCommands(): void {
+        this.registerActionCommand(GLSPCommand.FIT_TO_SCREEN, new FitToScreenAction([]));
+        this.registerActionCommand(GLSPCommand.CENTER, new CenterAction([]));
+        this.registerActionCommand(GLSPCommand.LAYOUT, new LayoutOperation());
+    }
+    /**
+     * Register a command that dispatches a new action when triggered.
+     * @param command Command id without extension prefix.
+     * @param action The action that should be dispatched.
+     */
+    protected registerActionCommand(command: string, action: Action): void {
+        GLSPCommand.registerActionCommand({
+            command,
+            action,
+            context: this.context,
+            registry: this.editorProvider.webviewRegistry,
+            extensionPrefix: this.extensionPrefix
+        });
+    }
+
 }
 
 export function createSocketConnection(outSocket: net.Socket, inSocket: net.Socket): MessageConnection {

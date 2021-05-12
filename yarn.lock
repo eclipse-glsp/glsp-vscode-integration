@@ -31,7 +31,7 @@
     "@eclipse-glsp/client" "0.9.0-next.d9bed812"
     balloon-css "^0.5.0"
 
-"@eclipse-glsp/client@0.9.0-next.d9bed812":
+"@eclipse-glsp/client@0.9.0-next.d9bed812", "@eclipse-glsp/client@^0.9.0-next.9bc904f3":
   version "0.9.0-next.d9bed812"
   resolved "https://registry.yarnpkg.com/@eclipse-glsp/client/-/client-0.9.0-next.d9bed812.tgz#b96dd5c1c967f1d28263f3836aa8743866a58afd"
   integrity sha512-CYFwwHk7qYmirquOjcEZB5+AOrjAx8xcBECUamllLWWhFZBUxZg6KTwncSgqSoCiv02PbdWSlAMtqy+OjxF3Tg==
@@ -40,24 +40,7 @@
     autocompleter "5.1.0"
     sprotty next
 
-"@eclipse-glsp/client@^0.9.0-next.9bc904f3":
-  version "0.9.0-next.9bc904f3"
-  resolved "https://registry.yarnpkg.com/@eclipse-glsp/client/-/client-0.9.0-next.9bc904f3.tgz#f1cd75825090a7c72ccd8a8ed24030b806f6c9dd"
-  integrity sha512-ydAENd+x5kCnv6WCf4aA47FxEecugEQTNxOJVcFIyL83ozry6PopFHiXG3HwRfmZEAdV8ybvPoYz/zBOUJSEhQ==
-  dependencies:
-    "@eclipse-glsp/protocol" "0.9.0-next.9bc904f3"
-    autocompleter "5.1.0"
-    sprotty next
-
-"@eclipse-glsp/protocol@0.9.0-next.9bc904f3":
-  version "0.9.0-next.9bc904f3"
-  resolved "https://registry.yarnpkg.com/@eclipse-glsp/protocol/-/protocol-0.9.0-next.9bc904f3.tgz#2aae9e69b28729da94a65e292015f972eada860a"
-  integrity sha512-Z685Pa3d84bT8/PhoOL3J2ZYVMazPaffTzh0FggGSTv1raEx2nf3tNxjJVbOrPgpGe1CO6leN1VZ+Lveaq9/Ig==
-  dependencies:
-    uuid "7.0.3"
-    vscode-ws-jsonrpc "0.2.0"
-
-"@eclipse-glsp/protocol@0.9.0-next.d9bed812", "@eclipse-glsp/protocol@next":
+"@eclipse-glsp/protocol@0.9.0-next.d9bed812", "@eclipse-glsp/protocol@^0.9.0-next.9bc904f3":
   version "0.9.0-next.d9bed812"
   resolved "https://registry.yarnpkg.com/@eclipse-glsp/protocol/-/protocol-0.9.0-next.d9bed812.tgz#0f28a6917f819f9e424d40019568b38bbd5ddf9f"
   integrity sha512-P9ZnpMQ1Bi1Gykcx7QjXrOaJBoY6WHIhWbd9mqye7kVbBwVr013AVjTJCJL9qPhsJxwfIVBkpTRzOG0bYojDmg==
@@ -3904,15 +3887,10 @@ interpret@^1.4.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
 
-inversify@5.0.1:
+inversify@5.0.1, inversify@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.0.1.tgz#500d709b1434896ce5a0d58915c4a4210e34fb6e"
   integrity sha512-Ieh06s48WnEYGcqHepdsJUIJUXpwH5o5vodAX+DK2JA/gjy4EbEcQZxw+uFfzysmKjiLXGYwNG3qDZsKVMcINQ==
-
-inversify@^5.0.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.1.1.tgz#6fbd668c591337404e005a1946bfe0d802c08730"
-  integrity sha512-j8grHGDzv1v+8T1sAQ+3boTCntFPfvxLCkNcxB1J8qA0lUN+fAlSyYd+RXKvaPRL4AGyPxViutBEJHNXOyUdFQ==
 
 invert-kv@^2.0.0:
   version "2.0.0"
@@ -6651,22 +6629,10 @@ sprotty-vscode-webview@0.1.2:
     sprotty-vscode-protocol "^0.0.5"
     vscode-uri "2.1.1"
 
-sprotty@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/sprotty/-/sprotty-0.9.0.tgz#5644cdb239c43e878705fe76d71ffc73f27cd27b"
-  integrity sha512-kPcXVgspNnMq/ysFFOVfjBkrNK/w9LXSiX1mx3mkEiEVbthjEiKicw+l9uwW9RJH+QvqrK8LrXqEZzKGERUQyA==
-  dependencies:
-    autocompleter "5.1.0"
-    file-saver "2.0.2"
-    inversify "5.0.1"
-    snabbdom "0.7.3"
-    snabbdom-jsx "0.4.2"
-    snabbdom-virtualize "0.7.0"
-
-sprotty@next:
-  version "0.10.0-next.0bb1094"
-  resolved "https://registry.yarnpkg.com/sprotty/-/sprotty-0.10.0-next.0bb1094.tgz#01189a1d956bdcbb3b9ffaa9db943af779a3b21c"
-  integrity sha512-YFsh6UvKAmf8HjnuknHUNX9Jh/PXzr78VmhuimcL+2dnE75Lp7jY2Xa5F2Cwm4TVT7XSIMsh+GmZazLTpzMDhw==
+sprotty@0.10.0-next.0e06051, sprotty@0.9.0, sprotty@next:
+  version "0.10.0-next.0e06051"
+  resolved "https://registry.yarnpkg.com/sprotty/-/sprotty-0.10.0-next.0e06051.tgz#ca76ca2f2056b5df88b47def776825bf36e0cdf6"
+  integrity sha512-iUK9z2IA+aYIakaiYgELEh6vrPBGchy16MiP/RegV1pW3qUPEsTJRf6o3cUuTSWyOc7yL10KkN+iKb04jmD0/g==
   dependencies:
     autocompleter "5.1.0"
     file-saver "2.0.2"

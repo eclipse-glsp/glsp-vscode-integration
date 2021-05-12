@@ -28,19 +28,19 @@
     ],
     "commands": [
       {
-        "command": "workflow.glsp.diagram.fit",
+        "command": "workflow.diagram.fit",
         "title": "Fit to Screen",
         "category": "Workflow Diagram",
         "enablement": "glsp-workflow-diagram-focused"
       },
       {
-        "command": "workflow.glsp.diagram.center",
+        "command": "workflow.diagram.center",
         "title": "Center selection",
         "category": "Workflow Diagram",
         "enablement": "glsp-workflow-diagram-focused"
       },
       {
-        "command": "workflow.glsp.diagram.layout",
+        "command": "workflow.diagram.layout",
         "title": "Layout diagram",
         "category": "Workflow Diagram",
         "enablement": "glsp-workflow-diagram-focused"
@@ -50,19 +50,19 @@
       {
         "key": "alt+f",
         "mac": "alt+f",
-        "command": "workflow.glsp.diagram.fit",
+        "command": "workflow.diagram.fit",
         "when": "glsp-workflow-diagram-focused"
       },
       {
         "key": "alt+c",
         "mac": "alt+c",
-        "command": "workflow.glsp.diagram.center",
+        "command": "workflow.diagram.center",
         "when": "glsp-workflow-diagram-focused"
       },
       {
         "key": "alt+l",
         "mac": "alt+l",
-        "command": "workflow.glsp.diagram.layout",
+        "command": "workflow.diagram.layout",
         "when": "glsp-workflow-diagram-focused"
       }
     ]

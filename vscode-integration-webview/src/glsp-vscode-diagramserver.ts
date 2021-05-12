@@ -29,8 +29,8 @@ import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selec
 import { inject } from 'inversify';
 import { isActionMessage, VscodeDiagramServer } from 'sprotty-vscode-webview';
 
-const receivedFromServerProperty = '__receivedFromServer';
-const localDispatchProperty = '_localDispatch';
+export const receivedFromServerProperty = '__receivedFromServer';
+export const localDispatchProperty = '_localDispatch';
 
 export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
     @inject(GLSP_TYPES.SelectionService) protected selectionService: SelectionService;
