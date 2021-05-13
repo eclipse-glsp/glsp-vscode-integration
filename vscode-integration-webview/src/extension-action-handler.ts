@@ -22,12 +22,12 @@ import { vscodeApi } from 'sprotty-vscode-webview/lib/vscode-api';
  * of the webview. This enables the implementation of action handlers that require access
  * to the vscode API and/or node backend.
  */
-
 export class GLSPVscodeExtensionActionHandler implements IActionHandler, IActionHandlerInitializer {
 
     constructor(protected readonly actionKinds: string[],
         protected readonly diagramIdentifier: SprottyDiagramIdentifier) {
     }
+
     initialize(registry: ActionHandlerRegistry): void {
         this.actionKinds.forEach(kind => registry.register(kind, this));
     }
@@ -37,10 +37,9 @@ export class GLSPVscodeExtensionActionHandler implements IActionHandler, IAction
             const message = {
                 clientId: this.diagramIdentifier.clientId,
                 action,
-                _localDispatch: true
+                __localDispatch: true
             };
             vscodeApi.postMessage(message);
         }
     }
-
 }

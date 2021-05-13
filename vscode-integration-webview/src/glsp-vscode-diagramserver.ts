@@ -30,7 +30,7 @@ import { inject } from 'inversify';
 import { isActionMessage, VscodeDiagramServer } from 'sprotty-vscode-webview';
 
 export const receivedFromServerProperty = '__receivedFromServer';
-export const localDispatchProperty = '_localDispatch';
+export const localDispatchProperty = '__localDispatch';
 
 export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
     @inject(GLSP_TYPES.SelectionService) protected selectionService: SelectionService;

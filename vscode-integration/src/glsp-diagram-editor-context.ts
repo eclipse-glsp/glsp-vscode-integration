@@ -107,6 +107,7 @@ export abstract class GlspDiagramEditorContext extends Disposable {
         this.registerActionCommand(GLSPCommand.CENTER, new CenterAction([]));
         this.registerActionCommand(GLSPCommand.LAYOUT, new LayoutOperation());
     }
+
     /**
      * Register a command that dispatches a new action when triggered.
      * @param command Command id without extension prefix.
