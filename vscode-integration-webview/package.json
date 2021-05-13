@@ -28,7 +28,7 @@
   "main": "lib/index",
   "types": "lib/index",
   "dependencies": {
-    "@eclipse-glsp/client": "^0.9.0-next.9bc904f3",
+    "@eclipse-glsp/client": "next",
     "reflect-metadata": "^0.1.12",
     "sprotty-vscode-webview": "0.1.2"
   },
@@ -41,7 +41,6 @@
     "clean": "rimraf lib",
     "build": "tsc && yarn run lint",
     "watch": "tsc -w",
-    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
-    "upgrade:next": "yarn upgrade @eclipse-glsp/client@next"
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src"
   }
 }
