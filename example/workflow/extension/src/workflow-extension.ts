@@ -32,6 +32,6 @@ export function deactivate(): Thenable<void> {
     if (!editorContext) {
         return Promise.resolve(undefined);
     }
-    return editorContext.deactiveGLSPCLient();
+    return editorContext.deactivateGLSPClient();
 }
 

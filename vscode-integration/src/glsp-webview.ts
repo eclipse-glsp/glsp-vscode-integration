@@ -198,7 +198,7 @@ export class GLSPWebView extends Disposable implements ExtensionActionDispatcher
         this.sendToWebview({
             clientId: this.diagramIdentifier.clientId,
             action,
-            _localDispatch: true
+            __localDispatch: true
         });
     }
 

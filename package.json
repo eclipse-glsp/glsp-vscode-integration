@@ -24,7 +24,10 @@
     "typescript": "^3.9.7"
   },
   "resolutions": {
-    "**/sprotty": "0.9.0"
+    "**/@eclipse-glsp/client": "0.9.0-next.d9bed812",
+    "**/@eclipse-glsp/protocol": "0.9.0-next.d9bed812",
+    "**/sprotty": "0.10.0-next.0e06051",
+    "**/inversify": "5.0.1"
   },
   "workspaces": [
     "vscode-integration",

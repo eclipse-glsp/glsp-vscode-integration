@@ -16,8 +16,6 @@
 import { SprottyDiagramIdentifier } from 'sprotty-vscode-protocol';
 import * as vscode from 'vscode';
 
-import { CenterAction, FitToScreenAction, LayoutOperation } from './action';
-import { GLSPCommand } from './glsp-commands';
 import { GlspDiagramDocument } from './glsp-diagram-document';
 import { GlspDiagramEditorContext } from './glsp-diagram-editor-context';
 import { GLSPWebView, GLSPWebViewRegistry } from './glsp-webview';
@@ -25,40 +23,13 @@ import { disposeAll } from './utils/disposable';
 
 export class GlspDiagramEditorProvider implements vscode.CustomEditorProvider<GlspDiagramDocument> {
     public static VIEW_TYPE = 'glspDiagram';
-    protected webviewRegistry: GLSPWebViewRegistry;
+    readonly webviewRegistry: GLSPWebViewRegistry;
     private _onDidChangeCustomDocument: vscode.EventEmitter<vscode.CustomDocumentEditEvent<GlspDiagramDocument>>;
 
     constructor(protected readonly context: vscode.ExtensionContext,
         protected readonly editorContext: GlspDiagramEditorContext) {
         this.webviewRegistry = new GLSPWebViewRegistry();
         this._onDidChangeCustomDocument = new vscode.EventEmitter<vscode.CustomDocumentEditEvent<GlspDiagramDocument>>();
-        this.registerCommands();
-    }
-
-    protected registerCommands(): void {
-        const options = {
-            context: this.context,
-            registry: this.webviewRegistry,
-            extensionPrefix: this.editorContext.extensionPrefix
-        };
-
-        GLSPCommand.registerActionCommand({
-            action: new FitToScreenAction([]),
-            command: GLSPCommand.FIT_TO_SCREEN,
-            ...options
-        });
-
-        GLSPCommand.registerActionCommand({
-            action: new CenterAction([]),
-            command: GLSPCommand.CENTER,
-            ...options
-        });
-
-        GLSPCommand.registerActionCommand({
-            action: new LayoutOperation(),
-            command: GLSPCommand.LAYOUT,
-            ...options
-        });
     }
 
     get onDidChangeCustomDocument(): vscode.Event<vscode.CustomDocumentEditEvent<GlspDiagramDocument>> {
@@ -99,6 +70,7 @@ export class GlspDiagramEditorProvider implements vscode.CustomEditorProvider<Gl
         const webview = this.editorContext.createWebview(webviewPanel, identifier);
         this.webviewRegistry.add(document.uri, webview);
         webview.addActionHandler(document);
+        this.editorContext.registerActionHandlers(webview);
         document.initialize(identifier, webview);
 
         return webview.connect();

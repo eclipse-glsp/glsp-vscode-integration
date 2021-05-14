@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { DiagramServer, TYPES } from '@eclipse-glsp/client';
+import { DiagramServer, NavigateToExternalTargetAction, TYPES } from '@eclipse-glsp/client';
 import { Container } from 'inversify';
 import {
     SprottyDiagramIdentifier,
@@ -23,6 +23,7 @@ import {
     VscodeDiagramWidgetFactory
 } from 'sprotty-vscode-webview';
 
+import { GLSPVscodeExtensionActionHandler } from './extension-action-handler';
 import { GLSPVscodeDiagramWidget } from './glsp-vscode-diagram-widget';
 import { GLSPVscodeDiagramServer } from './glsp-vscode-diagramserver';
 
@@ -37,5 +38,20 @@ export abstract class GLSPStarter extends SprottyStarter {
         container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);
         container.bind(TYPES.ModelSource).toService(GLSPVscodeDiagramServer);
         container.bind(DiagramServer).toService(GLSPVscodeDiagramServer);
+
+        this.configureExtensionActionHandler(container, diagramIdentifier);
+    }
+
+    protected configureExtensionActionHandler(container: Container, diagramIdentifier: SprottyDiagramIdentifier): void {
+        const extensionActionHandler = new GLSPVscodeExtensionActionHandler(this.extensionActionKinds, diagramIdentifier);
+        container.bind(GLSPVscodeExtensionActionHandler).toConstantValue(extensionActionHandler);
+        container.bind(TYPES.IActionHandlerInitializer).toService(GLSPVscodeExtensionActionHandler);
+    }
+
+    /**
+     *  All kinds of actions that should (also) be delegated to and handled by the vscode extension
+     */
+    protected get extensionActionKinds(): string[] {
+        return [NavigateToExternalTargetAction.KIND];
     }
 }

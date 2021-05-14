@@ -38,7 +38,6 @@ export class FitToScreenAction implements Action {
         return action !== undefined && action.kind === FitToScreenAction.KIND
             && 'elementIds' in action && 'animate' in action;
     }
-
 }
 
 export class CenterAction implements Action {

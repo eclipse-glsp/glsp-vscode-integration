@@ -31,6 +31,7 @@
     "@eclipse-glsp/client" "0.9.0-next.313fd011"
     balloon-css "^0.5.0"
 
+
 "@eclipse-glsp/client@0.9.0-next.313fd011", "@eclipse-glsp/client@next":
   version "0.9.0-next.313fd011"
   resolved "https://registry.yarnpkg.com/@eclipse-glsp/client/-/client-0.9.0-next.313fd011.tgz#63f2a340fc26f6454582591d8c2dda4d3a99ede1"
@@ -3878,7 +3879,7 @@ interpret@^1.4.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
 
-inversify@5.0.1:
+inversify@5.0.1, inversify@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.0.1.tgz#500d709b1434896ce5a0d58915c4a4210e34fb6e"
   integrity sha512-Ieh06s48WnEYGcqHepdsJUIJUXpwH5o5vodAX+DK2JA/gjy4EbEcQZxw+uFfzysmKjiLXGYwNG3qDZsKVMcINQ==

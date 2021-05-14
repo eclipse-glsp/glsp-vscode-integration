@@ -27,14 +27,12 @@ export interface GLSPCommandOptions {
     readonly context: vscode.ExtensionContext;
 }
 export namespace GLSPCommand {
-    export const GLSP_DIAGRAM_COMMAND_IDENTIFER = 'glsp.diagram';
-    export const FIT_TO_SCREEN = 'fit';
-    export const CENTER = 'center';
-    export const DELETE = 'delete';
-    export const LAYOUT = 'layout';
+    export const FIT_TO_SCREEN = 'diagram.fit';
+    export const CENTER = 'diagram.center';
+    export const LAYOUT = 'diagram.layout';
 
     export function commandId(extensionPrefix: string, commandKey: string): string {
-        return `${extensionPrefix}.${GLSP_DIAGRAM_COMMAND_IDENTIFER}.${commandKey}`;
+        return `${extensionPrefix}.${commandKey}`;
     }
 
     export function registerActionCommand(options: GLSPCommandOptions): void {

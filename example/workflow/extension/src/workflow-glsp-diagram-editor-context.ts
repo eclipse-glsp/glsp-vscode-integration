@@ -31,13 +31,11 @@ export const SERVER_DIR = join(__dirname, '..', 'server');
 export const JAR_FILE = resolve(join(SERVER_DIR, 'org.eclipse.glsp.example.workflow-0.9.0-SNAPSHOT-glsp.jar'));
 
 export class WorkflowGlspDiagramEditorContext extends GlspDiagramEditorContext {
-
     readonly id = 'glsp.workflow';
     readonly diagramType = 'workflow-diagram';
-    static EXTENSION_PREFIX = 'workflow';
 
-    constructor(context: vscode.ExtensionContext) {
-        super(WorkflowGlspDiagramEditorContext.EXTENSION_PREFIX, context);
+    get extensionPrefix(): string {
+        return 'workflow';
     }
 
     protected getConnectionProvider(): ServerConnectionProvider {
