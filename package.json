@@ -24,16 +24,13 @@
     "typescript": "^3.9.7"
   },
   "resolutions": {
-    "**/@eclipse-glsp/client": "0.9.0-next.d9bed812",
-    "**/@eclipse-glsp/protocol": "0.9.0-next.d9bed812",
-    "**/sprotty": "0.10.0-next.0e06051",
-    "**/inversify": "5.0.1"
+    "**/sprotty": "0.10.0-next.0e06051"
   },
   "workspaces": [
     "vscode-integration",
     "vscode-integration-webview",
-    "example/workflow/extension",
-    "example/workflow/webview"
+    "example/workflow/webview",
+    "example/workflow/extension"
   ],
   "dependencies": {
     "ts-node": "^9.1.1"
