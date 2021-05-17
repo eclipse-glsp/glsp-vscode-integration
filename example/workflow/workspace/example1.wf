@@ -5,6 +5,10 @@
       "name": "Push",
       "taskType": "manual",
       "id": "task0",
+      "cssClasses": [
+        "task",
+        "manual"
+      ],
       "children": [
         {
           "id": "task0_header",
@@ -17,16 +21,16 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 4.7421875
+                    "y": 5.0
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.515625
+                    "height": 22.0
                   },
                   "text": "M",
                   "alignment": {
                     "x": 8.34375,
-                    "y": 18.34375
+                    "y": 18.0
                   }
                 }
               ],
@@ -50,16 +54,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 49.1875,
-                "height": 22.515625
+                "width": 48.90625,
+                "height": 22.0
               },
               "text": "Push",
               "alignment": {
                 "x": 24.453125,
-                "y": 18.34375
+                "y": 18.0
               }
             }
           ],
@@ -69,7 +73,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 92.1875,
+            "width": 91.90625,
             "height": 42.0
           },
           "layout": "hbox"
@@ -81,15 +85,25 @@
         "y": 250.0
       },
       "size": {
-        "width": 102.1875,
+        "width": 101.90625,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "name": "ManualTask1",
       "taskType": "manual",
       "id": "task1",
+      "cssClasses": [
+        "task",
+        "manual"
+      ],
       "children": [
         {
           "id": "task1_header",
@@ -102,16 +116,16 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 4.7421875
+                    "y": 5.0
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.515625
+                    "height": 22.0
                   },
                   "text": "M",
                   "alignment": {
                     "x": 8.34375,
-                    "y": 18.34375
+                    "y": 18.0
                   }
                 }
               ],
@@ -135,16 +149,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 53.0625,
-                "height": 22.515625
+                "width": 52.5625,
+                "height": 22.0
               },
               "text": "RflWt",
               "alignment": {
                 "x": 26.109375,
-                "y": 18.34375
+                "y": 18.0
               }
             }
           ],
@@ -154,7 +168,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 96.0625,
+            "width": 95.5625,
             "height": 42.0
           },
           "layout": "hbox"
@@ -166,15 +180,25 @@
         "y": 150.0
       },
       "size": {
-        "width": 106.0625,
+        "width": 105.5625,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "name": "ManualTask2",
       "taskType": "manual",
       "id": "task2",
+      "cssClasses": [
+        "task",
+        "manual"
+      ],
       "children": [
         {
           "id": "task2_header",
@@ -187,16 +211,16 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 4.7421875
+                    "y": 5.0
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.515625
+                    "height": 22.0
                   },
                   "text": "M",
                   "alignment": {
                     "x": 8.34375,
-                    "y": 18.34375
+                    "y": 18.0
                   }
                 }
               ],
@@ -220,16 +244,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 62.515625,
-                "height": 22.515625
+                "width": 62.21875,
+                "height": 22.0
               },
               "text": "ChkTp",
               "alignment": {
                 "x": 31.109375,
-                "y": 18.34375
+                "y": 18.0
               }
             }
           ],
@@ -239,7 +263,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 105.515625,
+            "width": 105.21875,
             "height": 42.0
           },
           "layout": "hbox"
@@ -251,15 +275,25 @@
         "y": 320.0
       },
       "size": {
-        "width": 115.515625,
+        "width": 115.21875,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "name": "ManualTask3",
       "taskType": "manual",
       "id": "task3",
+      "cssClasses": [
+        "task",
+        "manual"
+      ],
       "children": [
         {
           "id": "task3_header",
@@ -272,16 +306,16 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 4.7421875
+                    "y": 5.0
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.515625
+                    "height": 22.0
                   },
                   "text": "M",
                   "alignment": {
                     "x": 8.34375,
-                    "y": 18.34375
+                    "y": 18.0
                   }
                 }
               ],
@@ -305,16 +339,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 76.453125,
-                "height": 22.515625
+                "width": 75.953125,
+                "height": 22.0
               },
               "text": "PreHeat",
               "alignment": {
                 "x": 37.8125,
-                "y": 18.34375
+                "y": 18.0
               }
             }
           ],
@@ -324,7 +358,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 119.453125,
+            "width": 118.953125,
             "height": 42.0
           },
           "layout": "hbox"
@@ -336,15 +370,25 @@
         "y": 360.0
       },
       "size": {
-        "width": 129.453125,
+        "width": 128.953125,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "name": "ManualTask4",
       "taskType": "manual",
       "id": "task4",
+      "cssClasses": [
+        "task",
+        "manual"
+      ],
       "children": [
         {
           "id": "task4_header",
@@ -357,16 +401,16 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 4.7421875
+                    "y": 5.0
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.515625
+                    "height": 22.0
                   },
                   "text": "M",
                   "alignment": {
                     "x": 8.34375,
-                    "y": 18.34375
+                    "y": 18.0
                   }
                 }
               ],
@@ -390,16 +434,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 50.03125,
-                "height": 22.515625
+                "width": 49.359375,
+                "height": 22.0
               },
               "text": "Brew",
               "alignment": {
                 "x": 24.453125,
-                "y": 18.34375
+                "y": 18.0
               }
             }
           ],
@@ -409,7 +453,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 93.03125,
+            "width": 92.359375,
             "height": 42.0
           },
           "layout": "hbox"
@@ -421,15 +465,25 @@
         "y": 250.0
       },
       "size": {
-        "width": 103.03125,
+        "width": 102.359375,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "name": "ManualTask6",
       "taskType": "manual",
       "id": "task6",
+      "cssClasses": [
+        "task",
+        "manual"
+      ],
       "children": [
         {
           "id": "task6_header",
@@ -442,16 +496,16 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 4.7421875
+                    "y": 5.0
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.515625
+                    "height": 22.0
                   },
                   "text": "M",
                   "alignment": {
                     "x": 8.34375,
-                    "y": 18.34375
+                    "y": 18.0
                   }
                 }
               ],
@@ -475,16 +529,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 73.625,
-                "height": 22.515625
+                "width": 73.34375,
+                "height": 22.0
               },
               "text": "KeepTp",
               "alignment": {
                 "x": 36.671875,
-                "y": 18.34375
+                "y": 18.0
               }
             }
           ],
@@ -494,7 +548,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 116.625,
+            "width": 116.34375,
             "height": 42.0
           },
           "layout": "hbox"
@@ -506,15 +560,25 @@
         "y": 290.0
       },
       "size": {
-        "width": 126.625,
+        "width": 126.34375,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "name": "AutomatedTask8",
       "taskType": "automated",
       "id": "task8",
+      "cssClasses": [
+        "task",
+        "automated"
+      ],
       "children": [
         {
           "id": "task8_header",
@@ -526,17 +590,17 @@
                   "id": "task8_ticon",
                   "type": "label:icon",
                   "position": {
-                    "x": 7.65625,
-                    "y": 4.7421875
+                    "x": 8.4921875,
+                    "y": 5.0
                   },
                   "size": {
-                    "width": 16.6875,
-                    "height": 22.515625
+                    "width": 15.015625,
+                    "height": 22.0
                   },
                   "text": "A",
                   "alignment": {
-                    "x": 8.34375,
-                    "y": 18.34375
+                    "x": 7.671875,
+                    "y": 18.0
                   }
                 }
               ],
@@ -560,16 +624,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 64.171875,
-                "height": 22.515625
+                "width": 63.671875,
+                "height": 22.0
               },
               "text": "ChkWt",
               "alignment": {
                 "x": 31.671875,
-                "y": 18.34375
+                "y": 18.0
               }
             }
           ],
@@ -579,7 +643,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 107.171875,
+            "width": 106.671875,
             "height": 42.0
           },
           "layout": "hbox"
@@ -591,15 +655,25 @@
         "y": 180.0
       },
       "size": {
-        "width": 117.171875,
+        "width": 116.671875,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "name": "AutomatedTask9",
       "taskType": "automated",
       "id": "task9",
+      "cssClasses": [
+        "task",
+        "automated"
+      ],
       "children": [
         {
           "id": "task9_header",
@@ -611,17 +685,17 @@
                   "id": "task9_ticon",
                   "type": "label:icon",
                   "position": {
-                    "x": 7.65625,
-                    "y": 4.7421875
+                    "x": 8.4921875,
+                    "y": 5.0
                   },
                   "size": {
-                    "width": 16.6875,
-                    "height": 22.515625
+                    "width": 15.015625,
+                    "height": 22.0
                   },
                   "text": "A",
                   "alignment": {
-                    "x": 8.34375,
-                    "y": 18.34375
+                    "x": 7.671875,
+                    "y": 18.0
                   }
                 }
               ],
@@ -645,16 +719,16 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 9.7421875
+                "y": 10.0
               },
               "size": {
-                "width": 57.78125,
-                "height": 22.515625
+                "width": 56.109375,
+                "height": 22.0
               },
               "text": "WtOK",
               "alignment": {
-                "x": 28.609375,
-                "y": 18.34375
+                "x": 27.78125,
+                "y": 18.0
               }
             }
           ],
@@ -664,7 +738,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 100.78125,
+            "width": 99.109375,
             "height": 42.0
           },
           "layout": "hbox"
@@ -676,10 +750,16 @@
         "y": 220.0
       },
       "size": {
-        "width": 110.78125,
+        "width": 109.109375,
         "height": 52.0
       },
-      "layout": "vbox"
+      "layout": "vbox",
+      "args": {
+        "radiusBottomLeft": 5.0,
+        "radiusTopLeft": 5.0,
+        "radiusTopRight": 5.0,
+        "radiusBottomRight": 5.0
+      }
     },
     {
       "nodeType": "mergeNode",
@@ -781,6 +861,9 @@
     },
     {
       "id": "69d7d698-c5ce-4e85-be06-d9bd9357322d",
+      "cssClasses": [
+        "medium"
+      ],
       "type": "edge:weighted",
       "sourceId": "b00fc494-0fa4-4448-8bf9-162c2c0865e4",
       "targetId": "task1"
@@ -788,6 +871,9 @@
     {
       "nodeType": "forkNode",
       "id": "bb2709f5-0ff0-4438-8853-b7e934b506d7",
+      "cssClasses": [
+        "forkOrJoin"
+      ],
       "type": "activityNode:fork",
       "position": {
         "x": 590.0,
@@ -813,6 +899,9 @@
     {
       "nodeType": "joinNode",
       "id": "bd94e44e-19f9-446e-89d4-97ca1a63c17b",
+      "cssClasses": [
+        "forkOrJoin"
+      ],
       "type": "activityNode:join",
       "position": {
         "x": 1220.0,
@@ -825,12 +914,18 @@
     },
     {
       "id": "2f57af4e-2960-496e-992d-03c8b021d81a",
+      "cssClasses": [
+        "medium"
+      ],
       "type": "edge:weighted",
       "sourceId": "activityNode2",
       "targetId": "task6"
     },
     {
       "id": "2c7427b0-9743-4bfb-b04c-078ba98f8d7e",
+      "cssClasses": [
+        "medium"
+      ],
       "type": "edge:weighted",
       "sourceId": "activityNode2",
       "targetId": "task3"
@@ -855,6 +950,9 @@
     },
     {
       "id": "e9aa796a-aa5b-4e6d-8860-4b9c5a5b8d89",
+      "cssClasses": [
+        "medium"
+      ],
       "type": "edge:weighted",
       "sourceId": "b00fc494-0fa4-4448-8bf9-162c2c0865e4",
       "targetId": "task9"
@@ -873,5 +971,5 @@
     }
   ],
   "type": "graph",
-  "revision": 9
+  "revision": 18
 }
