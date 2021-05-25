@@ -1,0 +1,59 @@
+{
+  "name": "@eclipse-glsp/vscode-integration",
+  "version": "0.9.0",
+  "description": "Glue code to integrate GLSP diagrams in VSCode extensions (extension part)",
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "displayName": "GLSP VSCode Integration",
+  "keywords": [
+    "eclipse",
+    "vscode-extension",
+    "glsp",
+    "modeling"
+  ],
+  "homepage": "https://www.eclipse.org/glsp/",
+  "bugs": "https://github.com/eclipse-glsp/glsp/issues",
+  "author": {
+    "name": "Eclipse GLSP"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
+  },
+  "contributors": [
+    {
+      "name": "Tobias Ortmayr",
+      "email": "tortmayr@eclipsesource.com",
+      "url": "https://www.eclipsesource.com"
+    }
+  ],
+  "files": [
+    "lib",
+    "src"
+  ],
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "dependencies": {
+    "@eclipse-glsp/protocol": "next",
+    "sprotty-vscode-protocol": "0.0.5",
+    "vscode-jsonrpc": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.0",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.9.7",
+    "vscode": "^1.1.37"
+  },
+  "scripts": {
+    "prepare": "yarn clean && yarn build && yarn lint",
+    "clean": "rimraf lib",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index",
+  "types": "lib/index"
+}
