@@ -46,14 +46,33 @@ pipeline {
     }
     
     stages {
-        stage('Build package') {
+        stage('Build') {
             steps {
                 timeout(30) {
                     container('node') {
-                        sh "yarn install --ignore-engines"
+                        sh "yarn build"
                     }
                 }
             }
+        }
+
+       stage('Codechecks (ESLint)'){
+            steps {
+                container('node') {
+                    timeout(30){
+                        sh "yarn lint -o eslint.xml -f checkstyle"                      
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Record & publish ESLint issues
+            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, 
+            tools: [esLint(pattern: 'node_modules/**/*/eslint.xml')], 
+            qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
         }
     }
 }

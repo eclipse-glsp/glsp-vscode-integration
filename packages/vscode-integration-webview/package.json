@@ -1,6 +1,6 @@
 {
   "name": "@eclipse-glsp/vscode-integration-webview",
-  "version": "0.0.1",
+  "version": "0.9.0",
   "description": "Integration of a GLSP diagram in a VS Code extensions (WebView part)",
   "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "keywords": [
@@ -8,25 +8,29 @@
     "graph",
     "diagram",
     "layout",
-    "sprotty",
     "glsp"
   ],
-  "homepage": "https://github.com/eclipsesource/glsp-vscode-integration",
-  "bugs": "https://github.com/eclipsesource/glsp-vscode-integration/issues",
+  "homepage": "https://www.eclipse.org/glsp/",
+  "bugs": "https://github.com/eclipse-glsp/glsp/issues",
   "author": {
     "name": "Eclipse GLSP"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eclipsesource/glsp-vscode-integration.git"
+    "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
   },
+  "contributors": [
+    {
+      "name": "Tobias Ortmayr",
+      "email": "tortmayr@eclipsesource.com",
+      "url": "https://www.eclipsesource.com"
+    }
+  ],
   "files": [
     "lib",
     "src",
     "css"
   ],
-  "main": "lib/index",
-  "types": "lib/index",
   "dependencies": {
     "@eclipse-glsp/client": "next",
     "reflect-metadata": "^0.1.12",
@@ -37,10 +41,15 @@
     "typescript": "latest"
   },
   "scripts": {
-    "prepare": "yarn run clean && yarn run build",
+    "prepare": "yarn clean && yarn build && yarn lint",
     "clean": "rimraf lib",
-    "build": "tsc && yarn run lint",
+    "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index",
+  "types": "lib/index"
 }

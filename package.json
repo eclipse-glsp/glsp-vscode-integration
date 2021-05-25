@@ -2,14 +2,14 @@
   "private": true,
   "scripts": {
     "prepare": "lerna run prepare",
-    "rebuild:browser": "theia rebuild:browser",
-    "rebuild:electron": "theia rebuild:electron",
     "watch": "lerna run --parallel watch",
+    "build": "yarn install --ignore-scripts && lerna run build",
     "test": "lerna run test",
-    "publish": "yarn && yarn publish:latest",
+    "lint": "lerna run lint --",
     "publish:latest": "lerna publish",
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
-    "upgrade:next": "yarn upgrade -p \"@eclipse-glsp.*\" --next"
+    "upgrade:next": "yarn upgrade -p \"@eclipse-glsp.*\" --next",
+    "build:ci": "lerna run build:ci"
   },
   "devDependencies": {
     "@types/vscode": "^1.54.0",
@@ -27,12 +27,7 @@
     "**/sprotty": "0.10.0-next.0e06051"
   },
   "workspaces": [
-    "vscode-integration",
-    "vscode-integration-webview",
-    "example/workflow/webview",
-    "example/workflow/extension"
-  ],
-  "dependencies": {
-    "ts-node": "^9.1.1"
-  }
+    "packages/*/",
+    "example/workflow/*"
+  ]
 }
