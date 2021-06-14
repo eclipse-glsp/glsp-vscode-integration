@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021 EclipseSource and  others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,19 +15,18 @@
  ********************************************************************************/
 import { Action } from 'sprotty-vscode-protocol';
 
-/**
- * Used to locally intercept and handle actions in the VS Code extension.
- */
-export interface ExtensionActionHandler {
+export interface Marker {
+    readonly label: string;
+    readonly description: string;
+    readonly elementId: string;
+    readonly kind: 'info' | 'warning' | 'error';
+}
 
-    /**
-     * List of action names that the action handler will intercept.
-     */
-    readonly kinds: string[];
+export class SetMarkersAction implements Action {
+    static readonly KIND = 'setMarkers';
+    constructor(public readonly markers: Marker[], public readonly kind = SetMarkersAction.KIND) { }
 
-    /**
-     * @returns true when the action should be further progagated to the glsp server or the
-     * webview
-     */
-    handleAction(action: Action): Thenable<boolean>;
+    static is(action?: Action): action is SetMarkersAction {
+        return action !== undefined && action.kind === SetMarkersAction.KIND && 'markers' in action;
+    }
 }

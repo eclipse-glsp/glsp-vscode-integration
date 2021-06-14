@@ -18,12 +18,11 @@ import {
     Action,
     ActionMessage,
     isActionMessage,
-    isDiagramIdentifier,
     isWebviewReadyMessage,
     SprottyDiagramIdentifier
 } from 'sprotty-vscode-protocol';
 import * as vscode from 'vscode';
-import { isResponseMessage, ResponseMessage } from 'vscode-jsonrpc/lib/messages';
+import { ResponseMessage } from 'vscode-jsonrpc/lib/messages';
 
 import { ExtensionActionDispatcher } from './action';
 import { ExtensionActionHandler } from './action/action-handler';
@@ -144,11 +143,17 @@ export class GLSPWebView extends Disposable implements ExtensionActionDispatcher
             }
             this.setWebviewActiveContext(event.webviewPanel.active);
         }));
+
         this.setWebviewActiveContext(this.diagramPanel.active);
 
         this.addDisposable(this.diagramPanel.webview.onDidReceiveMessage(message => this.receiveFromWebview(message)));
+        this.addDisposable(this.editorContext.onMessageFromGLSPServer(message => {
+            // only handle messages that are meant for this webview
+            if (message.clientId === this.diagramIdentifier.clientId) {
+                this.sendToWebview(message);
+            }
+        }));
 
-        this.addDisposable(this.editorContext.onMessageFromGLSPServer(message => this.sendToWebview(message)));
         this.sendDiagramIdentifier();
     }
 
@@ -157,19 +162,17 @@ export class GLSPWebView extends Disposable implements ExtensionActionDispatcher
     }
 
     protected async sendToWebview(message: any): Promise<void> {
-        if (isActionMessage(message) || isDiagramIdentifier(message) || isResponseMessage(message)) {
-            if (this.diagramPanel.visible) {
-                if (isActionMessage(message)) {
-                    const shouldForwardToWebview = await this.handleLocally(message.action);
-                    if (shouldForwardToWebview) {
-                        this.diagramPanel.webview.postMessage(message);
-                    }
-                } else {
+        if (this.diagramPanel.visible) {
+            if (isActionMessage(message)) {
+                const shouldForwardToWebview = await this.handleLocally(message.action);
+                if (shouldForwardToWebview) {
                     this.diagramPanel.webview.postMessage(message);
                 }
             } else {
-                this.messageQueue.push(message);
+                this.diagramPanel.webview.postMessage(message);
             }
+        } else {
+            this.messageQueue.push(message);
         }
     }
 
