@@ -21,11 +21,11 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 5.0
+                    "y": 4.5
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.0
+                    "height": 23.0
                   },
                   "text": "M",
                   "alignment": {
@@ -54,11 +54,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
                 "width": 48.90625,
-                "height": 22.0
+                "height": 23.0
               },
               "text": "Push",
               "alignment": {
@@ -116,11 +116,11 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 5.0
+                    "y": 4.5
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.0
+                    "height": 23.0
                   },
                   "text": "M",
                   "alignment": {
@@ -149,11 +149,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
-                "width": 52.5625,
-                "height": 22.0
+                "width": 52.21875,
+                "height": 23.0
               },
               "text": "RflWt",
               "alignment": {
@@ -168,7 +168,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 95.5625,
+            "width": 95.21875,
             "height": 42.0
           },
           "layout": "hbox"
@@ -180,7 +180,7 @@
         "y": 150.0
       },
       "size": {
-        "width": 105.5625,
+        "width": 105.21875,
         "height": 52.0
       },
       "layout": "vbox",
@@ -211,11 +211,11 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 5.0
+                    "y": 4.5
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.0
+                    "height": 23.0
                   },
                   "text": "M",
                   "alignment": {
@@ -244,11 +244,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
                 "width": 62.21875,
-                "height": 22.0
+                "height": 23.0
               },
               "text": "ChkTp",
               "alignment": {
@@ -306,11 +306,11 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 5.0
+                    "y": 4.5
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.0
+                    "height": 23.0
                   },
                   "text": "M",
                   "alignment": {
@@ -339,11 +339,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
-                "width": 75.953125,
-                "height": 22.0
+                "width": 75.625,
+                "height": 23.0
               },
               "text": "PreHeat",
               "alignment": {
@@ -358,7 +358,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 118.953125,
+            "width": 118.625,
             "height": 42.0
           },
           "layout": "hbox"
@@ -370,7 +370,7 @@
         "y": 360.0
       },
       "size": {
-        "width": 128.953125,
+        "width": 128.625,
         "height": 52.0
       },
       "layout": "vbox",
@@ -401,11 +401,11 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 5.0
+                    "y": 4.5
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.0
+                    "height": 23.0
                   },
                   "text": "M",
                   "alignment": {
@@ -434,11 +434,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
-                "width": 49.359375,
-                "height": 22.0
+                "width": 48.90625,
+                "height": 23.0
               },
               "text": "Brew",
               "alignment": {
@@ -453,7 +453,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 92.359375,
+            "width": 91.90625,
             "height": 42.0
           },
           "layout": "hbox"
@@ -465,7 +465,7 @@
         "y": 250.0
       },
       "size": {
-        "width": 102.359375,
+        "width": 101.90625,
         "height": 52.0
       },
       "layout": "vbox",
@@ -496,11 +496,11 @@
                   "type": "label:icon",
                   "position": {
                     "x": 7.65625,
-                    "y": 5.0
+                    "y": 4.5
                   },
                   "size": {
                     "width": 16.6875,
-                    "height": 22.0
+                    "height": 23.0
                   },
                   "text": "M",
                   "alignment": {
@@ -529,11 +529,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
                 "width": 73.34375,
-                "height": 22.0
+                "height": 23.0
               },
               "text": "KeepTp",
               "alignment": {
@@ -590,16 +590,16 @@
                   "id": "task8_ticon",
                   "type": "label:icon",
                   "position": {
-                    "x": 8.4921875,
-                    "y": 5.0
+                    "x": 9.328125,
+                    "y": 4.5
                   },
                   "size": {
-                    "width": 15.015625,
-                    "height": 22.0
+                    "width": 13.34375,
+                    "height": 23.0
                   },
                   "text": "A",
                   "alignment": {
-                    "x": 7.671875,
+                    "x": 6.671875,
                     "y": 18.0
                   }
                 }
@@ -624,11 +624,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
-                "width": 63.671875,
-                "height": 22.0
+                "width": 63.34375,
+                "height": 23.0
               },
               "text": "ChkWt",
               "alignment": {
@@ -643,7 +643,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 106.671875,
+            "width": 106.34375,
             "height": 42.0
           },
           "layout": "hbox"
@@ -655,7 +655,7 @@
         "y": 180.0
       },
       "size": {
-        "width": 116.671875,
+        "width": 116.34375,
         "height": 52.0
       },
       "layout": "vbox",
@@ -685,16 +685,16 @@
                   "id": "task9_ticon",
                   "type": "label:icon",
                   "position": {
-                    "x": 8.4921875,
-                    "y": 5.0
+                    "x": 9.328125,
+                    "y": 4.5
                   },
                   "size": {
-                    "width": 15.015625,
-                    "height": 22.0
+                    "width": 13.34375,
+                    "height": 23.0
                   },
                   "text": "A",
                   "alignment": {
-                    "x": 7.671875,
+                    "x": 6.671875,
                     "y": 18.0
                   }
                 }
@@ -719,11 +719,11 @@
               "type": "label:heading",
               "position": {
                 "x": 38.0,
-                "y": 10.0
+                "y": 9.5
               },
               "size": {
-                "width": 56.109375,
-                "height": 22.0
+                "width": 55.5625,
+                "height": 23.0
               },
               "text": "WtOK",
               "alignment": {
@@ -738,7 +738,7 @@
             "y": 5.0
           },
           "size": {
-            "width": 99.109375,
+            "width": 98.5625,
             "height": 42.0
           },
           "layout": "hbox"
@@ -750,7 +750,7 @@
         "y": 220.0
       },
       "size": {
-        "width": 109.109375,
+        "width": 108.5625,
         "height": 52.0
       },
       "layout": "vbox",
@@ -971,5 +971,5 @@
     }
   ],
   "type": "graph",
-  "revision": 18
+  "revision": 4
 }

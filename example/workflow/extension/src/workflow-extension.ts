@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { GlspDiagramEditorContext } from '@eclipse-glsp/vscode-integration';
+import { GlspDiagramEditorContext, NavigateAction } from '@eclipse-glsp/vscode-integration';
 import { join, resolve } from 'path';
 import * as vscode from 'vscode';
 
@@ -26,6 +26,18 @@ let editorContext: GlspDiagramEditorContext;
 
 export function activate(context: vscode.ExtensionContext): void {
     editorContext = new WorkflowGlspDiagramEditorContext(context);
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('workflow.goToNextNode', () => {
+            editorContext.dispatchActionToWebview(new NavigateAction('next'));
+        }),
+        vscode.commands.registerCommand('workflow.goToPreviousNode', () => {
+            editorContext.dispatchActionToWebview(new NavigateAction('previous'));
+        }),
+        vscode.commands.registerCommand('workflow.showDocumentation', () => {
+            editorContext.dispatchActionToWebview(new NavigateAction('documentation'));
+        })
+    );
 }
 
 export function deactivate(): Thenable<void> {

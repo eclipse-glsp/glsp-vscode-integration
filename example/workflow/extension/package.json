@@ -56,6 +56,24 @@
         "title": "Layout diagram",
         "category": "Workflow Diagram",
         "enablement": "glsp-workflow-diagram-focused"
+      },
+      {
+        "command": "workflow.goToNextNode",
+        "title": "Go to next Node",
+        "category": "Workflow Navigation",
+        "enablement": "glsp-workflow-diagram-focused"
+      },
+      {
+        "command": "workflow.goToPreviousNode",
+        "title": "Go to previous Node",
+        "category": "Workflow Navigation",
+        "enablement": "glsp-workflow-diagram-focused"
+      },
+      {
+        "command": "workflow.showDocumentation",
+        "title": "Show documentation...",
+        "category": "Workflow Diagram",
+        "enablement": "glsp-workflow-diagram-focused"
       }
     ],
     "keybindings": [
