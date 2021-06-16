@@ -76,6 +76,9 @@ export interface GLSPWebviewOptions {
     scriptUri: vscode.Uri;
     webviewPanel: vscode.WebviewPanel;
 }
+
+export type GLSPWebviewMessage = ActionMessage | SprottyDiagramIdentifier | ResponseMessage;
+
 export class GLSPWebView extends Disposable implements ExtensionActionDispatcher {
     static viewCount = 0;
 
@@ -161,7 +164,7 @@ export class GLSPWebView extends Disposable implements ExtensionActionDispatcher
         vscode.commands.executeCommand('setContext', 'glsp-' + this.diagramIdentifier.diagramType + '-focused', isActive);
     }
 
-    protected async sendToWebview(message: any): Promise<void> {
+    protected async sendToWebview(message: GLSPWebviewMessage): Promise<void> {
         if (this.diagramPanel.visible) {
             if (isActionMessage(message)) {
                 const shouldForwardToWebview = await this.handleLocally(message.action);
@@ -202,7 +205,7 @@ export class GLSPWebView extends Disposable implements ExtensionActionDispatcher
             clientId: this.diagramIdentifier.clientId,
             action,
             __localDispatch: true
-        });
+        } as ActionMessage); // TODO: Type Messages properly so that this casting isn't necessary
     }
 
     /**
