@@ -13,11 +13,20 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import { Action } from 'sprotty-vscode-protocol';
 
-export * from './action-handler';
-export * from './action-dispatcher';
-export * from './action';
-export * from './operation';
-export * from './navigation';
-export * from './external-navigation';
-export * from './markers';
+export interface Marker {
+    readonly label: string;
+    readonly description: string;
+    readonly elementId: string;
+    readonly kind: 'info' | 'warning' | 'error';
+}
+
+export class SetMarkersAction implements Action {
+    static readonly KIND = 'setMarkers';
+    constructor(public readonly markers: Marker[], public readonly kind = SetMarkersAction.KIND) { }
+
+    static is(action?: Action): action is SetMarkersAction {
+        return action !== undefined && action.kind === SetMarkersAction.KIND && 'markers' in action;
+    }
+}

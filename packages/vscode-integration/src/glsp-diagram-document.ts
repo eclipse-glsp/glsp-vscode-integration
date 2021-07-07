@@ -23,7 +23,8 @@ import {
     RequestModelAction,
     SaveModelAction,
     SetDirtyStateAction,
-    UndoOperation
+    UndoOperation,
+    SetMarkersAction
 } from './action';
 import { ExtensionActionHandler } from './action/action-handler';
 import { waitForEventWithTimeout } from './utils';
@@ -43,11 +44,18 @@ export class GlspDiagramDocument extends Disposable implements vscode.CustomDocu
     protected actionDispatcher?: ExtensionActionDispatcher;
     protected diagramIdentifier: SprottyDiagramIdentifier;
 
+    private readonly diagnostics: vscode.DiagnosticCollection;
+
+    kinds = [
+        SetDirtyStateAction.KIND,
+        SetMarkersAction.KIND
+    ];
+
     private constructor(readonly uri: vscode.Uri) {
         super();
         this._onDidChange = this.addDisposable(new vscode.EventEmitter<DiagramEditEvent>());
         this._onDidSave = this.addDisposable(new vscode.EventEmitter<void>());
-
+        this.diagnostics = this.addDisposable(vscode.languages.createDiagnosticCollection());
     }
 
     initialize(diagramIdentifier: SprottyDiagramIdentifier, actionDispatcher: ExtensionActionDispatcher): void {
@@ -70,7 +78,6 @@ export class GlspDiagramDocument extends Disposable implements vscode.CustomDocu
         }
         this.actionDispatcher.dispatch(action);
     }
-    kinds = [SetDirtyStateAction.KIND];
 
     async backup(destination: vscode.Uri, _cancellation: vscode.CancellationToken): Promise<vscode.CustomDocumentBackup> {
         // No need to implement a custom backup. The server holds the current model state anyways.
@@ -112,6 +119,25 @@ export class GlspDiagramDocument extends Disposable implements vscode.CustomDocu
                 });
             }
         }
+
+        if (SetMarkersAction.is(action)) {
+            const SEVERITY_MAP = {
+                'info': 2,
+                'warning': 1,
+                'error': 0
+            };
+
+            const updatedDiagnostics = action.markers.map(marker => new vscode.Diagnostic(
+                new vscode.Range(0, 0, 0, 0), // Must have be defined as such - no workarounds
+                marker.description,
+                SEVERITY_MAP[marker.kind]
+            ));
+
+            this.diagnostics.set(this.uri, updatedDiagnostics);
+
+            return true; // needs to be sent to webview
+        }
+
         return false;
     }
 }
