@@ -51,6 +51,7 @@ export class GlspDiagramEditorProvider implements vscode.CustomEditorProvider<Gl
         Thenable<vscode.CustomDocumentBackup> {
         return document.backup(context.destination, cancellation);
     }
+
     async openCustomDocument(uri: vscode.Uri, openContext: vscode.CustomDocumentOpenContext, token: vscode.CancellationToken): Promise<GlspDiagramDocument> {
         const document = await GlspDiagramDocument.create(uri, openContext.backupId);
 
@@ -65,6 +66,7 @@ export class GlspDiagramEditorProvider implements vscode.CustomEditorProvider<Gl
         document.onDidDispose(() => disposeAll(listeners));
         return document;
     }
+
     resolveCustomEditor(document: GlspDiagramDocument, webviewPanel: vscode.WebviewPanel, token: vscode.CancellationToken): void | Thenable<void> {
         const identifier = this.createDiagramIdentifier(document);
         const webview = this.editorContext.createWebview(webviewPanel, identifier);
