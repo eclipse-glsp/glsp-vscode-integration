@@ -1,13 +1,14 @@
 {
   "name": "workflow-vscode-example",
+  "private": "true",
   "version": "0.9.0",
   "description": "An example graphical language used for modeling workflows",
   "displayName": "Workflow GLSP Example",
-  "publisher": "Eclipse GLSP",
+  "publisher": "Eclipse-GLSP",
   "homepage": "https://www.eclipse.org/glsp/",
   "bugs": "https://github.com/eclipse-glsp/glsp/issues",
   "author": {
-    "name": "Eclipse GLSP"
+    "name": "EclipseGLSP"
   },
   "repository": {
     "type": "git",
@@ -15,9 +16,9 @@
   },
   "contributors": [
     {
-      "name": "Tobias Ortmayr",
-      "email": "tortmayr@eclipsesource.com",
-      "url": "https://www.eclipsesource.com"
+      "name": "Eclipse GLSP Project",
+      "email": "glsp-dev@eclipse.org",
+      "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
   "categories": [
