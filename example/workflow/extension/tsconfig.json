@@ -5,6 +5,8 @@
     "outDir": "lib",
   },
   "include": [
-    "src"
+    "src",
+    "server",
+    "pack"
   ]
 }

@@ -21,9 +21,9 @@
   },
   "contributors": [
     {
-      "name": "Tobias Ortmayr",
-      "email": "tortmayr@eclipsesource.com",
-      "url": "https://www.eclipsesource.com"
+      "name": "Eclipse GLSP Project",
+      "email": "glsp-dev@eclipse.org",
+      "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
   "files": [

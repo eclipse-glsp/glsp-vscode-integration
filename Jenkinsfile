@@ -65,6 +65,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy (master only)') {
+            when {
+                allOf {
+                    branch 'master'
+                    expression {  
+                      /* Only trigger the deployment job if the changeset contains changes in 
+                      the `packages` or `example` directory */
+                      sh(returnStatus: true, script: 'git diff --name-only HEAD^ | grep --quiet "^packages\\|example"') == 0
+                    }
+                }
+            }
+            steps {
+                build job: 'deploy-npm-glsp-vscode-integration', wait: false
+            }
+        }
     }
 
     post {
