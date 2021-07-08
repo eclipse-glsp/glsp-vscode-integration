@@ -26,7 +26,7 @@ import {
     SocketMessageWriter
 } from 'vscode-jsonrpc';
 
-import { CenterAction, FitToScreenAction, LayoutOperation } from './action';
+import { CenterAction, FitToScreenAction, LayoutOperation, ExtensionActionDispatcher, NavigateToExternalTargetHandler } from './action';
 import { GLSPCommand } from './glsp-commands';
 import { GlspDiagramEditorProvider } from './glsp-diagram-editor-provider';
 import { GLSPWebView } from './glsp-webview';
@@ -80,7 +80,7 @@ export abstract class GlspDiagramEditorContext extends Disposable {
     abstract createWebview(webviewPanel: vscode.WebviewPanel, identifier: SprottyDiagramIdentifier): GLSPWebView;
 
     registerActionHandlers(webview: GLSPWebView): void {
-        // e.g. webview.addActionHandler(myHandler);
+        webview.addActionHandler(new NavigateToExternalTargetHandler());
     }
 
     getExtensionFileUri(...segments: string[]): vscode.Uri {
@@ -121,6 +121,10 @@ export abstract class GlspDiagramEditorContext extends Disposable {
             registry: this.editorProvider.webviewRegistry,
             extensionPrefix: this.extensionPrefix
         });
+    }
+
+    async dispatchActionToWebview(action: Action): Promise<void> {
+        ExtensionActionDispatcher.dispatch(this.editorProvider.webviewRegistry, action);
     }
 
 }

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and  others.
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,11 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import { Action } from 'sprotty-vscode-protocol';
 
-export * from './action-handler';
-export * from './action-dispatcher';
-export * from './action';
-export * from './operation';
-export * from './navigation';
-export * from './external-navigation';
-export * from './markers';
+interface Args {
+    [key: string]: string | number | boolean;
+}
+
+export class NavigateAction implements Action {
+    static readonly KIND = 'navigate';
+    readonly kind = NavigateAction.KIND;
+    constructor(readonly targetTypeId: string, readonly args?: Args) { }
+
+    static is(action?: Action): action is NavigateAction {
+        return action !== undefined && action.kind === NavigateAction.KIND && 'targetTypeId' in action;
+    }
+}
