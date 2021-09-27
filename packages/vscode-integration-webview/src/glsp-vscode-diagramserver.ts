@@ -23,7 +23,8 @@ import {
     isDeleteElementOperation,
     isSetEditModeAction,
     registerDefaultGLSPServerActions,
-    SetEditModeAction
+    SetEditModeAction,
+    ICopyPasteHandler
 } from '@eclipse-glsp/client';
 import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';
@@ -34,6 +35,7 @@ export const localDispatchProperty = '__localDispatch';
 
 export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
     @inject(GLSP_TYPES.SelectionService) protected selectionService: SelectionService;
+    @inject(GLSP_TYPES.ICopyPasteHandler) protected copyPasteHandler: ICopyPasteHandler;
 
     initialize(registry: ActionHandlerRegistry): void {
         registerDefaultGLSPServerActions(registry, this);
@@ -42,6 +44,18 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
             if ('data' in message && isActionMessage(message.data)) {
                 this.messageReceived(message.data);
             }
+        });
+
+        window.addEventListener('copy', (e: ClipboardEvent) => {
+            this.copyPasteHandler.handleCopy(e);
+        });
+
+        window.addEventListener('cut', (e: ClipboardEvent) => {
+            this.copyPasteHandler.handleCut(e);
+        });
+
+        window.addEventListener('paste', (e: ClipboardEvent) => {
+            this.copyPasteHandler.handlePaste(e);
         });
     }
 

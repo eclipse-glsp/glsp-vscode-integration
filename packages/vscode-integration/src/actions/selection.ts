@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and  others.
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,10 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-export * from './action-handler';
-export * from './action-dispatcher';
-export * from './action';
-export * from './operation';
-export * from './navigation';
-export * from './external-navigation';
-export * from './markers';
+import { Action } from './action';
+
+export class SelectAction implements Action {
+    static readonly KIND = 'elementSelected';
+
+    constructor(
+        public readonly selectedElementsIDs: string[] = [],
+        public readonly deselectedElementsIDs: string[] = [],
+        public readonly kind = SelectAction.KIND
+    ) { }
+
+    static is(action?: Action): action is SelectAction {
+        return action !== undefined && action.kind === SelectAction.KIND
+            && 'selectedElementsIDs' in action
+            && 'deselectedElementsIDs' in action;
+    }
+}

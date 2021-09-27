@@ -13,20 +13,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export namespace GLSPEnvVariable {
-    export const SERVER_DEBUG = 'GLSP_SERVER_DEBUG';
-    export const SERVER_PORT = 'GLSP_SERVER_PORT';
 
-    export function isServerDebug(): boolean {
-        const envVar = process.env[SERVER_DEBUG];
-        return envVar !== undefined && JSON.parse(envVar);
+import { Action } from './action';
+
+export class ExportSvgAction implements Action {
+    static readonly KIND = 'exportSvg';
+    constructor(public readonly svg: string, public readonly kind = ExportSvgAction.KIND) { }
+
+    static is(action?: Action): action is ExportSvgAction {
+        return action !== undefined && action.kind === ExportSvgAction.KIND && 'svg' in action;
     }
+}
 
-    export function getServerPort(): number | undefined {
-        const envVar = process.env[SERVER_PORT];
-        if (envVar) {
-            return JSON.parse(envVar);
-        }
-        return;
+export class RequestExportSvgAction implements Action {
+    static readonly KIND = 'requestExportSvg';
+    constructor(public readonly kind = RequestExportSvgAction.KIND) { }
+
+    static is(action?: Action): action is RequestExportSvgAction {
+        return action !== undefined && action.kind === RequestExportSvgAction.KIND;
     }
 }

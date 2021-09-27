@@ -4928,7 +4928,7 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-sprotty-vscode-protocol@0.0.5, sprotty-vscode-protocol@^0.0.5:
+sprotty-vscode-protocol@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/sprotty-vscode-protocol/-/sprotty-vscode-protocol-0.0.5.tgz#6d0578d0094b224ea50549786ebd59dadace7fcf"
   integrity sha512-nhuOLHgWEczQRjYgHE3C8oHv7cxGsv2mAacdETkMYnnBkLG3t28N68ydIt9a/lv6EhMJDwh9dLqyDBbvHPA3Wg==

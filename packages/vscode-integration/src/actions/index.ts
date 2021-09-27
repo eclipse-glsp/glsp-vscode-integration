@@ -14,19 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-export namespace GLSPJavaServerArgs {
-    /**
-     * Utility function to create the additional launch args for a GLSP Java Server
-     * to enable file logging.
-     * @param logDir Path to the directy where the log files should be stored
-     * @param disableConsolelogging Flag to indicate wether default console logging should be disabled
-     */
-    export function enableFileLogging(logDir: string, disableConsolelogging = true): string[] {
-        const additionalArgs = ['--fileLog', 'true', '--logDir', logDir];
-        if (disableConsolelogging) {
-            additionalArgs.push('--consoleLog');
-            additionalArgs.push('false');
-        }
-        return additionalArgs;
-    }
-}
+export * from './action';
+export * from './export';
+export * from './save-state';
+export * from './external-navigation';
+export * from './markers';
+export * from './navigation';
+export * from './operation';
+export * from './selection';

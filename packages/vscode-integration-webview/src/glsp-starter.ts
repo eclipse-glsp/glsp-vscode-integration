@@ -13,8 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { DiagramServer, NavigateToExternalTargetAction, TYPES } from '@eclipse-glsp/client';
 import { Container } from 'inversify';
+import {
+    DiagramServer,
+    NavigateToExternalTargetAction,
+    ExportSvgAction,
+    SelectAction,
+    TYPES
+} from '@eclipse-glsp/client';
+import {
+    RequestClipboardDataAction,
+    SetClipboardDataAction
+} from '@eclipse-glsp/client/lib/features/copy-paste/copy-paste-actions';
 import {
     SprottyDiagramIdentifier,
     SprottyStarter,
@@ -52,6 +62,12 @@ export abstract class GLSPStarter extends SprottyStarter {
      *  All kinds of actions that should (also) be delegated to and handled by the vscode extension
      */
     protected get extensionActionKinds(): string[] {
-        return [NavigateToExternalTargetAction.KIND];
+        return [
+            NavigateToExternalTargetAction.KIND,
+            RequestClipboardDataAction.KIND,
+            SetClipboardDataAction.KIND,
+            SelectAction.KIND,
+            ExportSvgAction.KIND
+        ];
     }
 }

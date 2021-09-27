@@ -41,60 +41,128 @@
     ],
     "commands": [
       {
-        "command": "workflow.diagram.fit",
+        "command": "workflow.fit",
         "title": "Fit to Screen",
         "category": "Workflow Diagram",
-        "enablement": "glsp-workflow-diagram-focused"
+        "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
-        "command": "workflow.diagram.center",
+        "command": "workflow.center",
         "title": "Center selection",
         "category": "Workflow Diagram",
-        "enablement": "glsp-workflow-diagram-focused"
+        "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
-        "command": "workflow.diagram.layout",
+        "command": "workflow.layout",
         "title": "Layout diagram",
         "category": "Workflow Diagram",
-        "enablement": "glsp-workflow-diagram-focused"
+        "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
         "command": "workflow.goToNextNode",
         "title": "Go to next Node",
         "category": "Workflow Navigation",
-        "enablement": "glsp-workflow-diagram-focused"
+        "enablement": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       },
       {
         "command": "workflow.goToPreviousNode",
         "title": "Go to previous Node",
         "category": "Workflow Navigation",
-        "enablement": "glsp-workflow-diagram-focused"
+        "enablement": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       },
       {
         "command": "workflow.showDocumentation",
         "title": "Show documentation...",
         "category": "Workflow Diagram",
-        "enablement": "glsp-workflow-diagram-focused"
+        "enablement": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      },
+      {
+        "command": "workflow.exportAsSVG",
+        "title": "Export as SVG",
+        "category": "Workflow Diagram",
+        "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
       }
     ],
+    "submenus": [
+      {
+        "id": "workflow.editor.title",
+        "label": "Diagram"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "submenu": "workflow.editor.title",
+          "group": "bookmarks"
+        },
+        {
+          "command": "workflow.goToNextNode",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+        },
+        {
+          "command": "workflow.goToPreviousNode",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+        },
+        {
+          "command": "workflow.showDocumentation",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+        }
+      ],
+      "workflow.editor.title": [
+        {
+          "command": "workflow.fit",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+        },
+        {
+          "command": "workflow.center",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+        },
+        {
+          "command": "workflow.layout",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+        },
+        {
+          "command": "workflow.exportAsSVG",
+          "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+        }
+      ]
+    },
     "keybindings": [
       {
         "key": "alt+f",
         "mac": "alt+f",
-        "command": "workflow.diagram.fit",
-        "when": "glsp-workflow-diagram-focused"
+        "command": "workflow.fit",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
         "key": "alt+c",
         "mac": "alt+c",
-        "command": "workflow.diagram.center",
-        "when": "glsp-workflow-diagram-focused"
+        "command": "workflow.center",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
         "key": "alt+l",
         "mac": "alt+l",
-        "command": "workflow.diagram.layout",
-        "when": "glsp-workflow-diagram-focused"
+        "command": "workflow.layout",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "key": "Ctrl+4",
+        "mac": "cmd+4",
+        "command": "workflow.goToNextNode",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      },
+      {
+        "key": "Ctrl+3",
+        "mac": "cmd+3",
+        "command": "workflow.goToPreviousNode",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       }
     ]
   },
@@ -109,15 +177,15 @@
   ],
   "main": "./lib/workflow-extension",
   "devDependencies": {
+    "@eclipse-glsp/vscode-integration": "0.9.0",
     "@types/node": "^8.0.0",
     "path": "^0.12.7",
     "rimraf": "^2.6.3",
-    "@eclipse-glsp/vscode-integration": "0.9.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^9.1.1",
-    "workflow-glsp-webview": "0.9.0",
     "typescript": "^3.1.3",
-    "vscode": "^1.1.21"
+    "vscode": "^1.1.21",
+    "workflow-glsp-webview": "0.9.0"
   },
   "scripts": {
     "prepare": "npx vscode-install && yarn clean && yarn build && yarn lint",
