@@ -13,21 +13,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Action } from 'sprotty-vscode-protocol';
+/* eslint-disable no-null/no-null */
 
-/**
- * Used to locally intercept and handle actions in the VS Code extension.
- */
-export interface ExtensionActionHandler {
+export interface Action {
+    readonly kind: string;
+}
 
-    /**
-     * List of action names that the action handler will intercept.
-     */
-    readonly kinds: string[];
+export interface ActionMessage<A extends Action = Action> {
+    clientId: string;
+    action: A;
+}
 
-    /**
-     * @returns true when the action should be further progagated to the glsp server or the
-     * webview
-     */
-    handleAction(action: Action): Thenable<boolean>;
+export function isAction(object: any): object is Action {
+    return typeof object === 'object' && object !== null && 'kind' in object && typeof object['kind'] === 'string';
+}
+
+export function isActionMessage(object: any): object is ActionMessage {
+    return typeof object === 'object' && object !== null &&
+        'clientId' in object && typeof object['clientId'] === 'string' &&
+        'action' in object && isAction(object.action);
 }

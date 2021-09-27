@@ -13,10 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export * from './utils';
-export * from './action';
-export * from './glsp-diagram-editor-context';
-export * from './glsp-diagram-document';
-export * from './glsp-diagram-editor-provider';
-export * from './glsp-webview';
-export * from './java-socket-server-connection-provider';
+
+export * from './actions';
+export * from './glsp-vscode-connector';
+export * from './types';
