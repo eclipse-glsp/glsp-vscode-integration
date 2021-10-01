@@ -20,11 +20,11 @@ import {
     ComputedBoundsAction,
     DeleteElementOperation,
     GLSP_TYPES,
+    ICopyPasteHandler,
     isDeleteElementOperation,
     isSetEditModeAction,
     registerDefaultGLSPServerActions,
-    SetEditModeAction,
-    ICopyPasteHandler
+    SetEditModeAction
 } from '@eclipse-glsp/client';
 import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';

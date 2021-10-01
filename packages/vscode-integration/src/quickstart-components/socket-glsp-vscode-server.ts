@@ -13,13 +13,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-
+import { ApplicationIdProvider, BaseJsonrpcGLSPClient } from '@eclipse-glsp/protocol';
 import * as net from 'net';
 import * as vscode from 'vscode';
 import { createMessageConnection, SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc';
-import { ApplicationIdProvider, BaseJsonrpcGLSPClient } from '@eclipse-glsp/protocol';
 import { isActionMessage } from '../actions';
-
 import { GlspVscodeServer } from '../types';
 
 interface SocketGlspVscodeServerOptions {

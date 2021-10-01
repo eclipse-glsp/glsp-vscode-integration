@@ -13,12 +13,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-
-import * as vscode from 'vscode';
-import * as path from 'path';
-
 import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
 import { GlspEditorProvider } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import * as path from 'path';
+import * as vscode from 'vscode';
 
 export default class WorkflowEditorProvider extends GlspEditorProvider {
     diagramType = 'workflow-diagram';

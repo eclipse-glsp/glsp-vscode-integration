@@ -13,9 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import { existsSync } from 'fs';
 import download from 'mvn-artifact-download';
 import { join } from 'path';
-import { existsSync } from 'fs';
 
 const downloadDir = join(__dirname, '../extension/server');
 const mavenRepository = 'https://oss.sonatype.org/content/repositories/snapshots/';
@@ -27,10 +27,14 @@ const classifier = 'glsp';
 if (!existsSync(`${__dirname}/../extension/server/${artifactId}-${version}-SNAPSHOT-${classifier}.jar`)) {
     console.log('Downloading latest version of the Workflow Example Java Server from the maven repository...');
     download({ groupId, artifactId, version, classifier, isSnapShot: true }, downloadDir, mavenRepository)
-        .then(() => console.log('Download completed. Start the server using this command: \njava -jar org.eclipse.glsp.example.workflow-'
-            + version + '-SNAPSHOT-glsp.jar org.eclipse.glsp.example.workflow.launch.ExampleServerLauncher\n\n'))
+        .then(() =>
+            console.log(
+                'Download completed. Start the server using this command: \njava -jar org.eclipse.glsp.example.workflow-' +
+                    version +
+                    '-SNAPSHOT-glsp.jar org.eclipse.glsp.example.workflow.launch.ExampleServerLauncher\n\n'
+            )
+        )
         .catch(err => console.error(err));
 } else {
     console.log('Server jar already exists. Skipping download.');
 }
-

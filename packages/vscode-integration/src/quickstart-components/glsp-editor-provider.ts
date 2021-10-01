@@ -13,10 +13,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-
-import * as vscode from 'vscode';
-
 import { isActionMessage, isWebviewReadyMessage } from 'sprotty-vscode-protocol';
+import * as vscode from 'vscode';
 import { GlspVscodeConnector } from '../glsp-vscode-connector';
 
 /**
