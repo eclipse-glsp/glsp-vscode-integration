@@ -27,10 +27,7 @@ import {
     RequestExportSvgAction
 } from '@eclipse-glsp/vscode-integration';
 
-import {
-    GlspServerLauncher,
-    SocketGlspVscodeServer
-} from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import { GlspServerLauncher, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
 
 import WorkflowEditorProvider from './workflow-editor-provider';
 
@@ -108,4 +105,3 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         })
     );
 }
-

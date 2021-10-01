@@ -23,7 +23,7 @@ interface Args {
 export class NavigateAction implements Action {
     static readonly KIND = 'navigate';
     readonly kind = NavigateAction.KIND;
-    constructor(readonly targetTypeId: string, readonly args?: Args) { }
+    constructor(readonly targetTypeId: string, readonly args?: Args) {}
 
     static is(action?: Action): action is NavigateAction {
         return action !== undefined && action.kind === NavigateAction.KIND && 'targetTypeId' in action;
@@ -32,29 +32,35 @@ export class NavigateAction implements Action {
 
 export class FitToScreenAction implements Action {
     static readonly KIND = 'fit';
-    constructor(public readonly elementIds: string[],
+    constructor(
+        public readonly elementIds: string[],
         public readonly padding?: number,
         public readonly maxZoom?: number,
         public readonly animate: boolean = true,
-        public readonly kind = FitToScreenAction.KIND) {
-    }
+        public readonly kind = FitToScreenAction.KIND
+    ) {}
 
     static is(action?: Action): action is FitToScreenAction {
-        return action !== undefined && action.kind === FitToScreenAction.KIND
-            && 'elementIds' in action && 'animate' in action;
+        return action !== undefined && action.kind === FitToScreenAction.KIND && 'elementIds' in action && 'animate' in action;
     }
 }
 
 export class CenterAction implements Action {
     static readonly KIND = 'center';
-    constructor(public readonly elementIds: string[],
+    constructor(
+        public readonly elementIds: string[],
         public readonly animate: boolean = true,
         public readonly retainZoom: boolean = false,
-        public readonly kind = CenterAction.KIND) {
-    }
+        public readonly kind = CenterAction.KIND
+    ) {}
 
     static is(action?: Action): action is CenterAction {
-        return action !== undefined && action.kind === CenterAction.KIND
-            && 'elementIds' in action && 'animate' in action && 'retainZoom' in action;
+        return (
+            action !== undefined &&
+            action.kind === CenterAction.KIND &&
+            'elementIds' in action &&
+            'animate' in action &&
+            'retainZoom' in action
+        );
     }
 }

@@ -70,7 +70,7 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
     }
 
     protected messageReceived(data: any): void {
-        const object = typeof (data) === 'string' ? JSON.parse(data) : data;
+        const object = typeof data === 'string' ? JSON.parse(data) : data;
         if (isActionMessage(object) && object.action) {
             if (!object.clientId || object.clientId === this.clientId) {
                 this.checkMessageOrigin(object);
@@ -105,5 +105,4 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
     protected handleSetEditModeAction(action: SetEditModeAction): boolean {
         return (action as any)[receivedFromServerProperty] !== true;
     }
-
 }

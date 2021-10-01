@@ -16,7 +16,9 @@
 
 import { Action } from './action';
 
-interface Args { [key: string]: string | number | boolean }
+interface Args {
+    [key: string]: string | number | boolean;
+}
 
 interface NavigationTarget {
     uri: string;
@@ -27,9 +29,12 @@ interface NavigationTarget {
 export class NavigateToExternalTargetAction implements Action {
     static readonly KIND = 'navigateToExternalTarget';
     readonly kind = NavigateToExternalTargetAction.KIND;
-    constructor(readonly target: NavigationTarget) { }
+    constructor(readonly target: NavigationTarget) {}
     static is(action?: Action): action is NavigateToExternalTargetAction {
-        return action !== undefined && (action.kind === NavigateToExternalTargetAction.KIND)
-            && (action as NavigateToExternalTargetAction).target !== undefined;
+        return (
+            action !== undefined &&
+            action.kind === NavigateToExternalTargetAction.KIND &&
+            (action as NavigateToExternalTargetAction).target !== undefined
+        );
     }
 }

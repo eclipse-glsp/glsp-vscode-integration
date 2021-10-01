@@ -29,7 +29,12 @@ export function isAction(object: any): object is Action {
 }
 
 export function isActionMessage(object: any): object is ActionMessage {
-    return typeof object === 'object' && object !== null &&
-        'clientId' in object && typeof object['clientId'] === 'string' &&
-        'action' in object && isAction(object.action);
+    return (
+        typeof object === 'object' &&
+        object !== null &&
+        'clientId' in object &&
+        typeof object['clientId'] === 'string' &&
+        'action' in object &&
+        isAction(object.action)
+    );
 }

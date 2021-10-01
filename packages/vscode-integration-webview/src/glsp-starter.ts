@@ -14,17 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 import { Container } from 'inversify';
-import {
-    DiagramServer,
-    NavigateToExternalTargetAction,
-    ExportSvgAction,
-    SelectAction,
-    TYPES
-} from '@eclipse-glsp/client';
-import {
-    RequestClipboardDataAction,
-    SetClipboardDataAction
-} from '@eclipse-glsp/client/lib/features/copy-paste/copy-paste-actions';
+import { DiagramServer, NavigateToExternalTargetAction, ExportSvgAction, SelectAction, TYPES } from '@eclipse-glsp/client';
+import { RequestClipboardDataAction, SetClipboardDataAction } from '@eclipse-glsp/client/lib/features/copy-paste/copy-paste-actions';
 import {
     SprottyDiagramIdentifier,
     SprottyStarter,
@@ -41,8 +32,9 @@ export abstract class GLSPStarter extends SprottyStarter {
     protected addVscodeBindings(container: Container, diagramIdentifier: SprottyDiagramIdentifier): void {
         container.bind(GLSPVscodeDiagramWidget).toSelf().inSingletonScope();
         container.bind(VscodeDiagramWidget).toService(GLSPVscodeDiagramWidget);
-        container.bind(VscodeDiagramWidgetFactory).toFactory(
-            context => () => context.container.get<GLSPVscodeDiagramWidget>(GLSPVscodeDiagramWidget));
+        container
+            .bind(VscodeDiagramWidgetFactory)
+            .toFactory(context => () => context.container.get<GLSPVscodeDiagramWidget>(GLSPVscodeDiagramWidget));
         container.bind(SprottyDiagramIdentifier).toConstantValue(diagramIdentifier);
         container.bind(GLSPVscodeDiagramServer).toSelf().inSingletonScope();
         container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);

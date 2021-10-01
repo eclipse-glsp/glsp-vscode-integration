@@ -22,13 +22,12 @@ export class RequestModelAction implements Action {
     static readonly KIND = 'requestModel';
     readonly kind = RequestModelAction.KIND;
 
-    constructor(public readonly options?: { [key: string]: JsonPrimitive },
-        public readonly requestId = '') { }
+    constructor(public readonly options?: { [key: string]: JsonPrimitive }, public readonly requestId = '') {}
 }
 
 export class SaveModelAction implements Action {
     static readonly KIND = 'saveModel';
-    constructor(public readonly fileUri?: string, public readonly kind: string = SaveModelAction.KIND) { }
+    constructor(public readonly fileUri?: string, public readonly kind: string = SaveModelAction.KIND) {}
 
     static is(action?: Action): action is SaveModelAction {
         return action !== undefined && action.kind === SaveModelAction.KIND;
@@ -37,12 +36,15 @@ export class SaveModelAction implements Action {
 
 export class SetDirtyStateAction implements Action {
     static readonly KIND = 'setDirtyState';
-    constructor(public readonly isDirty: boolean, public readonly reason?: string,
-        public readonly kind = SetDirtyStateAction.KIND) { }
+    constructor(public readonly isDirty: boolean, public readonly reason?: string, public readonly kind = SetDirtyStateAction.KIND) {}
 
     static is(action?: Action): action is SetDirtyStateAction {
-        return action !== undefined && action.kind === SetDirtyStateAction.KIND && 'isDirty' in action
-            && typeof action['isDirty'] === 'boolean';
+        return (
+            action !== undefined &&
+            action.kind === SetDirtyStateAction.KIND &&
+            'isDirty' in action &&
+            typeof action['isDirty'] === 'boolean'
+        );
     }
 }
 
@@ -53,4 +55,3 @@ export namespace DirtyStateChangeReason {
     export const SAVE = 'save';
     export const EXTERNAL = 'external';
 }
-

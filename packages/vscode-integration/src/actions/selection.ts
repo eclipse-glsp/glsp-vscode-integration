@@ -23,11 +23,14 @@ export class SelectAction implements Action {
         public readonly selectedElementsIDs: string[] = [],
         public readonly deselectedElementsIDs: string[] = [],
         public readonly kind = SelectAction.KIND
-    ) { }
+    ) {}
 
     static is(action?: Action): action is SelectAction {
-        return action !== undefined && action.kind === SelectAction.KIND
-            && 'selectedElementsIDs' in action
-            && 'deselectedElementsIDs' in action;
+        return (
+            action !== undefined &&
+            action.kind === SelectAction.KIND &&
+            'selectedElementsIDs' in action &&
+            'deselectedElementsIDs' in action
+        );
     }
 }

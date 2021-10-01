@@ -23,21 +23,19 @@ import { GlspEditorProvider } from '@eclipse-glsp/vscode-integration/lib/quickst
 export default class WorkflowEditorProvider extends GlspEditorProvider {
     diagramType = 'workflow-diagram';
 
-    constructor(
-        protected readonly extensionContext: vscode.ExtensionContext,
-        protected readonly glspVscodeConnector: GlspVscodeConnector
-    ) {
+    constructor(protected readonly extensionContext: vscode.ExtensionContext, protected readonly glspVscodeConnector: GlspVscodeConnector) {
         super(glspVscodeConnector);
     }
 
-    setUpWebview(_document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken, clientId: string): void {
-        const localResourceRootsUri = vscode.Uri.file(
-            path.join(this.extensionContext.extensionPath, './pack')
-        );
+    setUpWebview(
+        _document: vscode.CustomDocument,
+        webviewPanel: vscode.WebviewPanel,
+        _token: vscode.CancellationToken,
+        clientId: string
+    ): void {
+        const localResourceRootsUri = vscode.Uri.file(path.join(this.extensionContext.extensionPath, './pack'));
 
-        const webviewScriptSourceUri = vscode.Uri.file(
-            path.join(this.extensionContext.extensionPath, './pack/webview.js')
-        );
+        const webviewScriptSourceUri = vscode.Uri.file(path.join(this.extensionContext.extensionPath, './pack/webview.js'));
 
         webviewPanel.webview.options = {
             localResourceRoots: [localResourceRootsUri],

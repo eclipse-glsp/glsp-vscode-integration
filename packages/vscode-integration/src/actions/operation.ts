@@ -20,17 +20,17 @@ type Operation = Action;
 
 export class UndoOperation implements Operation {
     static readonly KIND = 'glspUndo';
-    constructor(public readonly kind = UndoOperation.KIND) { }
+    constructor(public readonly kind = UndoOperation.KIND) {}
 }
 
 export class RedoOperation implements Operation {
     static readonly KIND = 'glspRedo';
-    constructor(public readonly kind = RedoOperation.KIND) { }
+    constructor(public readonly kind = RedoOperation.KIND) {}
 }
 
 export class DeleteElementOperation implements Operation {
     static readonly KIND = 'deleteElement';
-    constructor(readonly elementIds: string[], public readonly kind: string = DeleteElementOperation.KIND) { }
+    constructor(readonly elementIds: string[], public readonly kind: string = DeleteElementOperation.KIND) {}
 
     static is(action?: Action): action is DeleteElementOperation {
         return action !== undefined && action.kind === DeleteElementOperation.KIND && 'elementIds' in action;
@@ -39,11 +39,9 @@ export class DeleteElementOperation implements Operation {
 
 export class LayoutOperation implements Operation {
     static readonly KIND = 'layout';
-    constructor(readonly elementIds: string[] = [], readonly kind = LayoutOperation.KIND) {
-    }
+    constructor(readonly elementIds: string[] = [], readonly kind = LayoutOperation.KIND) {}
 
     static is(action?: Action): action is LayoutOperation {
-        return action !== undefined && action.kind === LayoutOperation.KIND
-            && 'elementIds' in action;
+        return action !== undefined && action.kind === LayoutOperation.KIND && 'elementIds' in action;
     }
 }
