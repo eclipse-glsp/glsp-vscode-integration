@@ -13,25 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-
-import * as vscode from 'vscode';
-import * as process from 'process';
-import * as path from 'path';
-
 import {
-    GlspVscodeConnector,
-    NavigateAction,
-    LayoutOperation,
-    FitToScreenAction,
     CenterAction,
+    FitToScreenAction,
+    GlspVscodeConnector,
+    LayoutOperation,
+    NavigateAction,
     RequestExportSvgAction
 } from '@eclipse-glsp/vscode-integration';
-
-import {
-    GlspServerLauncher,
-    SocketGlspVscodeServer
-} from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
-
+import { GlspServerLauncher, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import * as path from 'path';
+import * as process from 'process';
+import * as vscode from 'vscode';
 import WorkflowEditorProvider from './workflow-editor-provider';
 
 const DEFAULT_SERVER_PORT = '5007';
@@ -108,4 +101,3 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         })
     );
 }
-

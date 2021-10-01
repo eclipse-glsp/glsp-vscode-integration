@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-
 import * as vscode from 'vscode';
 
 /**
@@ -21,7 +20,6 @@ import * as vscode from 'vscode';
  * interface.
  */
 export interface GlspVscodeClient<D extends vscode.CustomDocument = vscode.CustomDocument> {
-
     /**
      * A unique identifier for the client/panel with which the client will be registered
      * on the server.
@@ -70,7 +68,6 @@ export interface GlspVscodeClient<D extends vscode.CustomDocument = vscode.Custo
  * this interface.
  */
 export interface GlspVscodeServer {
-
     /**
      * An event emitter used by the VSCode extension to send messages to the server.
      *
@@ -114,7 +111,6 @@ interface InterceptorCallback {
 }
 
 export interface GlspVscodeConnectorOptions {
-
     /**
      * The GLSP server (or its wrapper) that the VSCode integration should use.
      */
@@ -167,9 +163,7 @@ export interface GlspVscodeConnectorOptions {
      * @returns A message that will be propagated to the server. If the message
      * is `undefined` the propagation will be cancelled.
      */
-    onBeforePropagateMessageToServer?(
-        originalMessage: unknown, processedMessage: unknown, messageChanged: boolean
-    ): unknown | undefined;
+    onBeforePropagateMessageToServer?(originalMessage: unknown, processedMessage: unknown, messageChanged: boolean): unknown | undefined;
 
     /**
      * Optional property to intercept (and/or modify) messages sent from the VSCode
@@ -191,7 +185,5 @@ export interface GlspVscodeConnectorOptions {
      * @returns A message that will be propagated to the client. If the message
      * is `undefined` the propagation will be cancelled.
      */
-    onBeforePropagateMessageToClient?(
-        originalMessage: unknown, processedMessage: unknown, messageChanged: boolean
-    ): unknown | undefined;
+    onBeforePropagateMessageToClient?(originalMessage: unknown, processedMessage: unknown, messageChanged: boolean): unknown | undefined;
 }

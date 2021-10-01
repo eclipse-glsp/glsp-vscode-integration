@@ -13,12 +13,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
-import 'reflect-metadata';
-
 import { createWorkflowDiagramContainer } from '@eclipse-glsp-examples/workflow-glsp';
 import { GLSPStarter } from '@eclipse-glsp/vscode-integration-webview';
+import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
 import { Container } from 'inversify';
+import 'reflect-metadata';
 import { SprottyDiagramIdentifier } from 'sprotty-vscode-webview';
 
 export class WorkflowGLSPStarter extends GLSPStarter {

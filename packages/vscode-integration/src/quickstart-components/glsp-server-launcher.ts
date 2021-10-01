@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
@@ -66,11 +65,7 @@ export class GlspServerLauncher implements vscode.Disposable {
                 throw Error(`Could not launch GLSP server. The given jar path is not valid: ${jarPath}`);
             }
 
-            const args = [
-                '-jar', this.options.jarPath,
-                '--port', `${this.options.serverPort}`,
-                ...this.options.additionalArgs
-            ];
+            const args = ['-jar', this.options.jarPath, '--port', `${this.options.serverPort}`, ...this.options.additionalArgs];
 
             const process = childProcess.spawn('java', args);
             this.serverProcess = process;

@@ -13,10 +13,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-
-import * as vscode from 'vscode';
-
 import { isActionMessage, isWebviewReadyMessage } from 'sprotty-vscode-protocol';
+import * as vscode from 'vscode';
 import { GlspVscodeConnector } from '../glsp-vscode-connector';
 
 /**
@@ -26,7 +24,6 @@ import { GlspVscodeConnector } from '../glsp-vscode-connector';
  * Webview setup needs to be implemented.
  */
 export abstract class GlspEditorProvider implements vscode.CustomEditorProvider {
-
     /** The diagram type identifier the diagram server is responsible for. */
     abstract diagramType: string;
 
@@ -35,9 +32,7 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
 
     onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentContentChangeEvent<vscode.CustomDocument>>;
 
-    constructor(
-        protected readonly glspVscodeConnector: GlspVscodeConnector
-    ) {
+    constructor(protected readonly glspVscodeConnector: GlspVscodeConnector) {
         this.onDidChangeCustomDocument = glspVscodeConnector.onDidChangeCustomDocument;
     }
 
@@ -45,7 +40,11 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         return this.glspVscodeConnector.saveDocument(document);
     }
 
-    saveCustomDocumentAs(document: vscode.CustomDocument, destination: vscode.Uri, _cancellation: vscode.CancellationToken): Thenable<void> {
+    saveCustomDocumentAs(
+        document: vscode.CustomDocument,
+        destination: vscode.Uri,
+        _cancellation: vscode.CancellationToken
+    ): Thenable<void> {
         return this.glspVscodeConnector.saveDocument(document, destination);
     }
 
@@ -62,12 +61,20 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         return Promise.resolve({ id: context.destination.toString(), delete: () => undefined });
     }
 
-    openCustomDocument(uri: vscode.Uri, _openContext: vscode.CustomDocumentOpenContext, _token: vscode.CancellationToken): vscode.CustomDocument | Thenable<vscode.CustomDocument> {
+    openCustomDocument(
+        uri: vscode.Uri,
+        _openContext: vscode.CustomDocumentOpenContext,
+        _token: vscode.CancellationToken
+    ): vscode.CustomDocument | Thenable<vscode.CustomDocument> {
         // Return the most basic implementation possible.
         return { uri, dispose: () => undefined };
     }
 
-    resolveCustomEditor(document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, token: vscode.CancellationToken): void | Thenable<void> {
+    resolveCustomEditor(
+        document: vscode.CustomDocument,
+        webviewPanel: vscode.WebviewPanel,
+        token: vscode.CancellationToken
+    ): void | Thenable<void> {
         // This is used to initialize sprotty for our diagram
         const sprottyDiagramIdentifier = {
             diagramType: this.diagramType,

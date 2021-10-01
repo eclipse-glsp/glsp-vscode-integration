@@ -20,11 +20,11 @@ import {
     ComputedBoundsAction,
     DeleteElementOperation,
     GLSP_TYPES,
+    ICopyPasteHandler,
     isDeleteElementOperation,
     isSetEditModeAction,
     registerDefaultGLSPServerActions,
-    SetEditModeAction,
-    ICopyPasteHandler
+    SetEditModeAction
 } from '@eclipse-glsp/client';
 import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';
@@ -70,7 +70,7 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
     }
 
     protected messageReceived(data: any): void {
-        const object = typeof (data) === 'string' ? JSON.parse(data) : data;
+        const object = typeof data === 'string' ? JSON.parse(data) : data;
         if (isActionMessage(object) && object.action) {
             if (!object.clientId || object.clientId === this.clientId) {
                 this.checkMessageOrigin(object);
@@ -105,5 +105,4 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
     protected handleSetEditModeAction(action: SetEditModeAction): boolean {
         return (action as any)[receivedFromServerProperty] !== true;
     }
-
 }

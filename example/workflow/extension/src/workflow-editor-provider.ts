@@ -13,31 +13,27 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-
-import * as vscode from 'vscode';
-import * as path from 'path';
-
 import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
 import { GlspEditorProvider } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import * as path from 'path';
+import * as vscode from 'vscode';
 
 export default class WorkflowEditorProvider extends GlspEditorProvider {
     diagramType = 'workflow-diagram';
 
-    constructor(
-        protected readonly extensionContext: vscode.ExtensionContext,
-        protected readonly glspVscodeConnector: GlspVscodeConnector
-    ) {
+    constructor(protected readonly extensionContext: vscode.ExtensionContext, protected readonly glspVscodeConnector: GlspVscodeConnector) {
         super(glspVscodeConnector);
     }
 
-    setUpWebview(_document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken, clientId: string): void {
-        const localResourceRootsUri = vscode.Uri.file(
-            path.join(this.extensionContext.extensionPath, './pack')
-        );
+    setUpWebview(
+        _document: vscode.CustomDocument,
+        webviewPanel: vscode.WebviewPanel,
+        _token: vscode.CancellationToken,
+        clientId: string
+    ): void {
+        const localResourceRootsUri = vscode.Uri.file(path.join(this.extensionContext.extensionPath, './pack'));
 
-        const webviewScriptSourceUri = vscode.Uri.file(
-            path.join(this.extensionContext.extensionPath, './pack/webview.js')
-        );
+        const webviewScriptSourceUri = vscode.Uri.file(path.join(this.extensionContext.extensionPath, './pack/webview.js'));
 
         webviewPanel.webview.options = {
             localResourceRoots: [localResourceRootsUri],

@@ -30,10 +30,12 @@ export abstract class GLSPVscodeDiagramWidget extends VscodeDiagramWidget {
             this.modelSource.clientId = this.diagramIdentifier.clientId;
         }
         this.actionDispatcher.dispatch(new InitializeClientSessionAction(this.diagramIdentifier.clientId));
-        this.actionDispatcher.dispatch(new RequestModelAction({
-            sourceUri: decodeURI(this.diagramIdentifier.uri),
-            diagramType: this.diagramIdentifier.diagramType
-        }));
+        this.actionDispatcher.dispatch(
+            new RequestModelAction({
+                sourceUri: decodeURI(this.diagramIdentifier.uri),
+                diagramType: this.diagramIdentifier.diagramType
+            })
+        );
 
         this.actionDispatcher.dispatch(new RequestTypeHintsAction(this.diagramIdentifier.diagramType));
         this.actionDispatcher.dispatch(new EnableToolPaletteAction());

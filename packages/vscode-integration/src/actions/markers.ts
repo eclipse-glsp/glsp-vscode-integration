@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-
 import { Action } from './action';
 
 export interface Marker {
@@ -25,7 +24,7 @@ export interface Marker {
 
 export class SetMarkersAction implements Action {
     static readonly KIND = 'setMarkers';
-    constructor(public readonly markers: Marker[], public readonly kind = SetMarkersAction.KIND) { }
+    constructor(public readonly markers: Marker[], public readonly kind = SetMarkersAction.KIND) {}
 
     static is(action?: Action): action is SetMarkersAction {
         return action !== undefined && action.kind === SetMarkersAction.KIND && 'markers' in action;

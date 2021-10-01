@@ -13,28 +13,26 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-
-import * as vscode from 'vscode';
 import * as fs from 'fs';
-
+import * as vscode from 'vscode';
 import {
-    isActionMessage,
-    SaveModelAction,
-    RequestModelAction,
-    SetDirtyStateAction,
-    DirtyStateChangeReason,
-    UndoOperation,
-    RedoOperation,
-    SetMarkersAction,
-    NavigateToExternalTargetAction,
-    SelectAction,
-    ExportSvgAction,
     Action,
-    ActionMessage
+    ActionMessage,
+    DirtyStateChangeReason,
+    ExportSvgAction,
+    isActionMessage,
+    NavigateToExternalTargetAction,
+    RedoOperation,
+    RequestModelAction,
+    SaveModelAction,
+    SelectAction,
+    SetDirtyStateAction,
+    SetMarkersAction,
+    UndoOperation
 } from './actions';
+import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
-import { GlspVscodeConnectorOptions, GlspVscodeClient } from './types';
-
+// eslint-disable-next-line no-shadow
 export enum MessageOrigin {
     CLIENT,
     SERVER
@@ -60,7 +58,6 @@ export interface MessageProcessingResult {
  * Selection updates can be listened to using the `onSelectionUpdate` property.
  */
 export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> implements vscode.Disposable {
-
     /** Maps clientId to corresponding GlspVscodeClient. */
     protected readonly clientMap = new Map<string, GlspVscodeClient<D>>();
     /** Maps Documents to corresponding clientId. */
@@ -118,9 +115,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
             // Run message through first user-provided interceptor (pre-receive)
             this.options.onBeforeReceiveMessageFromServer(message, (newMessage, shouldBeProcessedByConnector = true) => {
-                const { processedMessage, messageChanged } = shouldBeProcessedByConnector ?
-                    this.processMessage(newMessage, MessageOrigin.SERVER) :
-                    { processedMessage: message, messageChanged: false };
+                const { processedMessage, messageChanged } = shouldBeProcessedByConnector
+                    ? this.processMessage(newMessage, MessageOrigin.SERVER)
+                    : { processedMessage: message, messageChanged: false };
 
                 // Run message through second user-provided interceptor (pre-send) - processed
                 const filteredMessage = this.options.onBeforePropagateMessageToClient(newMessage, processedMessage, messageChanged);
@@ -130,11 +127,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             });
         });
 
-        this.disposables.push(
-            this.diagnostics,
-            this.selectionUpdateEmitter,
-            serverMessageListener
-        );
+        this.disposables.push(this.diagnostics, this.selectionUpdateEmitter, serverMessageListener);
     }
 
     /**
@@ -160,9 +153,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
             // Run message through first user-provided interceptor (pre-receive)
             this.options.onBeforeReceiveMessageFromClient(message, (newMessage, shouldBeProcessedByConnector = true) => {
-                const { processedMessage, messageChanged } = shouldBeProcessedByConnector ?
-                    this.processMessage(newMessage, MessageOrigin.CLIENT) :
-                    { processedMessage: message, messageChanged: false };
+                const { processedMessage, messageChanged } = shouldBeProcessedByConnector
+                    ? this.processMessage(newMessage, MessageOrigin.CLIENT)
+                    : { processedMessage: message, messageChanged: false };
 
                 const filteredMessage = this.options.onBeforePropagateMessageToServer(newMessage, processedMessage, messageChanged);
 
@@ -313,16 +306,19 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     ): MessageProcessingResult {
         if (client) {
             const SEVERITY_MAP = {
-                'info': vscode.DiagnosticSeverity.Information,
-                'warning': vscode.DiagnosticSeverity.Warning,
-                'error': vscode.DiagnosticSeverity.Error
+                info: vscode.DiagnosticSeverity.Information,
+                warning: vscode.DiagnosticSeverity.Warning,
+                error: vscode.DiagnosticSeverity.Error
             };
 
-            const updatedDiagnostics = message.action.markers.map(marker => new vscode.Diagnostic(
-                new vscode.Range(0, 0, 0, 0), // Must have be defined as such - no workarounds
-                marker.description,
-                SEVERITY_MAP[marker.kind]
-            ));
+            const updatedDiagnostics = message.action.markers.map(
+                marker =>
+                    new vscode.Diagnostic(
+                        new vscode.Range(0, 0, 0, 0), // Must have be defined as such - no workarounds
+                        marker.description,
+                        SEVERITY_MAP[marker.kind]
+                    )
+            );
 
             this.diagnostics.set(client.document.uri, updatedDiagnostics);
         }
@@ -348,11 +344,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             showOptions = { ...args, ...JSON.parse(showOptionsField.toString()) };
         }
 
-        vscode.window.showTextDocument(vscode.Uri.parse(uri), showOptions)
-            .then(
-                () => undefined, // onFulfilled: Do nothing.
-                () => undefined // onRejected: Do nothing - This is needed as error handling in case the navigationTarget does not exist.
-            );
+        vscode.window.showTextDocument(vscode.Uri.parse(uri), showOptions).then(
+            () => undefined, // onFulfilled: Do nothing.
+            () => undefined // onRejected: Do nothing - This is needed as error handling in case the navigationTarget does not exist.
+        );
 
         // Do not propagate action
         return { processedMessage: undefined, messageChanged: true };
@@ -382,12 +377,13 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         _client: GlspVscodeClient<D> | undefined,
         _origin: MessageOrigin
     ): MessageProcessingResult {
-        vscode.window.showSaveDialog({
-            filters: { 'SVG': ['svg'] },
-            saveLabel: 'Export',
-            title: 'Export as SVG'
-        }).then(
-            (uri: vscode.Uri | undefined) => {
+        vscode.window
+            .showSaveDialog({
+                filters: { SVG: ['svg'] },
+                saveLabel: 'Export',
+                title: 'Export as SVG'
+            })
+            .then((uri: vscode.Uri | undefined) => {
                 if (uri) {
                     fs.writeFile(uri.fsPath, message.action.svg, { encoding: 'utf-8' }, err => {
                         if (err) {
@@ -395,9 +391,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                         }
                     });
                 }
-            },
-            console.error
-        );
+            }, console.error);
 
         // Do not propagate action to avoid an infinite loop, as both, client and server will mirror the Export SVG action
         return { processedMessage: undefined, messageChanged: true };
@@ -443,10 +437,13 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     public async revertDocument(document: D, diagramType: string): Promise<void> {
         const clientId = this.documentMap.get(document);
         if (clientId) {
-            this.sendActionToClient(clientId, new RequestModelAction({
-                sourceUri: document.uri.toString(),
-                diagramType
-            }));
+            this.sendActionToClient(
+                clientId,
+                new RequestModelAction({
+                    sourceUri: document.uri.toString(),
+                    diagramType
+                })
+            );
         } else {
             if (this.options.logging) {
                 console.error('Backup failed: Document not registered');

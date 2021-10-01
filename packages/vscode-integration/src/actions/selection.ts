@@ -13,7 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-
 import { Action } from './action';
 
 export class SelectAction implements Action {
@@ -23,11 +22,14 @@ export class SelectAction implements Action {
         public readonly selectedElementsIDs: string[] = [],
         public readonly deselectedElementsIDs: string[] = [],
         public readonly kind = SelectAction.KIND
-    ) { }
+    ) {}
 
     static is(action?: Action): action is SelectAction {
-        return action !== undefined && action.kind === SelectAction.KIND
-            && 'selectedElementsIDs' in action
-            && 'deselectedElementsIDs' in action;
+        return (
+            action !== undefined &&
+            action.kind === SelectAction.KIND &&
+            'selectedElementsIDs' in action &&
+            'deselectedElementsIDs' in action
+        );
     }
 }
