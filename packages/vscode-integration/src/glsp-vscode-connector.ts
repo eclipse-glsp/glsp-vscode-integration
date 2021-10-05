@@ -364,6 +364,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         }
 
         if (origin === MessageOrigin.CLIENT) {
+            // eslint-disable-next-line max-len
             // Do not propagate action if it comes from client to avoid an infinite loop, as both, client and server will mirror the Selection action
             return { processedMessage: undefined, messageChanged: true };
         } else {
