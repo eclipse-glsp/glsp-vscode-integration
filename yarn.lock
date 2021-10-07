@@ -40,20 +40,20 @@
     autocompleter "5.1.0"
     sprotty next
 
-"@eclipse-glsp/config@0.9.0-next.620be0c0":
-  version "0.9.0-next.620be0c0"
-  resolved "https://registry.yarnpkg.com/@eclipse-glsp/config/-/config-0.9.0-next.620be0c0.tgz#1667eee3904890412e08a87dc9b27646f67cb2fa"
-  integrity sha512-8lWHaiwKSc61C4QQ9IMiq91r9qV6WCc91LBDnBitLsXc1NKowcnLcF/F+aLgCRtQdWVMQCM0692H8sU+ulH6Fg==
+"@eclipse-glsp/config@0.9.0-next.a3910f6a":
+  version "0.9.0-next.a3910f6a"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/config/-/config-0.9.0-next.a3910f6a.tgz#bbb4cef669d5151f6452e31f71c0e05220c7f13d"
+  integrity sha512-RmO8753dQQA07wh0fJtVWbs+NYTij7kk/VcwgVR+H2uYy6y/EelIo+tZ1XMO6i4lZyPJ18Ue6If4qJSPZv8BBw==
   dependencies:
-    "@eclipse-glsp/eslint-config" "0.9.0-next.620be0c0"
-    "@eclipse-glsp/prettier-config" "0.9.0-next.620be0c0"
-    "@eclipse-glsp/ts-config" "0.9.0-next.620be0c0"
+    "@eclipse-glsp/eslint-config" "0.9.0-next.a3910f6a"
+    "@eclipse-glsp/prettier-config" "0.9.0-next.a3910f6a"
+    "@eclipse-glsp/ts-config" "0.9.0-next.a3910f6a"
     prettier "^2.4.1"
 
-"@eclipse-glsp/eslint-config@0.9.0-next.620be0c0":
-  version "0.9.0-next.620be0c0"
-  resolved "https://registry.yarnpkg.com/@eclipse-glsp/eslint-config/-/eslint-config-0.9.0-next.620be0c0.tgz#7d69ffb4e16becf1f97c5777d18342199f5459af"
-  integrity sha512-fEtbR+JmC0XWSeavBk2RohY2ZTmAx4Tvtzkun1hqPL0dEcGJZZrkI93mAI5FkIYzDOzQ9z31iihUSPeb92YcUA==
+"@eclipse-glsp/eslint-config@0.9.0-next.a3910f6a":
+  version "0.9.0-next.a3910f6a"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/eslint-config/-/eslint-config-0.9.0-next.a3910f6a.tgz#71168f0d2e5ddc44adfb4cf2a951166726024304"
+  integrity sha512-mVl2SFrFrLDKGYEIvdAa0K0/ZSDki/Micway3CAhhlJfDig5UYMST26TwwCMjSKqT4+7svoCUp1oiVjnz18RnA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.32.0"
     "@typescript-eslint/parser" "^4.32.0"
@@ -63,10 +63,10 @@
     eslint-plugin-import "^2.24.2"
     eslint-plugin-no-null "^1.0.2"
 
-"@eclipse-glsp/prettier-config@0.9.0-next.620be0c0":
-  version "0.9.0-next.620be0c0"
-  resolved "https://registry.yarnpkg.com/@eclipse-glsp/prettier-config/-/prettier-config-0.9.0-next.620be0c0.tgz#20993c0cefe8c0f5479174fa773556bea4889122"
-  integrity sha512-J2/BwcEL4tuo09zPoXlXxqrdaVNTqgYRYxTXG9yZf+x9qgkGm5swDR1aAYyYSxr0mzh0LDWLvxPZpzqMzZ/vTA==
+"@eclipse-glsp/prettier-config@0.9.0-next.a3910f6a":
+  version "0.9.0-next.a3910f6a"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/prettier-config/-/prettier-config-0.9.0-next.a3910f6a.tgz#e8b4f9355aeafa39ee635a692f95de42e065cc05"
+  integrity sha512-m/lPeuafVx0+kVAZmoncFRZ5kntMbcoMfYPcn1UYR3srDGWThr75rHN4OWpfOM2sVg7p5CsuS7FvdQiJdYwzdQ==
 
 "@eclipse-glsp/protocol@0.9.0-next.7d7aab40", "@eclipse-glsp/protocol@next":
   version "0.9.0-next.7d7aab40"
@@ -76,10 +76,10 @@
     uuid "7.0.3"
     vscode-ws-jsonrpc "0.2.0"
 
-"@eclipse-glsp/ts-config@0.9.0-next.620be0c0":
-  version "0.9.0-next.620be0c0"
-  resolved "https://registry.yarnpkg.com/@eclipse-glsp/ts-config/-/ts-config-0.9.0-next.620be0c0.tgz#f7a148432c12d166806e44f4bb5a7c6ba7d071e4"
-  integrity sha512-ukexiJnfIPZegrCN3GQMPTCmpzcDZ/3HGRLu1q6jc4Ul1hsb7FfsbWJpMTaOq79VYXPrZhjGEYpbmrm+HkEnEQ==
+"@eclipse-glsp/ts-config@0.9.0-next.a3910f6a":
+  version "0.9.0-next.a3910f6a"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/ts-config/-/ts-config-0.9.0-next.a3910f6a.tgz#972bfe7b31f37f19883209193ca51f804d3dd0e7"
+  integrity sha512-9cjgHOdOkB22VVJhrRYllsnRTHQNuG5wO45TJbQW/eusH/aNOTm0SSnKqzwQ/rh0Q4hpb9NiKFXvj0lLZ6XZbg==
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
