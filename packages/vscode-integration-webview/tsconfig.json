@@ -3,9 +3,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["reflect-metadata"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
