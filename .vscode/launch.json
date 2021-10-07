@@ -17,7 +17,7 @@
         "${workspaceFolder}/example/workflow/extension/lib/*.js",
         "${workspaceFolder}/vscode-integration/lib/**/*.js"
       ],
-      "sourceMaps": true,
+      "sourceMaps": true
     },
     {
       "name": "Workflow GLSP Example Extension (External GLSP Server)",

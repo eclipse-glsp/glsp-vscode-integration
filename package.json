@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@types/vscode": "^1.54.0",
-    "@eclipse-glsp/config": "0.9.0-next.0e05932b",
+    "@eclipse-glsp/config": "0.9.0-next.a3910f6a",
     "rimraf": "^2.6.3",
     "lerna": "^2.2.0",
     "mvn-artifact-download": "5.1.0",

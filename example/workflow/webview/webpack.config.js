@@ -7,9 +7,9 @@ const outputPath = path.resolve(__dirname, '../extension/pack');
 const config = {
     target: 'web',
 
-    entry: path.resolve(__dirname, 'src/main.ts'),
+    entry: path.resolve(__dirname, 'src/index.ts'),
     output: {
-		filename: 'webview.js',
+        filename: 'webview.js',
         path: outputPath
     },
     devtool: 'eval-source-map',
@@ -35,7 +35,7 @@ const config = {
             }
         ]
     },
-    node : { fs: 'empty', net: 'empty' }
+    node: { fs: 'empty', net: 'empty' }
 };
 
 module.exports = config;

@@ -41,7 +41,8 @@
     animation: fadein 0.3s;
 }
 
-.command-palette.validation.error input, .command-palette.validation.error input:focus {
+.command-palette.validation.error input,
+.command-palette.validation.error input:focus {
     color: var(--vscode-inputValidation-errorForeground);
     outline-color: var(--vscode-inputValidation-errorBorder);
 }
@@ -51,7 +52,8 @@
     background-color: var(--vscode-inputValidation-errorBorder);
 }
 
-.command-palette.validation.warning input, .command-palette.validation.warning input:focus {
+.command-palette.validation.warning input,
+.command-palette.validation.warning input:focus {
     color: var(--vscode-inputValidation-warningForeground);
     outline-color: var(--vscode-inputValidation-warningBorder);
 }
@@ -81,11 +83,11 @@
     line-height: var(--vscode-content-line-height);
 }
 
-.command-palette .command-palette-suggestions>div:hover:not(.group) {
+.command-palette .command-palette-suggestions > div:hover:not(.group) {
     background: var(--vscode-menubar-selectionBackground);
 }
 
-.command-palette .command-palette-suggestions>div.selected {
+.command-palette .command-palette-suggestions > div.selected {
     background: var(--vscode-menu-selectionBackground);
     color: var(--vscode-menu-selectionForeground);
 }
