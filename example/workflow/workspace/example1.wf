@@ -81,8 +81,8 @@
       ],
       "type": "task:manual",
       "position": {
-        "x": 470.0,
-        "y": 250.0
+        "x": 40.0,
+        "y": 120.0
       },
       "size": {
         "width": 101.90625,
@@ -176,8 +176,8 @@
       ],
       "type": "task:manual",
       "position": {
-        "x": 930.0,
-        "y": 150.0
+        "x": 500.0,
+        "y": 20.0
       },
       "size": {
         "width": 105.5625,
@@ -271,8 +271,8 @@
       ],
       "type": "task:manual",
       "position": {
-        "x": 670.0,
-        "y": 320.0
+        "x": 240.0,
+        "y": 190.0
       },
       "size": {
         "width": 115.21875,
@@ -366,8 +366,8 @@
       ],
       "type": "task:manual",
       "position": {
-        "x": 930.0,
-        "y": 360.0
+        "x": 500.0,
+        "y": 230.0
       },
       "size": {
         "width": 128.953125,
@@ -461,8 +461,8 @@
       ],
       "type": "task:manual",
       "position": {
-        "x": 1260.0,
-        "y": 250.0
+        "x": 830.0,
+        "y": 120.0
       },
       "size": {
         "width": 102.359375,
@@ -556,8 +556,8 @@
       ],
       "type": "task:manual",
       "position": {
-        "x": 930.0,
-        "y": 290.0
+        "x": 500.0,
+        "y": 160.0
       },
       "size": {
         "width": 126.34375,
@@ -651,8 +651,8 @@
       ],
       "type": "task:automated",
       "position": {
-        "x": 670.0,
-        "y": 180.0
+        "x": 240.0,
+        "y": 50.0
       },
       "size": {
         "width": 116.671875,
@@ -746,8 +746,8 @@
       ],
       "type": "task:automated",
       "position": {
-        "x": 930.0,
-        "y": 220.0
+        "x": 500.0,
+        "y": 90.0
       },
       "size": {
         "width": 109.109375,
@@ -766,8 +766,8 @@
       "id": "activityNode1",
       "type": "activityNode:merge",
       "position": {
-        "x": 1100.0,
-        "y": 190.0
+        "x": 670.0,
+        "y": 60.0
       },
       "size": {
         "width": 32.0,
@@ -795,8 +795,8 @@
       "id": "activityNode2",
       "type": "activityNode:decision",
       "position": {
-        "x": 840.0,
-        "y": 330.0
+        "x": 410.0,
+        "y": 200.0
       },
       "size": {
         "width": 32.0,
@@ -818,8 +818,8 @@
       "id": "activityNode4",
       "type": "activityNode:merge",
       "position": {
-        "x": 1110.0,
-        "y": 330.0
+        "x": 680.0,
+        "y": 200.0
       },
       "size": {
         "width": 32.0,
@@ -847,8 +847,8 @@
       "id": "b00fc494-0fa4-4448-8bf9-162c2c0865e4",
       "type": "activityNode:decision",
       "position": {
-        "x": 830.0,
-        "y": 190.0
+        "x": 400.0,
+        "y": 60.0
       },
       "size": {
         "width": 32.0,
@@ -876,8 +876,8 @@
       ],
       "type": "activityNode:fork",
       "position": {
-        "x": 590.0,
-        "y": 250.0
+        "x": 160.0,
+        "y": 120.0
       },
       "size": {
         "width": 10.0,
@@ -904,8 +904,8 @@
       ],
       "type": "activityNode:join",
       "position": {
-        "x": 1220.0,
-        "y": 250.0
+        "x": 770.0,
+        "y": 120.0
       },
       "size": {
         "width": 10.0,
@@ -971,5 +971,5 @@
     }
   ],
   "type": "graph",
-  "revision": 18
+  "revision": 3
 }
