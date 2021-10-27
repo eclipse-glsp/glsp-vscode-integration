@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import { GLSPClient, InitializeResult } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 
 /**
@@ -25,6 +26,11 @@ export interface GlspVscodeClient<D extends vscode.CustomDocument = vscode.Custo
      * on the server.
      */
     readonly clientId: string;
+
+    /**
+     * Unique identifier of the diagram type that this client can handle.
+     */
+    readonly diagramType: string;
 
     /**
      * The webview belonging to the client.
@@ -92,6 +98,18 @@ export interface GlspVscodeServer {
      * and processed.
      */
     readonly onServerMessage: vscode.Event<unknown>;
+
+    /**
+     * The {@link GLSPClient} instance that is used by this server wrapper to communicate with the
+     * GLSP server process.
+     */
+    readonly glspClient: Promise<GLSPClient>;
+
+    /**
+     * The result of the {@link GLSPClient.initializeServer} call. Implementing classes are expected
+     * to call this method during the their initialization phase.
+     */
+    readonly initializeResult: Promise<InitializeResult>;
 }
 
 interface InterceptorCallback {
@@ -186,4 +204,11 @@ export interface GlspVscodeConnectorOptions {
      * is `undefined` the propagation will be cancelled.
      */
     onBeforePropagateMessageToClient?(originalMessage: unknown, processedMessage: unknown, messageChanged: boolean): unknown | undefined;
+}
+
+export interface GLSPDiagramIdentifier {
+    clientId: string;
+    diagramType: string;
+    uri: string;
+    initializeResult?: InitializeResult;
 }

@@ -175,25 +175,34 @@
     "server",
     "webview"
   ],
-  "main": "./lib/workflow-extension",
+  "dependencies": {
+    "@vscode/codicons": "^0.0.25"
+  },
+  "main": "./lib/index",
   "devDependencies": {
     "@eclipse-glsp/vscode-integration": "0.9.0",
-    "@types/node": "^8.0.0",
+    "@types/vscode": "^1.54.0",
+    "reflect-metadata": "^0.1.13",
     "path": "^0.12.7",
     "rimraf": "^2.6.3",
     "ts-loader": "^6.2.1",
     "ts-node": "^9.1.1",
-    "typescript": "^3.1.3",
-    "vscode": "^1.1.21",
+    "typescript": "^4.4.3",
     "workflow-glsp-webview": "0.9.0"
   },
   "scripts": {
-    "prepare": "npx vscode-install && yarn clean && yarn build && yarn lint",
+    "prepare": "yarn clean && yarn build && yarn lint",
     "clean": "rimraf extension/lib extension/pack extension/server",
     "watch": "tsc -w",
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
     "build": "tsc  && yarn download:Server",
     "publish": "vsce publish",
     "download:Server": "ts-node ../scripts/download.ts"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**/@vscode/codicons",
+      "**/@vscode/codicons/**"
+    ]
   }
 }

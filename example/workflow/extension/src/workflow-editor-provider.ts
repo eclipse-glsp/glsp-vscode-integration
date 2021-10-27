@@ -15,7 +15,6 @@
  ********************************************************************************/
 import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
 import { GlspEditorProvider } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
-import * as path from 'path';
 import * as vscode from 'vscode';
 
 export default class WorkflowEditorProvider extends GlspEditorProvider {
@@ -31,12 +30,14 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
         _token: vscode.CancellationToken,
         clientId: string
     ): void {
-        const localResourceRootsUri = vscode.Uri.file(path.join(this.extensionContext.extensionPath, './pack'));
-
-        const webviewScriptSourceUri = vscode.Uri.file(path.join(this.extensionContext.extensionPath, './pack/webview.js'));
+        const webview = webviewPanel.webview;
+        const extensionUri = this.extensionContext.extensionUri;
+        const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'pack', 'webview.js'));
+        const codiconsUri = webview.asWebviewUri(
+            vscode.Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css')
+        );
 
         webviewPanel.webview.options = {
-            localResourceRoots: [localResourceRootsUri],
             enableScripts: true
         };
 
@@ -46,14 +47,15 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, height=device-height">
-                    <link
-                        rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-                        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-                        crossorigin="anonymous">
+					<meta http-equiv="Content-Security-Policy" content="
+                default-src http://*.fontawesome.com  ${webview.cspSource} 'unsafe-inline' 'unsafe-eval';
+                ">
+				<link href="${codiconsUri}" rel="stylesheet" />
+
                 </head>
                 <body>
                     <div id="${clientId}_container" style="height: 100%;"></div>
-                    <script src="${webviewPanel.webview.asWebviewUri(webviewScriptSourceUri).toString()}"></script>
+                    <script src="${webviewScriptSourceUri}"></script>
                 </body>
             </html>`;
     }

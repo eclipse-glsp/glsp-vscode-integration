@@ -13,27 +13,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Action } from './action';
+import 'reflect-metadata';
+import * as vscode from 'vscode';
+import { activate as extensionActivate } from './workflow-extension';
 
-interface Args {
-    [key: string]: string | number | boolean;
-}
-
-interface NavigationTarget {
-    uri: string;
-    label?: string;
-    args?: Args;
-}
-
-export class NavigateToExternalTargetAction implements Action {
-    static readonly KIND = 'navigateToExternalTarget';
-    readonly kind = NavigateToExternalTargetAction.KIND;
-    constructor(readonly target: NavigationTarget) {}
-    static is(action?: Action): action is NavigateToExternalTargetAction {
-        return (
-            action !== undefined &&
-            action.kind === NavigateToExternalTargetAction.KIND &&
-            (action as NavigateToExternalTargetAction).target !== undefined
-        );
-    }
+export function activate(context: vscode.ExtensionContext): Promise<void> {
+    return extensionActivate(context);
 }

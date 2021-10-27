@@ -13,11 +13,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { ApplicationIdProvider, BaseJsonrpcGLSPClient } from '@eclipse-glsp/protocol';
+import {
+    ApplicationIdProvider,
+    BaseJsonrpcGLSPClient,
+    GLSPClient,
+    InitializeParameters,
+    InitializeResult,
+    isActionMessage
+} from '@eclipse-glsp/protocol';
 import * as net from 'net';
 import * as vscode from 'vscode';
 import { createMessageConnection, SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc';
-import { isActionMessage } from '../actions';
 import { GlspVscodeServer } from '../types';
 
 interface SocketGlspVscodeServerOptions {
@@ -48,10 +54,11 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
     protected readonly onServerSendEmitter = new vscode.EventEmitter<unknown>();
 
     protected readonly socket = new net.Socket();
-    protected readonly glspClient: BaseJsonrpcGLSPClient;
+    protected readonly _glspClient: GLSPClient;
 
     protected readonly onReady: Promise<void>;
     protected setReady: () => void;
+    _initializeResult: InitializeResult;
 
     constructor(protected readonly options: SocketGlspVscodeServerOptions) {
         this.onReady = new Promise(resolve => {
@@ -64,16 +71,15 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
         const writer = new SocketMessageWriter(this.socket);
         const connection = createMessageConnection(reader, writer);
 
-        this.glspClient = new BaseJsonrpcGLSPClient({
+        this._glspClient = new BaseJsonrpcGLSPClient({
             id: options.clientId,
-            name: options.clientName,
             connectionProvider: connection
         });
 
         this.onSendToServerEmitter.event(message => {
             this.onReady.then(() => {
                 if (isActionMessage(message)) {
-                    this.glspClient.sendActionMessage(message);
+                    this._glspClient.sendActionMessage(message);
                 }
             });
         });
@@ -85,28 +91,44 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
     async start(): Promise<void> {
         this.socket.connect(this.options.serverPort);
 
-        await this.glspClient.start();
-        await this.glspClient.initializeServer({ applicationId: ApplicationIdProvider.get() });
+        await this._glspClient.start();
+        const parameters = await this.createInitializeParameters();
+        this._initializeResult = await this._glspClient.initializeServer(parameters);
 
         // The listener cant be registered before `glspClient.start()` because the
         // glspClient will reject the listener if it has not connected to the server yet.
-        this.glspClient.onActionMessage(message => {
+        this._glspClient.onActionMessage(message => {
             this.onServerSendEmitter.fire(message);
         });
 
         this.setReady();
     }
 
+    protected async createInitializeParameters(): Promise<InitializeParameters> {
+        return {
+            applicationId: ApplicationIdProvider.get(),
+            protocolVersion: GLSPClient.protocolVersion
+        };
+    }
+
     /**
      * Stops the client. It cannot be restarted.
      */
     async stop(): Promise<void> {
-        return this.glspClient.stop();
+        return this._glspClient.stop();
     }
 
     dispose(): void {
         this.onSendToServerEmitter.dispose();
         this.onServerSendEmitter.dispose();
         this.stop();
+    }
+
+    get initializeResult(): Promise<InitializeResult> {
+        return this.onReady.then(() => this._initializeResult);
+    }
+
+    get glspClient(): Promise<GLSPClient> {
+        return this.onReady.then(() => this._glspClient);
     }
 }

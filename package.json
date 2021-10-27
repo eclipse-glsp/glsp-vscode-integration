@@ -11,19 +11,19 @@
     "lint": "lerna run lint --",
     "publish:latest": "lerna publish",
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
-    "upgrade:next": "yarn upgrade -p \"@eclipse-glsp.*\" --next",
+    "upgrade:next": "yarn upgrade -p \"@eclipse-glsp.*|sprotty\" --next",
     "build:ci": "lerna run build:ci"
   },
   "devDependencies": {
+    "@eclipse-glsp/config": "next",
     "@types/vscode": "^1.54.0",
-    "@eclipse-glsp/config": "0.9.0-next.a3910f6a",
-    "rimraf": "^2.6.3",
     "lerna": "^2.2.0",
     "mvn-artifact-download": "5.1.0",
-    "typescript": "^3.9.7"
+    "rimraf": "^2.6.3",
+    "typescript": "^4.4.3"
   },
   "resolutions": {
-    "**/sprotty": "0.10.0-next.0e06051"
+    "**/sprotty": "0.11.0-next.ef11ae9"
   },
   "workspaces": [
     "packages/*/",

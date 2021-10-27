@@ -13,13 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import {
-    DiagramServer,
-    EnableToolPaletteAction,
-    InitializeClientSessionAction,
-    RequestModelAction,
-    RequestTypeHintsAction
-} from '@eclipse-glsp/client';
+import { DiagramServer, EnableToolPaletteAction, RequestModelAction, RequestTypeHintsAction } from '@eclipse-glsp/client';
 import { injectable } from 'inversify';
 import { VscodeDiagramWidget } from 'sprotty-vscode-webview';
 
@@ -29,7 +23,6 @@ export abstract class GLSPVscodeDiagramWidget extends VscodeDiagramWidget {
         if (this.modelSource instanceof DiagramServer) {
             this.modelSource.clientId = this.diagramIdentifier.clientId;
         }
-        this.actionDispatcher.dispatch(new InitializeClientSessionAction(this.diagramIdentifier.clientId));
         this.actionDispatcher.dispatch(
             new RequestModelAction({
                 sourceUri: decodeURI(this.diagramIdentifier.uri),

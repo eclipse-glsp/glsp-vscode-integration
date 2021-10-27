@@ -13,23 +13,25 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Action } from './action';
 
-export class SelectAction implements Action {
-    static readonly KIND = 'elementSelected';
+import { Action, Args, isActionKind, isString } from '@eclipse-glsp/protocol';
 
-    constructor(
-        public readonly selectedElementsIDs: string[] = [],
-        public readonly deselectedElementsIDs: string[] = [],
-        public readonly kind = SelectAction.KIND
-    ) {}
+export class RequestExportSvgAction implements Action {
+    static readonly KIND = 'requestExportSvg';
 
-    static is(action?: Action): action is SelectAction {
-        return (
-            action !== undefined &&
-            action.kind === SelectAction.KIND &&
-            'selectedElementsIDs' in action &&
-            'deselectedElementsIDs' in action
-        );
-    }
+    constructor(readonly kind = RequestExportSvgAction.KIND) {}
+}
+
+export function isRequestExportSvgAction(action: any): action is RequestExportSvgAction {
+    return isActionKind(action, RequestExportSvgAction.KIND);
+}
+
+export class NavigateAction implements Action {
+    static readonly KIND = 'navigate';
+    readonly kind = NavigateAction.KIND;
+    constructor(readonly targetTypeId: string, readonly args?: Args) {}
+}
+
+export function isNavigateAction(action: any): action is NavigateAction {
+    return isActionKind(action, NavigateAction.KIND) && isString(action, 'targetTypeId');
 }

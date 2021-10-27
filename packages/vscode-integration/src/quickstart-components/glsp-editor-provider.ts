@@ -16,6 +16,7 @@
 import { isActionMessage, isWebviewReadyMessage } from 'sprotty-vscode-protocol';
 import * as vscode from 'vscode';
 import { GlspVscodeConnector } from '../glsp-vscode-connector';
+import { GLSPDiagramIdentifier } from '../types';
 
 /**
  * An extensible base class to create a CustomEditorProvider that takes care of
@@ -70,13 +71,13 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         return { uri, dispose: () => undefined };
     }
 
-    resolveCustomEditor(
+    async resolveCustomEditor(
         document: vscode.CustomDocument,
         webviewPanel: vscode.WebviewPanel,
         token: vscode.CancellationToken
-    ): void | Thenable<void> {
-        // This is used to initialize sprotty for our diagram
-        const sprottyDiagramIdentifier = {
+    ): Promise<void> {
+        // This is used to initialize GLSP for our diagram
+        const diagramIdentifier: GLSPDiagramIdentifier = {
             diagramType: this.diagramType,
             uri: serializeUri(document.uri),
             clientId: `${this.diagramType}_${this.viewCount++}`
@@ -131,18 +132,20 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         });
 
         // Register document/diagram panel/model in vscode connector
-        this.glspVscodeConnector.registerClient({
-            clientId: sprottyDiagramIdentifier.clientId,
+        const initializeResult = await this.glspVscodeConnector.registerClient({
+            clientId: diagramIdentifier.clientId,
+            diagramType: diagramIdentifier.diagramType,
             document: document,
             webviewPanel: webviewPanel,
             onClientMessage: sendMessageToServerEmitter.event,
             onSendToClientEmitter: receiveMessageFromServerEmitter
         });
 
+        diagramIdentifier.initializeResult = initializeResult;
         // Initialize diagram
-        sendMessageToWebview(sprottyDiagramIdentifier);
+        sendMessageToWebview(diagramIdentifier);
 
-        this.setUpWebview(document, webviewPanel, token, sprottyDiagramIdentifier.clientId);
+        this.setUpWebview(document, webviewPanel, token, diagramIdentifier.clientId);
     }
 
     /**

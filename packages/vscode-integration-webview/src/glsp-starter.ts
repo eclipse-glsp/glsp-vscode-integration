@@ -13,8 +13,16 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { DiagramServer, ExportSvgAction, NavigateToExternalTargetAction, SelectAction, TYPES } from '@eclipse-glsp/client';
-import { RequestClipboardDataAction, SetClipboardDataAction } from '@eclipse-glsp/client/lib/features/copy-paste/copy-paste-actions';
+import {
+    configureServerActions,
+    DiagramServer,
+    ExportSvgAction,
+    NavigateToExternalTargetAction,
+    RequestClipboardDataAction,
+    SelectAction,
+    SetClipboardDataAction,
+    TYPES
+} from '@eclipse-glsp/client';
 import { Container } from 'inversify';
 import {
     SprottyDiagramIdentifier,
@@ -23,17 +31,46 @@ import {
     VscodeDiagramWidget,
     VscodeDiagramWidgetFactory
 } from 'sprotty-vscode-webview';
+import { GLSPDiagramIdentifier, isDiagramIdentifier } from './diagram-identifer';
 import { GLSPVscodeExtensionActionHandler } from './extension-action-handler';
 import { GLSPVscodeDiagramWidget } from './glsp-vscode-diagram-widget';
 import { GLSPVscodeDiagramServer } from './glsp-vscode-diagramserver';
 
 export abstract class GLSPStarter extends SprottyStarter {
-    protected addVscodeBindings(container: Container, diagramIdentifier: SprottyDiagramIdentifier): void {
+    protected acceptDiagramIdentifier(): void {
+        console.log('Waiting for diagram identifier...');
+        const eventListener = (message: any): void => {
+            if (isDiagramIdentifier(message.data)) {
+                console.log(message);
+                if (this.container) {
+                    const oldIdentifier = this.container.get<GLSPDiagramIdentifier>(GLSPDiagramIdentifier);
+                    const newIdentifier = message.data as GLSPDiagramIdentifier;
+                    oldIdentifier.diagramType = newIdentifier.diagramType;
+                    oldIdentifier.uri = newIdentifier.uri;
+                    const diagramWidget = this.container.get(VscodeDiagramWidget);
+                    diagramWidget.requestModel();
+                } else {
+                    console.log('...received...', message);
+                    const diagramIdentifier = message.data as GLSPDiagramIdentifier;
+                    this.container = this.createContainer(diagramIdentifier);
+                    this.addVscodeBindings(this.container, diagramIdentifier);
+                    if (diagramIdentifier.initializeResult) {
+                        configureServerActions(diagramIdentifier.initializeResult, diagramIdentifier.diagramType, this.container);
+                    }
+                    this.container.get(VscodeDiagramWidget);
+                }
+            }
+        };
+        window.addEventListener('message', eventListener);
+    }
+
+    protected addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
         container.bind(GLSPVscodeDiagramWidget).toSelf().inSingletonScope();
         container.bind(VscodeDiagramWidget).toService(GLSPVscodeDiagramWidget);
         container
             .bind(VscodeDiagramWidgetFactory)
             .toFactory(context => () => context.container.get<GLSPVscodeDiagramWidget>(GLSPVscodeDiagramWidget));
+        container.bind(GLSPDiagramIdentifier).toConstantValue(diagramIdentifier);
         container.bind(SprottyDiagramIdentifier).toConstantValue(diagramIdentifier);
         container.bind(GLSPVscodeDiagramServer).toSelf().inSingletonScope();
         container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);
