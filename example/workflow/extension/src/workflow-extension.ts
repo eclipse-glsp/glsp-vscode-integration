@@ -24,6 +24,7 @@ import {
 import { GlspServerLauncher, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
 import * as path from 'path';
 import * as process from 'process';
+import 'reflect-metadata';
 import * as vscode from 'vscode';
 import WorkflowEditorProvider from './workflow-editor-provider';
 

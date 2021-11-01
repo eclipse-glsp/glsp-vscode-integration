@@ -13,14 +13,19 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import * as fs from 'fs';
-import * as vscode from 'vscode';
 import {
     Action,
     ActionMessage,
     DirtyStateChangeReason,
     ExportSvgAction,
+    InitializeClientSessionParameters,
+    InitializeResult,
     isActionMessage,
+    isExportSvgAction,
+    isNavigateToExternalTargetAction,
+    isSelectAction,
+    isSetDirtyStateAction,
+    isSetMarkersAction,
     NavigateToExternalTargetAction,
     RedoOperation,
     RequestModelAction,
@@ -29,7 +34,9 @@ import {
     SetDirtyStateAction,
     SetMarkersAction,
     UndoOperation
-} from './actions';
+} from '@eclipse-glsp/protocol';
+import * as fs from 'fs';
+import * as vscode from 'vscode';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
 // eslint-disable-next-line no-shadow
@@ -136,8 +143,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      * as they are automatically disposed of when the panel they belong to is closed.
      *
      * @param client The client to register.
+     *
+     * @returns the {@link InitializeResult} of the server to enable further configuration.
      */
-    public registerClient(client: GlspVscodeClient<D>): void {
+    public async registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
         this.clientMap.set(client.clientId, client);
         this.documentMap.set(client.document, client.clientId);
 
@@ -181,6 +190,19 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             clientMessageListener.dispose();
             panelOnDisposeListener.dispose();
         });
+
+        // Initialize client session
+        const glspClient = await this.options.server.glspClient;
+        const initializeParams = await this.createInitializeClientSessionParams(client);
+        await glspClient.initializeClientSession(initializeParams);
+        return this.options.server.initializeResult;
+    }
+
+    protected async createInitializeClientSessionParams(client: GlspVscodeClient<D>): Promise<InitializeClientSessionParameters> {
+        return {
+            clientSessionId: client.clientId,
+            diagramType: client.diagramType
+        };
     }
 
     /**
@@ -244,27 +266,27 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             const client = this.clientMap.get(message.clientId);
 
             // Dirty state & save actions
-            if (SetDirtyStateAction.is(message.action)) {
+            if (isSetDirtyStateAction(message.action)) {
                 return this.handleSetDirtyStateAction(message as ActionMessage<SetDirtyStateAction>, client, origin);
             }
 
             // Diagnostic actions
-            if (SetMarkersAction.is(message.action)) {
+            if (isSetMarkersAction(message.action)) {
                 return this.handleSetMarkersAction(message as ActionMessage<SetMarkersAction>, client, origin);
             }
 
             // External targets action
-            if (NavigateToExternalTargetAction.is(message.action)) {
+            if (isNavigateToExternalTargetAction(message.action)) {
                 return this.handleNavigateToExternalTargetAction(message as ActionMessage<NavigateToExternalTargetAction>, client, origin);
             }
 
             // Selection action
-            if (SelectAction.is(message.action)) {
+            if (isSelectAction(message.action)) {
                 return this.handleSelectAction(message as ActionMessage<SelectAction>, client, origin);
             }
 
             // Export SVG action
-            if (ExportSvgAction.is(message.action)) {
+            if (isExportSvgAction(message.action)) {
                 return this.handleExportSvgAction(message as ActionMessage<ExportSvgAction>, client, origin);
             }
         }
@@ -305,18 +327,17 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         _origin: MessageOrigin
     ): MessageProcessingResult {
         if (client) {
-            const SEVERITY_MAP = {
-                info: vscode.DiagnosticSeverity.Information,
-                warning: vscode.DiagnosticSeverity.Warning,
-                error: vscode.DiagnosticSeverity.Error
-            };
+            const severityMap = new Map<string, vscode.DiagnosticSeverity>();
+            severityMap.set('info', vscode.DiagnosticSeverity.Information);
+            severityMap.set('warning', vscode.DiagnosticSeverity.Warning);
+            severityMap.set('error', vscode.DiagnosticSeverity.Error);
 
             const updatedDiagnostics = message.action.markers.map(
                 marker =>
                     new vscode.Diagnostic(
                         new vscode.Range(0, 0, 0, 0), // Must have be defined as such - no workarounds
                         marker.description,
-                        SEVERITY_MAP[marker.kind]
+                        severityMap.get(marker.kind)
                     )
             );
 

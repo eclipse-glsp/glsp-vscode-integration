@@ -33,12 +33,12 @@
   ],
   "dependencies": {
     "@eclipse-glsp/client": "next",
-    "reflect-metadata": "^0.1.12",
     "sprotty-vscode-webview": "0.1.2"
   },
   "devDependencies": {
     "rimraf": "latest",
-    "typescript": "latest"
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^4.4.3"
   },
   "scripts": {
     "prepare": "yarn clean && yarn build && yarn lint",

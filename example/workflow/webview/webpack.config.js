@@ -12,7 +12,8 @@ const config = {
         filename: 'webview.js',
         path: outputPath
     },
-    devtool: 'eval-source-map',
+    devtool: 'source-map-eval',
+    mode: 'development',
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
@@ -30,12 +31,19 @@ const config = {
             },
             {
                 test: /\.css$/,
-                exclude: /\.useable\.css$/,
+                exclude: /(codicon|\.useable)\.css$/,
                 use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /codicon.css$/,
+                use: ['ignore-loader']
             }
         ]
     },
-    node: { fs: 'empty', net: 'empty' }
+    node: { fs: 'empty', net: 'empty' },
+    stats: {
+        warningsFilter: [/Failed to parse source map/]
+    }
 };
 
 module.exports = config;
