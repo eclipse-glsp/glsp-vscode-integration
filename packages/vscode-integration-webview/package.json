@@ -1,6 +1,6 @@
 {
   "name": "@eclipse-glsp/vscode-integration-webview",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Integration of a GLSP diagram in a VS Code extensions (WebView part)",
   "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "keywords": [
@@ -36,8 +36,8 @@
     "sprotty-vscode-webview": "0.1.2"
   },
   "devDependencies": {
-    "rimraf": "latest",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "latest",
     "typescript": "^4.4.3"
   },
   "scripts": {

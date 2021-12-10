@@ -1,7 +1,7 @@
 {
   "name": "workflow-vscode-example",
   "private": "true",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "An example graphical language used for modeling workflows",
   "displayName": "Workflow GLSP Example",
   "publisher": "Eclipse-GLSP",
@@ -180,15 +180,15 @@
   },
   "main": "./lib/index",
   "devDependencies": {
-    "@eclipse-glsp/vscode-integration": "0.8.0",
+    "@eclipse-glsp/vscode-integration": "0.9.0",
     "@types/vscode": "^1.54.0",
-    "reflect-metadata": "^0.1.13",
     "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13",
     "rimraf": "^2.6.3",
     "ts-loader": "^6.2.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.3",
-    "workflow-glsp-webview": "0.8.0"
+    "workflow-glsp-webview": "0.9.0"
   },
   "scripts": {
     "prepare": "yarn clean && yarn build && yarn lint",
