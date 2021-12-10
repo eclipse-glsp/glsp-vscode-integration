@@ -32,7 +32,7 @@
     "css"
   ],
   "dependencies": {
-    "@eclipse-glsp/client": "0.9.0",
+    "@eclipse-glsp/client": "next",
     "sprotty-vscode-webview": "0.1.2"
   },
   "devDependencies": {
