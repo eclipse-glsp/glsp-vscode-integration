@@ -86,7 +86,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             glspVscodeConnector.sendActionToActiveClient(new CenterAction(selectedElements));
         }),
         vscode.commands.registerCommand('workflow.layout', () => {
-            glspVscodeConnector.sendActionToActiveClient(new LayoutOperation());
+            glspVscodeConnector.sendActionToActiveClient(new LayoutOperation([]));
         }),
         vscode.commands.registerCommand('workflow.goToNextNode', () => {
             glspVscodeConnector.sendActionToActiveClient(new NavigateAction('next'));

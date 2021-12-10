@@ -1,39 +1,32 @@
 # Eclipse GLSP VSCode Integration
 
-This package contains the glue code for integrating [GLSP](https://www.eclipse.org/glsp/)
-diagrams in VS Code. This library enables the implementation of GLSP Diagram editors
-for VS Code base on the [Custom Editor API](https://code.visualstudio.com/api/extension-guides/custom-editors).
+This package contains the glue code for integrating [GLSP](https://www.eclipse.org/glsp/) diagrams in VS Code.
+This library enables the implementation of GLSP Diagram editors for VS Code base on the [Custom Editor API](https://code.visualstudio.com/api/extension-guides/custom-editors).
 
 ## Where to find the sources?
 
 In addition to this repository, the related source code can be found here:
 
--   https://github.com/eclipse-glsp/glsp-server
--   https://github.com/eclipse-glsp/glsp-client
+-   <https://github.com/eclipse-glsp/glsp-server>
+-   <https://github.com/eclipse-glsp/glsp-client>
 
 ## Getting started
 
-This section will show you how to get your first GLPS extension up and running using
-the _GLSP VSCode Integration_.
+This section will show you how to get your first GLSP extension up and running using the _GLSP VSCode Integration_.
 
 ### Example Extension
 
-You can find a complete example extension that uses this package
-[here](https://github.com/eclipse-glsp/glsp-vscode-integration/tree/master/example/workflow).
-It makes heavy use of default implementations like the default GLSP server, the
-default GLSP client and the default GLSP Sprotty client.
+You can find a complete example extension that uses this package [here](https://github.com/eclipse-glsp/glsp-vscode-integration/tree/master/example/workflow).
+It makes heavy use of default implementations like the default GLSP server, the default GLSP client and the default GLSP Sprotty client.
 
 ### Example Code
 
-There are a few steps that are absolutely necessary for the GLSP VSCode Integration
-to work. They are outlined in this section.
+There are a few steps that are absolutely necessary for the GLSP VSCode Integration to work. They are outlined in this section.
 
 #### Extension
 
-First you need to set up your extension starter code. This is done by setting the
-`"main"` field of your `package.json` to the entry point of your extension and exporting
-an `activate()` function from that file. For more information on how to set up your
-VSCode extension please visit https://code.visualstudio.com/api.
+First you need to set up your extension starter code. This is done by setting the `"main"` field of your `package.json` to the entry point of your extension and exporting an `activate()` function from that file.
+For more information on how to set up your VSCode extension please visit https://code.visualstudio.com/api.
 
 <details><summary>Code Example</summary>
 
@@ -49,12 +42,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
 #### Server
 
-Next we will start a GLSP server from within the activate function. If you have
-already have the server running through some other process you can skip this step.
+Next we will start a GLSP server from within the activate function. If you have already have the server running through some other process you can skip this step.
 
-If you are using the default GLSP server implementation provided at https://github.com/eclipse-glsp/glsp-server,
-you can use the `GlspServerLauncher` [quickstart component](#Quickstart-Components)
-to start the server with very little code:
+If you are using the default GLSP server implementation provided at <https://github.com/eclipse-glsp/glsp-server>, you can use the `GlspServerLauncher` [quickstart component](#Quickstart-Components) to start the server with very little code:
 
 <details><summary>Code Example</summary>
 
@@ -75,14 +65,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
 #### Server Interface and GLSP VSCode Connector
 
-A connector class is needed to provide an interface for the _GLSP VSCode integration_
-to communicate with the server. If you are using the default GLSP server which communicates
-over JSON-RPC, you can make use of the `SocketGlspVscodeServer` [quickstart component](#Quickstart-Components)
-to implement the needed interface with very little boilerplate code.
+A connector class is needed to provide an interface for the \_GLSP VSCode integration_to communicate with the server.
+If you are using the default GLSP server which communicates over JSON-RPC, you can make use of the `SocketGlspVscodeServer` [quickstart component](#Quickstart-Components) to implement the needed interface with very little boilerplate code.
 
-If we have a server component providing the needed interface we can create an instance
-of the `GlspVscodeConnector` and pass the server component. The `GlspVscodeConnector`
-lies at the core of this package and provides all the needed functionality.
+If we have a server component providing the needed interface we can create an instance of the `GlspVscodeConnector` and pass the server component. The `GlspVscodeConnector` lies at the core of this package and provides all the needed functionality.
 
 <details><summary>Code Example</summary>
 
@@ -109,13 +95,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
 #### Custom Editor Provider
 
-In order to have a custom editor in VSCode a component implementing the `vscode.CustomEditorProvider`
-needs to be registered from within the extension (more information on custom editors
-[here](https://code.visualstudio.com/api/extension-guides/custom-editors)).
+In order to have a custom editor in VSCode a component implementing the `vscode.CustomEditorProvider` needs to be registered from within the extension (more information on custom editors [here](https://code.visualstudio.com/api/extension-guides/custom-editors)).
 
-The GLSP VSCode integration package gives you free reign over how you implement
-your `CustomEditorProvider`, however a few function calls at certain places are
-needed for the integration to work properly:
+The GLSP VSCode integration package gives you free reign over how you implement your `CustomEditorProvider`, however a few function calls at certain places are needed for the integration to work properly:
 
 -   The `onDidChangeCustomDocument` of your `CustomEditorProvider` should always fire
     at least when `GlspVscodeConnector.onDidChangeCustomDocument` fires.
@@ -126,16 +108,11 @@ needed for the integration to work properly:
 -   `GlspVscodeConnector.revertDocument()` should be called when `CustomEditorProvider.revertCustomDocument`
     is called.
 
-You can use the `GlspEditorProvider` [quickstart component](#Quickstart-Components)
-to set up such an editor provider without much boilerplate code.
+You can use the `GlspEditorProvider` [quickstart component](#Quickstart-Components) to set up such an editor provider without much boilerplate code.
 
-If you chose to create a `CustomEditorProvider` yourself, the `resolveCustomEditor`
-function of the `CustomEditorProvider` act as an excellent place to register your
-GLSP clients. You can do this with the `GlspVscodeConnector.registerClient(client)`
-function. You are free to choose on how your clients implement the needed interface,
-however if you need inspiration on how to do it with the default GLSP components,
-you can take a look at the example
-[here](https://github.com/eclipse-glsp/glsp-vscode-integration/tree/master/example/workflow).
+If you chose to create a `CustomEditorProvider` yourself, the `resolveCustomEditor` function of the `CustomEditorProvider` act as an excellent place to register your GLSP clients.
+You can do this with the `GlspVscodeConnector.registerClient(client)`function.
+You are free to choose on how your clients implement the needed interface,however if you need inspiration on how to do it with the default GLSP components, you can take a look at the example [here](https://github.com/eclipse-glsp/glsp-vscode-integration/tree/master/example/workflow).
 
 <details><summary>Code Example</summary>
 
@@ -210,8 +187,7 @@ export default class WorkflowEditorProvider implements vscode.CustomEditorProvid
 
 #### Final touches
 
-All that's left to do is a final call to start the server and the extension
-should be up and running.
+All that's left to do is a final call to start the server and the extension should be up and running.
 
 <details><summary>Code Example</summary>
 
@@ -233,9 +209,9 @@ This package exports a number of members, the most important one being the `Glsp
 
 ### GlspVscodeConnector
 
-This is the core of the VSCode integration and provides various functionality. It
-primarily intercepts certain GLSP Actions sent from the clients or server to trigger
-VSCode specific contributions. This currently includes:
+This is the core of the VSCode integration and provides various functionality.
+It primarily intercepts certain GLSP Actions sent from the clients or server to trigger VSCode specific contributions.
+This currently includes:
 
 -   File dirty state
 -   File "Save" and "Save as..."
@@ -516,8 +492,7 @@ interface JavaSocketServerLauncherOptions {
 
 #### SocketGlspVscodeServer
 
-A can component that provides the right interface for the GLSP VSCode integration
-to be used as server and which can connect to a default implementation GLSP server.
+A can component that provides the right interface for the GLSP VSCode integration to be used as server and which can connect to a default implementation GLSP server.
 
 ```ts
 interface SocketGlspVscodeServerOptions {
@@ -546,8 +521,7 @@ interface SocketGlspVscodeServer extends GlspVscodeServer, vscode.Disposable {
 
 #### GlspEditorProvider
 
-An extensible base class to create a CustomEditorProvider that takes care of diagram
-initialization and custom document events.
+An extensible base class to create a CustomEditorProvider that takes care of diagram initialization and custom document events.
 
 Webview setup needs to be implemented.
 
@@ -574,7 +548,5 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
 
 ## More information
 
-For more information, please visit the [Eclipse GLSP Umbrella repository](https://github.com/eclipse-glsp/glsp)
-and the [Eclipse GLSP Website](https://www.eclipse.org/glsp/). If you have questions,
-contact us on our [spectrum chat](https://spectrum.chat/glsp/) and have a look at our
-[communication and support options](https://www.eclipse.org/glsp/contact/).
+For more information, please visit the [Eclipse GLSP Umbrella repository](https://github.com/eclipse-glsp/glsp) and the [Eclipse GLSP Website](https://www.eclipse.org/glsp/).
+If you have questions, please raise them in the [discussions](https://github.com/eclipse-glsp/glsp/discussions) and have a look at our [communication and support options](https://www.eclipse.org/glsp/contact/).
