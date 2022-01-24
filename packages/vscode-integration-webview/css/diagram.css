@@ -1,5 +1,5 @@
 /********************************************************************************
-* Copyright (c) 2020-2021 EclipseSource and others.
+* Copyright (c) 2020-2022 EclipseSource and others.
 *
 * This program and the accompanying materials are made available under the
 * terms of the Eclipse Public License v. 2.0 which is available at
@@ -52,10 +52,51 @@ body {
     stroke: var(--vscode-editor-foreground);
 }
 
-.sprotty-edge.arrow {
+.sprotty-edge .arrow {
     fill: var(--vscode-editor-foreground);
 }
 
-.sprotty-node.selected {
-    stroke: var(--vscode-menu-selectionBackground);
+.sprotty-node.selected,
+.sprotty-edge.selected {
+    stroke: var(--vscode-focusBorder);
+}
+
+.sprotty-edge.selected .arrow {
+    fill: var(--vscode-focusBorder);
+    stroke: var(--vscode-focusBorder);
+}
+
+.inactive .sprotty-node.selected {
+    stroke: var(--vscode-editor-inactiveSelectionBackground);
+}
+
+.sprotty-resize-handle.selected,
+.sprotty-resize-handle.active,
+.sprotty-edge > .sprotty-routing-handle.selected,
+.sprotty-edge > .sprotty-routing-handle.mouseover {
+    fill: var(--vscode-focusBorder);
+}
+
+.inactive .sprotty-resize-handle,
+.inactive .sprotty-routing-handle {
+    fill: var(--vscode-tab-unfocusedInactiveForeground);
+}
+
+.sprotty-node.mouseover:not(.selected),
+.sprotty-edge.mouseover:not(.selected) {
+    stroke: var(--vscode-editor-foreground);
+}
+
+.sprotty-edge.mouseover:not(.selected) .arrow {
+    fill: var(--vscode-editor-foreground);
+    stroke: var(--vscode-editor-foreground);
+}
+
+.sprotty-popup {
+    padding: 0px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 6px var(--vscode-widget-shadow);
+    background-color: var(--vscode-editorHoverWidget-background);
+    color: var(--vscode-editorHoverWidget-foreground);
+    border: 1px solid var(--vscode-editorHoverWidget-border);
 }

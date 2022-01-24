@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020-2021 EclipseSource and others.
+ * Copyright (c) 2020-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -18,8 +18,16 @@
     box-shadow: 0px 1px 6px var(--vscode-widget-shadow);
 }
 
+.tool-palette :focus-visible {
+    outline: none;
+}
+
+.tool-group {
+    background: var(--vscode-settings-dropdownBackground);
+}
+
 .tool-palette .palette-header {
-    background: var(--vscode-titleBar-activeBackground);
+    background: var(--vscode-settings-dropdownBackground);
     color: var(--vscode-titleBar-activeForeground);
     border: 0;
     font-weight: normal;
@@ -31,20 +39,23 @@
 }
 
 .tool-palette .palette-header .header-icon {
-    font-size: var(--vscode-ui-font-size1);
     float: left;
     padding: 0.2em;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 400;
 }
 
 .tool-palette .palette-header .header-tools {
-    font-size: var(--vscode-ui-font-size3);
     float: right;
+    font-size: 11px;
 }
 
 .tool-palette .palette-header .header-tools i {
     border: none;
     width: 1em;
     text-align: center;
+    border-radius: 5px;
 }
 
 .tool-palette .palette-header .header-tools i:hover:not(.clicked) {
@@ -58,35 +69,34 @@
 .tool-palette .palette-body {
     border: 0;
     box-shadow: none;
+    background: var(--vscode-list-focusBackground);
+    color: var(--vscode-titleBar-activeForeground);
 }
 
 .tool-palette .palette-body .group-header {
     font-size: var(--vscode-ui-font-size1);
-    font-weight: normal;
-    background: var(--vscode-settings-dropdownBackground);
+    text-transform: uppercase;
+    font-weight: bold;
+    background: var(--vscode-editorHoverWidget-statusBarBackground);
     color: var(--vscode-titleBar-activeForeground);
     border: 0;
 }
 
-.tool-palette .palette-body .tool-button {
-    background: var(--vscode-menu-background);
+.tool-button {
+    background: var(--vscode-settings-dropdownBackground);
     color: var(--vscode-titleBar-activeForeground);
 }
 
 .tool-palette .palette-body .tool-button:hover:not(.clicked) {
-    background: var(--vscode-list-hoverBackground);
+    background: var(--vscode-menubar-selectionBackground);
 }
 
 .tool-palette .tool-button.clicked {
-    background: var(--vscode-menu-selectionBackground);
-    color: var(--vscode-menu-selectionForeground);
+    background: var(--vscode-inputOption-activeBackground);
 }
 
 .search-input {
     background: var(--vscode-input-background);
     color: var(--vscode-input-foreground);
     border: var(--vscode-border-width) solid var(--vscode-input-border);
-    font-family: var(--vscode-ui-font-family);
-    font-size: var(--vscode-ui-font-size1);
-    line-height: var(--vscode-content-line-height);
 }
