@@ -30,7 +30,7 @@ export abstract class GLSPVscodeDiagramWidget extends VscodeDiagramWidget {
             })
         );
 
-        this.actionDispatcher.dispatch(new RequestTypeHintsAction(this.diagramIdentifier.diagramType));
+        this.actionDispatcher.dispatch(new RequestTypeHintsAction());
         this.actionDispatcher.dispatch(new EnableToolPaletteAction());
     }
 }
