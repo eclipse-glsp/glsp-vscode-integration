@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020-2021 EclipseSource and others.
+ * Copyright (c) 2020-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -19,59 +19,57 @@ import {
     ActionMessage,
     ComputedBoundsAction,
     DeleteElementOperation,
-    GLSP_TYPES,
     ICopyPasteHandler,
-    isDeleteElementOperation,
-    isSetEditModeAction,
     registerDefaultGLSPServerActions,
-    SetEditModeAction
+    SetEditModeAction,
+    TYPES
 } from '@eclipse-glsp/client';
 import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';
-import { isActionMessage, VscodeDiagramServer } from 'sprotty-vscode-webview';
-
+import { VscodeDiagramServer } from 'sprotty-vscode-webview/lib/vscode-diagram-server';
 export const receivedFromServerProperty = '__receivedFromServer';
 export const localDispatchProperty = '__localDispatch';
 
 export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
-    @inject(GLSP_TYPES.SelectionService) protected selectionService: SelectionService;
-    @inject(GLSP_TYPES.ICopyPasteHandler) protected copyPasteHandler: ICopyPasteHandler;
+    @inject(TYPES.SelectionService) protected selectionService: SelectionService;
+    @inject(TYPES.ICopyPasteHandler) protected copyPasteHandler: ICopyPasteHandler;
 
-    initialize(registry: ActionHandlerRegistry): void {
+    override initialize(registry: ActionHandlerRegistry): void {
         registerDefaultGLSPServerActions(registry, this);
         this.clientId = this.viewerOptions.baseDiv;
+
         window.addEventListener('message', message => {
-            if ('data' in message && isActionMessage(message.data)) {
+            if ('data' in message && ActionMessage.is(message.data)) {
                 this.messageReceived(message.data);
             }
         });
 
-        window.addEventListener('copy', (e: ClipboardEvent) => {
+        document.addEventListener('copy', (e: ClipboardEvent) => {
             this.copyPasteHandler.handleCopy(e);
         });
 
-        window.addEventListener('cut', (e: ClipboardEvent) => {
+        document.addEventListener('cut', (e: ClipboardEvent) => {
             this.copyPasteHandler.handleCut(e);
         });
 
-        window.addEventListener('paste', (e: ClipboardEvent) => {
+        document.addEventListener('paste', (e: ClipboardEvent) => {
             this.copyPasteHandler.handlePaste(e);
         });
     }
 
-    handleLocally(action: Action): boolean {
-        if (isSetEditModeAction(action)) {
+    override handleLocally(action: Action): boolean {
+        if (SetEditModeAction.is(action)) {
             return this.handleSetEditModeAction(action);
         }
-        if (isDeleteElementOperation(action)) {
+        if (DeleteElementOperation.is(action)) {
             return this.handleDeleteElementOperation(action);
         }
         return super.handleLocally(action);
     }
 
-    protected messageReceived(data: any): void {
+    protected override messageReceived(data: any): void {
         const object = typeof data === 'string' ? JSON.parse(data) : data;
-        if (isActionMessage(object) && object.action) {
+        if (ActionMessage.is(object) && object.action) {
             if (!object.clientId || object.clientId === this.clientId) {
                 this.checkMessageOrigin(object);
                 this.logger.log(this, 'receiving', object);
@@ -91,7 +89,7 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
         }
     }
 
-    protected handleComputedBounds(action: ComputedBoundsAction): boolean {
+    protected override handleComputedBounds(action: ComputedBoundsAction): boolean {
         return true;
     }
 

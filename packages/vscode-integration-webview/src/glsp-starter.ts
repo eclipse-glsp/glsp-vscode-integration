@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020-2021 EclipseSource and others.
+ * Copyright (c) 2020-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,7 +15,7 @@
  ********************************************************************************/
 import {
     configureServerActions,
-    DiagramServer,
+    DiagramServerProxy,
     ExportSvgAction,
     NavigateToExternalTargetAction,
     RequestClipboardDataAction,
@@ -37,7 +37,7 @@ import { GLSPVscodeDiagramWidget } from './glsp-vscode-diagram-widget';
 import { GLSPVscodeDiagramServer } from './glsp-vscode-diagramserver';
 
 export abstract class GLSPStarter extends SprottyStarter {
-    protected acceptDiagramIdentifier(): void {
+    protected override acceptDiagramIdentifier(): void {
         console.log('Waiting for diagram identifier...');
         const eventListener = (message: any): void => {
             if (isDiagramIdentifier(message.data)) {
@@ -64,7 +64,7 @@ export abstract class GLSPStarter extends SprottyStarter {
         window.addEventListener('message', eventListener);
     }
 
-    protected addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
+    protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
         container.bind(GLSPVscodeDiagramWidget).toSelf().inSingletonScope();
         container.bind(VscodeDiagramWidget).toService(GLSPVscodeDiagramWidget);
         container
@@ -74,8 +74,8 @@ export abstract class GLSPStarter extends SprottyStarter {
         container.bind(SprottyDiagramIdentifier).toConstantValue(diagramIdentifier);
         container.bind(GLSPVscodeDiagramServer).toSelf().inSingletonScope();
         container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);
+        container.bind(DiagramServerProxy).toService(GLSPVscodeDiagramServer);
         container.bind(TYPES.ModelSource).toService(GLSPVscodeDiagramServer);
-        container.bind(DiagramServer).toService(GLSPVscodeDiagramServer);
 
         this.configureExtensionActionHandler(container, diagramIdentifier);
     }

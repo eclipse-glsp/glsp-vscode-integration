@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -20,7 +20,10 @@ import * as vscode from 'vscode';
 export default class WorkflowEditorProvider extends GlspEditorProvider {
     diagramType = 'workflow-diagram';
 
-    constructor(protected readonly extensionContext: vscode.ExtensionContext, protected readonly glspVscodeConnector: GlspVscodeConnector) {
+    constructor(
+        protected readonly extensionContext: vscode.ExtensionContext,
+        protected override readonly glspVscodeConnector: GlspVscodeConnector
+    ) {
         super(glspVscodeConnector);
     }
 

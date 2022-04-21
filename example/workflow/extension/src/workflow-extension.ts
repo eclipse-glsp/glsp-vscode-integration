@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -80,25 +80,25 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     // Register various commands
     context.subscriptions.push(
         vscode.commands.registerCommand('workflow.fit', () => {
-            glspVscodeConnector.sendActionToActiveClient(new FitToScreenAction(selectedElements));
+            glspVscodeConnector.sendActionToActiveClient(FitToScreenAction.create(selectedElements));
         }),
         vscode.commands.registerCommand('workflow.center', () => {
-            glspVscodeConnector.sendActionToActiveClient(new CenterAction(selectedElements));
+            glspVscodeConnector.sendActionToActiveClient(CenterAction.create(selectedElements));
         }),
         vscode.commands.registerCommand('workflow.layout', () => {
-            glspVscodeConnector.sendActionToActiveClient(new LayoutOperation([]));
+            glspVscodeConnector.sendActionToActiveClient(LayoutOperation.create([]));
         }),
         vscode.commands.registerCommand('workflow.goToNextNode', () => {
-            glspVscodeConnector.sendActionToActiveClient(new NavigateAction('next'));
+            glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('next'));
         }),
         vscode.commands.registerCommand('workflow.goToPreviousNode', () => {
-            glspVscodeConnector.sendActionToActiveClient(new NavigateAction('previous'));
+            glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('previous'));
         }),
         vscode.commands.registerCommand('workflow.showDocumentation', () => {
-            glspVscodeConnector.sendActionToActiveClient(new NavigateAction('documentation'));
+            glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('documentation'));
         }),
         vscode.commands.registerCommand('workflow.exportAsSVG', () => {
-            glspVscodeConnector.sendActionToActiveClient(new RequestExportSvgAction());
+            glspVscodeConnector.sendActionToActiveClient(RequestExportSvgAction.create());
         })
     );
 }

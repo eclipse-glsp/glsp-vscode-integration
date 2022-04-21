@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,7 +13,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-import { isActionMessage, isWebviewReadyMessage } from 'sprotty-vscode-protocol';
+import { ActionMessage } from '@eclipse-glsp/protocol';
+import { isWebviewReadyMessage } from 'sprotty-vscode-protocol';
 import * as vscode from 'vscode';
 import { GlspVscodeConnector } from '../glsp-vscode-connector';
 import { GLSPDiagramIdentifier } from '../types';
@@ -118,7 +119,7 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         // Listen for Messages from webview (only after ready-message has been received)
         webviewReadyPromise.then(() => {
             webviewPanel.webview.onDidReceiveMessage((message: unknown) => {
-                if (isActionMessage(message)) {
+                if (ActionMessage.is(message)) {
                     sendMessageToServerEmitter.fire(message);
                 }
             });
@@ -126,7 +127,7 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
 
         // Listen for Messages from server
         receiveMessageFromServerEmitter.event(message => {
-            if (isActionMessage(message)) {
+            if (ActionMessage.is(message)) {
                 sendMessageToWebview(message);
             }
         });

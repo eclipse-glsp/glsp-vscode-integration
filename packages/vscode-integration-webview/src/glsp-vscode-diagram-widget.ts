@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020-2021 EclipseSource and others.
+ * Copyright (c) 2020-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,25 +13,27 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { DiagramServer, EnableToolPaletteAction, RequestModelAction, RequestTypeHintsAction } from '@eclipse-glsp/client';
+import { DiagramServerProxy, EnableToolPaletteAction, RequestModelAction, RequestTypeHintsAction } from '@eclipse-glsp/client';
 import { injectable } from 'inversify';
 import { VscodeDiagramWidget } from 'sprotty-vscode-webview';
 
 @injectable()
 export abstract class GLSPVscodeDiagramWidget extends VscodeDiagramWidget {
-    protected initializeSprotty(): void {
-        if (this.modelSource instanceof DiagramServer) {
+    protected override initializeSprotty(): void {
+        if (this.modelSource instanceof DiagramServerProxy) {
             this.modelSource.clientId = this.diagramIdentifier.clientId;
         }
         this.actionDispatcher.dispatch(
-            new RequestModelAction({
-                sourceUri: decodeURI(this.diagramIdentifier.uri),
-                diagramType: this.diagramIdentifier.diagramType
+            RequestModelAction.create({
+                options: {
+                    sourceUri: decodeURI(this.diagramIdentifier.uri),
+                    diagramType: this.diagramIdentifier.diagramType
+                }
             })
         );
 
-        this.actionDispatcher.dispatch(new RequestTypeHintsAction());
-        this.actionDispatcher.dispatch(new EnableToolPaletteAction());
+        this.actionDispatcher.dispatch(RequestTypeHintsAction.create());
+        this.actionDispatcher.dispatch(EnableToolPaletteAction.create());
     }
 }
 

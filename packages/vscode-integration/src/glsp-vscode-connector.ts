@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -16,16 +16,9 @@
 import {
     Action,
     ActionMessage,
-    DirtyStateChangeReason,
     ExportSvgAction,
     InitializeClientSessionParameters,
     InitializeResult,
-    isActionMessage,
-    isExportSvgAction,
-    isNavigateToExternalTargetAction,
-    isSelectAction,
-    isSetDirtyStateAction,
-    isSetMarkersAction,
     NavigateToExternalTargetAction,
     RedoOperation,
     RequestModelAction,
@@ -113,7 +106,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         // Set up message listener for server
         const serverMessageListener = this.options.server.onServerMessage(message => {
             if (this.options.logging) {
-                if (isActionMessage(message)) {
+                if (ActionMessage.is(message)) {
                     console.log(`Server (${message.clientId}): ${message.action.kind}`, message.action);
                 } else {
                     console.log('Server (no action message):', message);
@@ -128,7 +121,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
                 // Run message through second user-provided interceptor (pre-send) - processed
                 const filteredMessage = this.options.onBeforePropagateMessageToClient(newMessage, processedMessage, messageChanged);
-                if (typeof filteredMessage !== 'undefined' && isActionMessage(filteredMessage)) {
+                if (typeof filteredMessage !== 'undefined' && ActionMessage.is(filteredMessage)) {
                     this.sendMessageToClient(filteredMessage.clientId, filteredMessage);
                 }
             });
@@ -153,7 +146,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         // Set up message listener for client
         const clientMessageListener = client.onClientMessage(message => {
             if (this.options.logging) {
-                if (isActionMessage(message)) {
+                if (ActionMessage.is(message)) {
                     console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
                 } else {
                     console.log('Client (no action message):', message);
@@ -262,31 +255,31 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      * the message was modified.
      */
     protected processMessage(message: unknown, origin: MessageOrigin): MessageProcessingResult {
-        if (isActionMessage(message)) {
+        if (ActionMessage.is(message)) {
             const client = this.clientMap.get(message.clientId);
 
             // Dirty state & save actions
-            if (isSetDirtyStateAction(message.action)) {
+            if (SetDirtyStateAction.is(message.action)) {
                 return this.handleSetDirtyStateAction(message as ActionMessage<SetDirtyStateAction>, client, origin);
             }
 
             // Diagnostic actions
-            if (isSetMarkersAction(message.action)) {
+            if (SetMarkersAction.is(message.action)) {
                 return this.handleSetMarkersAction(message as ActionMessage<SetMarkersAction>, client, origin);
             }
 
             // External targets action
-            if (isNavigateToExternalTargetAction(message.action)) {
+            if (NavigateToExternalTargetAction.is(message.action)) {
                 return this.handleNavigateToExternalTargetAction(message as ActionMessage<NavigateToExternalTargetAction>, client, origin);
             }
 
             // Selection action
-            if (isSelectAction(message.action)) {
+            if (SelectAction.is(message.action)) {
                 return this.handleSelectAction(message as ActionMessage<SelectAction>, client, origin);
             }
 
             // Export SVG action
-            if (isExportSvgAction(message.action)) {
+            if (ExportSvgAction.is(message.action)) {
                 return this.handleExportSvgAction(message as ActionMessage<ExportSvgAction>, client, origin);
             }
         }
@@ -302,16 +295,16 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     ): MessageProcessingResult {
         if (client) {
             const reason = message.action.reason || '';
-            if (reason === DirtyStateChangeReason.SAVE) {
+            if (reason === 'save') {
                 this.onDocumentSavedEmitter.fire(client.document);
-            } else if (reason === DirtyStateChangeReason.OPERATION && message.action.isDirty) {
+            } else if (reason === 'operation' && message.action.isDirty) {
                 this.onDidChangeCustomDocumentEventEmitter.fire({
                     document: client.document,
                     undo: () => {
-                        this.sendActionToClient(client.clientId, new UndoOperation());
+                        this.sendActionToClient(client.clientId, UndoOperation.create());
                     },
                     redo: () => {
-                        this.sendActionToClient(client.clientId, new RedoOperation());
+                        this.sendActionToClient(client.clientId, RedoOperation.create());
                     }
                 });
             }
@@ -438,7 +431,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                         resolve();
                     }
                 });
-                this.sendActionToClient(clientId, new SaveModelAction(destination?.path));
+                this.sendActionToClient(clientId, SaveModelAction.create({ fileUri: destination?.path }));
             });
         } else {
             if (this.options.logging) {
@@ -461,9 +454,11 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         if (clientId) {
             this.sendActionToClient(
                 clientId,
-                new RequestModelAction({
-                    sourceUri: document.uri.toString(),
-                    diagramType
+                RequestModelAction.create({
+                    options: {
+                        sourceUri: document.uri.toString(),
+                        diagramType
+                    }
                 })
             );
         } else {
