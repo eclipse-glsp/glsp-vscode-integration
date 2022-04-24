@@ -195,7 +195,7 @@
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
     "build": "tsc  && yarn download:Server",
     "publish": "vsce publish",
-    "download:Server": " rimraf server && ts-node ../scripts/download.ts"
+    "download:Server": "ts-node ../scripts/download.ts"
   },
   "workspaces": {
     "nohoist": [
