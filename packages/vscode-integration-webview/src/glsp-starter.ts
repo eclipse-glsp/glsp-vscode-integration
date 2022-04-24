@@ -17,6 +17,7 @@ import {
     configureServerActions,
     DiagramServerProxy,
     ExportSvgAction,
+    ICopyPasteHandler,
     NavigateToExternalTargetAction,
     RequestClipboardDataAction,
     SelectAction,
@@ -31,6 +32,7 @@ import {
     VscodeDiagramWidget,
     VscodeDiagramWidgetFactory
 } from 'sprotty-vscode-webview';
+import { CopyPasteHandlerProvider } from './copy-paste-handler-provider';
 import { GLSPDiagramIdentifier, isDiagramIdentifier } from './diagram-identifer';
 import { GLSPVscodeExtensionActionHandler } from './extension-action-handler';
 import { GLSPVscodeDiagramWidget } from './glsp-vscode-diagram-widget';
@@ -71,11 +73,17 @@ export abstract class GLSPStarter extends SprottyStarter {
             .bind(VscodeDiagramWidgetFactory)
             .toFactory(context => () => context.container.get<GLSPVscodeDiagramWidget>(GLSPVscodeDiagramWidget));
         container.bind(GLSPDiagramIdentifier).toConstantValue(diagramIdentifier);
-        container.bind(SprottyDiagramIdentifier).toConstantValue(diagramIdentifier);
+        container
+            .bind(CopyPasteHandlerProvider)
+            .toProvider(
+                ctx => () =>
+                    new Promise<ICopyPasteHandler>(resolve => resolve(ctx.container.get<ICopyPasteHandler>(TYPES.ICopyPasteHandler)))
+            );
+        container.bind(SprottyDiagramIdentifier).toService(GLSPDiagramIdentifier);
         container.bind(GLSPVscodeDiagramServer).toSelf().inSingletonScope();
         container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);
-        container.bind(DiagramServerProxy).toService(GLSPVscodeDiagramServer);
         container.bind(TYPES.ModelSource).toService(GLSPVscodeDiagramServer);
+        container.bind(DiagramServerProxy).toService(GLSPVscodeDiagramServer);
 
         this.configureExtensionActionHandler(container, diagramIdentifier);
     }

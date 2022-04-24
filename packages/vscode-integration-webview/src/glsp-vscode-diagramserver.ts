@@ -19,7 +19,6 @@ import {
     ActionMessage,
     ComputedBoundsAction,
     DeleteElementOperation,
-    ICopyPasteHandler,
     registerDefaultGLSPServerActions,
     SetEditModeAction,
     TYPES
@@ -27,12 +26,16 @@ import {
 import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';
 import { VscodeDiagramServer } from 'sprotty-vscode-webview/lib/vscode-diagram-server';
+import { CopyPasteHandlerProvider } from './copy-paste-handler-provider';
 export const receivedFromServerProperty = '__receivedFromServer';
 export const localDispatchProperty = '__localDispatch';
 
 export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
-    @inject(TYPES.SelectionService) protected selectionService: SelectionService;
-    @inject(TYPES.ICopyPasteHandler) protected copyPasteHandler: ICopyPasteHandler;
+    @inject(TYPES.SelectionService)
+    protected selectionService: SelectionService;
+
+    @inject(CopyPasteHandlerProvider)
+    protected copyPasteHandlerProvider: CopyPasteHandlerProvider;
 
     override initialize(registry: ActionHandlerRegistry): void {
         registerDefaultGLSPServerActions(registry, this);
@@ -44,16 +47,18 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
             }
         });
 
-        document.addEventListener('copy', (e: ClipboardEvent) => {
-            this.copyPasteHandler.handleCopy(e);
-        });
+        this.copyPasteHandlerProvider().then(copyPasteHandler => {
+            document.addEventListener('copy', (e: ClipboardEvent) => {
+                copyPasteHandler.handleCopy(e);
+            });
 
-        document.addEventListener('cut', (e: ClipboardEvent) => {
-            this.copyPasteHandler.handleCut(e);
-        });
+            document.addEventListener('cut', (e: ClipboardEvent) => {
+                copyPasteHandler.handleCut(e);
+            });
 
-        document.addEventListener('paste', (e: ClipboardEvent) => {
-            this.copyPasteHandler.handlePaste(e);
+            document.addEventListener('paste', (e: ClipboardEvent) => {
+                copyPasteHandler.handlePaste(e);
+            });
         });
     }
 

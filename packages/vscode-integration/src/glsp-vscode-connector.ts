@@ -58,6 +58,10 @@ export interface MessageProcessingResult {
  * Selection updates can be listened to using the `onSelectionUpdate` property.
  */
 export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> implements vscode.Disposable {
+    /** Can be returned as processedMessage of {@link MessageProcessingResult} to indicate that the message
+     * should not be propagated to the webview GLSP client
+     */
+    static NO_PROPAGATION_MESSAGE = 'NO_PROPAGATION_MESSAGE';
     /** Maps clientId to corresponding GlspVscodeClient. */
     protected readonly clientMap = new Map<string, GlspVscodeClient<D>>();
     /** Maps Documents to corresponding clientId. */
@@ -310,8 +314,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             }
         }
 
-        // Propagate unchanged message
-        return { processedMessage: message, messageChanged: false };
+        // The webview client cannot handle `SetDirtyStateAction`s. Avoid propagation
+        return { processedMessage: GlspVscodeConnector.NO_PROPAGATION_MESSAGE, messageChanged: true };
     }
 
     protected handleSetMarkersAction(
