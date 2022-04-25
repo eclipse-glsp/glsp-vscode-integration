@@ -147,6 +147,12 @@
         "when": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
+        "key": "ctrl+a",
+        "mac": "ctrl+a",
+        "command": "workflow.selectAll",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
         "key": "alt+l",
         "mac": "alt+l",
         "command": "workflow.layout",

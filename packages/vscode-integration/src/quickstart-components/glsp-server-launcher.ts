@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,27 +15,30 @@
  ********************************************************************************/
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
+import * as net from 'net';
 import * as vscode from 'vscode';
 
 const START_UP_COMPLETE_MSG = '[GLSP-Server]:Startup completed';
 
 interface JavaSocketServerLauncherOptions {
-    /** Path to the location of the jar file that should be launched as process */
-    readonly jarPath: string;
-    /** Port on which the server should listen for new client connections */
-    readonly serverPort: number;
+    /** Path to the location of the server executable (JAR or node module) that should be launched as process */
+    readonly executable: string;
+    /** Socket connection on which the server should listen for new client connections */
+    socketConnectionOptions: net.TcpSocketConnectOpts;
     /** Set to `true` if server stdout and stderr should be printed in extension host console. Default: `false` */
     readonly logging?: boolean;
     /** Additional arguments that should be passed when starting the server process. */
+    readonly serverType: 'java' | 'node';
     readonly additionalArgs?: string[];
 }
 
 /**
  * This component can be used to bootstrap your extension when using the default
- * GLSP server implementation, which you can find here:
+ * GLSP server implementations, which you can find here:
  * https://github.com/eclipse-glsp/glsp-server
+ * https://github.com/eclipse-glsp/glsp-server-node
  *
- * It simply starts up a server JAR located at a specified path on a specified port.
+ * It simply starts up a server executable (JAR or node module) located at a specified path on a specified port.
  * You can pass additional launch arguments through the options.
  *
  * If you need a component to quickly connect your default GLSP server to the GLSP-VSCode
@@ -59,15 +62,14 @@ export class GlspServerLauncher implements vscode.Disposable {
      */
     async start(): Promise<void> {
         return new Promise(resolve => {
-            const jarPath = this.options.jarPath;
+            const executable = this.options.executable;
 
-            if (!fs.existsSync(jarPath)) {
-                throw Error(`Could not launch GLSP server. The given jar path is not valid: ${jarPath}`);
+            if (!fs.existsSync(executable)) {
+                throw Error(`Could not launch GLSP server. The given server executable path is not valid: ${executable}`);
             }
 
-            const args = ['-jar', this.options.jarPath, '--port', `${this.options.serverPort}`, ...this.options.additionalArgs];
+            const process = this.options.serverType === 'java' ? this.startJavaProcess() : this.startNodeProcess();
 
-            const process = childProcess.spawn('java', args);
             this.serverProcess = process;
 
             process.stdout.on('data', data => {
@@ -78,9 +80,39 @@ export class GlspServerLauncher implements vscode.Disposable {
                 this.handleStdoutData(data);
             });
 
-            process.stderr.on('data', this.handleStderrData);
-            process.on('error', this.handleProcessError);
+            process.stderr.on('data', error => this.handleStderrData(error));
+            process.on('error', error => this.handleProcessError(error));
         });
+    }
+
+    protected startJavaProcess(): childProcess.ChildProcessWithoutNullStreams {
+        if (!this.options.executable.endsWith('jar')) {
+            throw new Error(`Could not launch Java GLSP server. The given executable is no JAR: ${this.options.executable}`);
+        }
+        const args = [
+            '-jar',
+            this.options.executable,
+            '--port',
+            `${this.options.socketConnectionOptions.port}`,
+            ...this.options.additionalArgs
+        ];
+
+        if (this.options.socketConnectionOptions.host) {
+            args.push('--host', `${this.options.socketConnectionOptions.host}`);
+        }
+        return childProcess.spawn('java', args);
+    }
+
+    protected startNodeProcess(): childProcess.ChildProcessWithoutNullStreams {
+        if (!this.options.executable.endsWith('.js')) {
+            throw new Error(`Could not launch Node GLSP server. The given executable is no node module: ${this.options.executable}`);
+        }
+        const args = [this.options.executable, '--port', `${this.options.socketConnectionOptions.port}`, ...this.options.additionalArgs];
+
+        if (this.options.socketConnectionOptions.host) {
+            args.push('--host', `${this.options.socketConnectionOptions.host}`);
+        }
+        return childProcess.spawn('node', args);
     }
 
     protected handleStdoutData(data: string | Buffer): void {
