@@ -147,6 +147,12 @@
         "when": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
+        "key": "ctrl+a",
+        "mac": "ctrl+a",
+        "command": "workflow.selectAll",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
         "key": "alt+l",
         "mac": "alt+l",
         "command": "workflow.layout",
@@ -184,15 +190,13 @@
     "@types/vscode": "^1.54.0",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^2.6.3",
     "ts-loader": "^6.2.1",
     "ts-node": "^9.1.1",
-    "typescript": "^4.4.3",
     "workflow-glsp-webview": "0.9.0"
   },
   "scripts": {
     "prepare": "yarn clean && yarn build && yarn lint",
-    "clean": "rimraf extension/lib extension/pack extension/server",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
     "watch": "tsc -w",
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
     "build": "tsc  && yarn download:Server",

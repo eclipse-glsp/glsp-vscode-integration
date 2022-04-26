@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020-2021 EclipseSource and others.
+ * Copyright (c) 2020-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,8 +15,9 @@
  ********************************************************************************/
 import {
     configureServerActions,
-    DiagramServer,
+    DiagramServerProxy,
     ExportSvgAction,
+    ICopyPasteHandler,
     NavigateToExternalTargetAction,
     RequestClipboardDataAction,
     SelectAction,
@@ -31,13 +32,14 @@ import {
     VscodeDiagramWidget,
     VscodeDiagramWidgetFactory
 } from 'sprotty-vscode-webview';
+import { CopyPasteHandlerProvider } from './copy-paste-handler-provider';
 import { GLSPDiagramIdentifier, isDiagramIdentifier } from './diagram-identifer';
 import { GLSPVscodeExtensionActionHandler } from './extension-action-handler';
 import { GLSPVscodeDiagramWidget } from './glsp-vscode-diagram-widget';
 import { GLSPVscodeDiagramServer } from './glsp-vscode-diagramserver';
 
 export abstract class GLSPStarter extends SprottyStarter {
-    protected acceptDiagramIdentifier(): void {
+    protected override acceptDiagramIdentifier(): void {
         console.log('Waiting for diagram identifier...');
         const eventListener = (message: any): void => {
             if (isDiagramIdentifier(message.data)) {
@@ -64,18 +66,24 @@ export abstract class GLSPStarter extends SprottyStarter {
         window.addEventListener('message', eventListener);
     }
 
-    protected addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
+    protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
         container.bind(GLSPVscodeDiagramWidget).toSelf().inSingletonScope();
         container.bind(VscodeDiagramWidget).toService(GLSPVscodeDiagramWidget);
         container
             .bind(VscodeDiagramWidgetFactory)
             .toFactory(context => () => context.container.get<GLSPVscodeDiagramWidget>(GLSPVscodeDiagramWidget));
         container.bind(GLSPDiagramIdentifier).toConstantValue(diagramIdentifier);
-        container.bind(SprottyDiagramIdentifier).toConstantValue(diagramIdentifier);
+        container
+            .bind(CopyPasteHandlerProvider)
+            .toProvider(
+                ctx => () =>
+                    new Promise<ICopyPasteHandler>(resolve => resolve(ctx.container.get<ICopyPasteHandler>(TYPES.ICopyPasteHandler)))
+            );
+        container.bind(SprottyDiagramIdentifier).toService(GLSPDiagramIdentifier);
         container.bind(GLSPVscodeDiagramServer).toSelf().inSingletonScope();
         container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);
         container.bind(TYPES.ModelSource).toService(GLSPVscodeDiagramServer);
-        container.bind(DiagramServer).toService(GLSPVscodeDiagramServer);
+        container.bind(DiagramServerProxy).toService(GLSPVscodeDiagramServer);
 
         this.configureExtensionActionHandler(container, diagramIdentifier);
     }

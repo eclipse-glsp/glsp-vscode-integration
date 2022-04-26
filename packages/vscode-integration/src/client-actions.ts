@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,24 +14,26 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { Action, Args, isActionKind, isString } from '@eclipse-glsp/protocol';
+import { Action, Args, hasStringProp } from '@eclipse-glsp/protocol';
 
-export class RequestExportSvgAction implements Action {
-    static readonly KIND = 'requestExportSvg';
-
-    constructor(readonly kind = RequestExportSvgAction.KIND) {}
+export interface NavigateAction extends Action {
+    kind: typeof NavigateAction.KIND;
+    readonly targetTypeId: string;
+    readonly args?: Args;
 }
 
-export function isRequestExportSvgAction(action: any): action is RequestExportSvgAction {
-    return isActionKind(action, RequestExportSvgAction.KIND);
-}
+export namespace NavigateAction {
+    export const KIND = 'navigate';
 
-export class NavigateAction implements Action {
-    static readonly KIND = 'navigate';
-    readonly kind = NavigateAction.KIND;
-    constructor(readonly targetTypeId: string, readonly args?: Args) {}
-}
+    export function is(object: any): object is NavigateAction {
+        return Action.hasKind(object, KIND) && hasStringProp(object, 'targetTypeId');
+    }
 
-export function isNavigateAction(action: any): action is NavigateAction {
-    return isActionKind(action, NavigateAction.KIND) && isString(action, 'targetTypeId');
+    export function create(targetTypeId: string, options: { args?: Args } = {}): NavigateAction {
+        return {
+            kind: KIND,
+            targetTypeId,
+            ...options
+        };
+    }
 }

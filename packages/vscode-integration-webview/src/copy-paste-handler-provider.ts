@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 EclipseSource and others.
+ * Copyright (c) 2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,7 +13,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export * from './configuration-util';
-export * from './glsp-editor-provider';
-export * from './glsp-server-launcher';
-export * from './socket-glsp-vscode-server';
+
+import { ICopyPasteHandler } from '@eclipse-glsp/client/lib/features/copy-paste/copy-paste-handler';
+
+export const CopyPasteHandlerProvider = Symbol('CopyPasteHandlerProvider');
+/**
+ * Service identifier and type definition to bind the {@link ICopyPasteHandler} to an provider.
+ * This enables asynchronous injections and can be used to bypass circular dependency issues.
+ */
+export type CopyPasteHandlerProvider = () => Promise<ICopyPasteHandler>;

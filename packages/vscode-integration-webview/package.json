@@ -33,16 +33,14 @@
   ],
   "dependencies": {
     "@eclipse-glsp/client": "next",
-    "sprotty-vscode-webview": "0.1.2"
+    "sprotty-vscode-webview": "0.2.0"
   },
   "devDependencies": {
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "latest",
-    "typescript": "^4.4.3"
+    "reflect-metadata": "^0.1.13"
   },
   "scripts": {
     "prepare": "yarn clean && yarn build && yarn lint",
-    "clean": "rimraf lib",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src"

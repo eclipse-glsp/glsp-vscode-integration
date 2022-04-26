@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 EclipseSource and others.
+ * Copyright (c) 2021-2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,8 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { InitializeResult } from '@eclipse-glsp/client';
-import { isString } from '@eclipse-glsp/protocol';
+import { hasStringProp, InitializeResult } from '@eclipse-glsp/client';
 
 export const GLSPDiagramIdentifier = Symbol('GLSPDiagramIdentifier');
 
@@ -29,8 +28,8 @@ export function isDiagramIdentifier(object: any): object is GLSPDiagramIdentifie
     return (
         object !== undefined &&
         typeof object === 'object' &&
-        isString(object, 'clientId') &&
-        isString(object, 'diagramType') &&
-        isString(object, 'uri')
+        hasStringProp(object, 'clientId') &&
+        hasStringProp(object, 'diagramType') &&
+        hasStringProp(object, 'uri')
     );
 }

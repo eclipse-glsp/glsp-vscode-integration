@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { existsSync } from 'fs';
+import * as fs from 'fs';
 import download from 'mvn-artifact-download';
 import { join } from 'path';
 
@@ -24,17 +24,17 @@ const artifactId = 'org.eclipse.glsp.example.workflow';
 const version = '0.10.0';
 const classifier = 'glsp';
 
-if (!existsSync(`${__dirname}/../extension/server/${artifactId}-${version}-${classifier}-SNAPSHOT.jar`)) {
-    console.log('Downloading latest version of the Workflow Example Java Server from the maven repository...');
-    download({ groupId, artifactId, version, classifier, isSnapShot: true }, downloadDir, mavenRepository)
-        .then(() =>
-            console.log(
-                'Download completed. Start the server using this command: \njava -jar org.eclipse.glsp.example.workflow-' +
-                    version +
-                    '-SNAPSHOT-glsp.jar org.eclipse.glsp.example.workflow.launch.ExampleServerLauncher\n\n'
-            )
-        )
-        .catch(err => console.error(err));
-} else {
-    console.log('Server jar already exists. Skipping download.');
+const serverExecutable = `${__dirname}/../extension/server/${artifactId}-${version}-${classifier}-SNAPSHOT.jar`;
+if (fs.existsSync(serverExecutable)) {
+    fs.unlinkSync(serverExecutable);
 }
+console.log('Downloading latest version of the Workflow Example Java Server from the maven repository...');
+download({ groupId, artifactId, version, classifier, isSnapShot: true }, downloadDir, mavenRepository)
+    .then(() =>
+        console.log(
+            'Download completed. Start the server using this command: \njava -jar org.eclipse.glsp.example.workflow-' +
+                version +
+                '-SNAPSHOT-glsp.jar org.eclipse.glsp.example.workflow.launch.ExampleServerLauncher\n\n'
+        )
+    )
+    .catch(err => console.error(err));
