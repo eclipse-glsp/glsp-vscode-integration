@@ -32,6 +32,7 @@ import {
     VscodeDiagramWidget,
     VscodeDiagramWidgetFactory
 } from 'sprotty-vscode-webview';
+import { VsCodeApi } from 'sprotty-vscode-webview/lib/services';
 import { CopyPasteHandlerProvider } from './copy-paste-handler-provider';
 import { GLSPDiagramIdentifier, isDiagramIdentifier } from './diagram-identifer';
 import { GLSPVscodeExtensionActionHandler } from './extension-action-handler';
@@ -67,6 +68,7 @@ export abstract class GLSPStarter extends SprottyStarter {
     }
 
     protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
+        container.bind(VsCodeApi).toConstantValue(this.vscodeApi);
         container.bind(GLSPVscodeDiagramWidget).toSelf().inSingletonScope();
         container.bind(VscodeDiagramWidget).toService(GLSPVscodeDiagramWidget);
         container
@@ -89,7 +91,7 @@ export abstract class GLSPStarter extends SprottyStarter {
     }
 
     protected configureExtensionActionHandler(container: Container, diagramIdentifier: SprottyDiagramIdentifier): void {
-        const extensionActionHandler = new GLSPVscodeExtensionActionHandler(this.extensionActionKinds, diagramIdentifier);
+        const extensionActionHandler = new GLSPVscodeExtensionActionHandler(this.extensionActionKinds, diagramIdentifier, this.vscodeApi);
         container.bind(GLSPVscodeExtensionActionHandler).toConstantValue(extensionActionHandler);
         container.bind(TYPES.IActionHandlerInitializer).toService(GLSPVscodeExtensionActionHandler);
     }

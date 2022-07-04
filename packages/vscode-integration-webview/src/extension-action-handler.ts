@@ -15,7 +15,7 @@
  ********************************************************************************/
 import { Action, ActionHandlerRegistry, IActionHandler, IActionHandlerInitializer, ICommand } from '@eclipse-glsp/client';
 import { SprottyDiagramIdentifier } from 'sprotty-vscode-webview';
-import { vscodeApi } from 'sprotty-vscode-webview/lib/vscode-api';
+import { VsCodeApi } from 'sprotty-vscode-webview/lib/services';
 
 /**
  * Delegates actions that should be handled inside of the glsp vscode extension instead
@@ -23,7 +23,11 @@ import { vscodeApi } from 'sprotty-vscode-webview/lib/vscode-api';
  * to the vscode API and/or node backend.
  */
 export class GLSPVscodeExtensionActionHandler implements IActionHandler, IActionHandlerInitializer {
-    constructor(protected readonly actionKinds: string[], protected readonly diagramIdentifier: SprottyDiagramIdentifier) {}
+    constructor(
+        protected readonly actionKinds: string[],
+        protected readonly diagramIdentifier: SprottyDiagramIdentifier,
+        protected vscodeApi: VsCodeApi
+    ) {}
 
     initialize(registry: ActionHandlerRegistry): void {
         this.actionKinds.forEach(kind => registry.register(kind, this));
@@ -36,7 +40,7 @@ export class GLSPVscodeExtensionActionHandler implements IActionHandler, IAction
                 action,
                 __localDispatch: true
             };
-            vscodeApi.postMessage(message);
+            this.vscodeApi.postMessage(message);
         }
     }
 }
