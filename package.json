@@ -16,7 +16,7 @@
     "build:ci": "lerna run build:ci"
   },
   "devDependencies": {
-    "@eclipse-glsp/config": "next",
+    "@eclipse-glsp/config": "^1.0.0",
     "@types/vscode": "^1.54.0",
     "lerna": "^4.0.0",
     "mvn-artifact-download": "5.1.0",
