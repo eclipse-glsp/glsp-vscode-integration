@@ -46,7 +46,8 @@
     "prepare": "yarn clean && yarn build && yarn lint",
     "clean": "rimraf lib ../extension/pack tsconfig.tsbuildinfo",
     "build": "tsc && webpack --mode=development",
-    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
     "watch": "tsc -w"
   }
 }
