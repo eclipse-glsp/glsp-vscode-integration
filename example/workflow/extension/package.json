@@ -184,23 +184,26 @@
   "dependencies": {
     "@vscode/codicons": "^0.0.25"
   },
-  "main": "./lib/index",
+  "main": "./dist/extension",
   "devDependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-next",
     "@types/vscode": "^1.54.0",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
-    "ts-loader": "^6.2.1",
+    "ts-loader": "^9.3.1",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0",
     "ts-node": "^10.8.2",
+    "vsce": "^2.9.3",
     "workflow-glsp-webview": "1.1.0-next"
   },
   "scripts": {
-    "prepare": "yarn clean && yarn build && yarn lint",
+    "prepare": "yarn clean &&  yarn download:Server && yarn build && yarn lint",
     "clean": "rimraf lib tsconfig.tsbuildinfo",
     "watch": "tsc -w",
     "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
-    "build": "tsc  && yarn download:Server",
-    "publish": "vsce publish",
+    "build": "tsc && webpack",
+    "package": "vsce package",
     "download:Server": "ts-node ../scripts/download.ts"
   },
   "workspaces": {

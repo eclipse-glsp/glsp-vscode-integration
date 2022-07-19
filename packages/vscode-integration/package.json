@@ -34,11 +34,10 @@
     "vscode": "^1.54.0"
   },
   "dependencies": {
-    "@eclipse-glsp/protocol": "next",
-    "vscode-jsonrpc": "^4.0.0"
+    "@eclipse-glsp/protocol": "osw"
   },
   "devDependencies": {
-    "@types/node": "^12.12.0",
+    "@types/node": "14.x",
     "@types/vscode": "^1.54.0"
   },
   "scripts": {
@@ -51,6 +50,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "lib/index",
-  "types": "lib/index"
+  "types": "lib/common/index",
+  "main": "lib/node/index",
+  "browser": {
+    "lib/node/index": "lib/node/browser"
+  }
 }

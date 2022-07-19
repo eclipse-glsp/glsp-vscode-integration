@@ -28,19 +28,18 @@
     }
   ],
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-glsp": "next",
+    "@eclipse-glsp-examples/workflow-glsp": "osw",
     "@eclipse-glsp/vscode-integration-webview": "1.1.0-next",
     "@vscode/codicons": "^0.0.25",
     "circular-dependency-plugin": "^5.2.2",
-    "css-loader": "^2.1.0",
+    "css-loader": "^6.7.1",
     "ignore-loader": "^0.1.2",
     "reflect-metadata": "^0.1.13",
-    "source-map-loader": "^1.0.2",
-    "style-loader": "^2.0.0",
-    "ts-loader": "^8.1.0",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^4.9.1",
-    "yargs": "^12.0.5"
+    "source-map-loader": "^4.0.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.1",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
   },
   "scripts": {
     "prepare": "yarn clean && yarn build && yarn lint",

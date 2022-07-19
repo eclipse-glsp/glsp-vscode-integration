@@ -13,12 +13,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { GlspVscodeConnector, NavigateAction } from '@eclipse-glsp/vscode-integration';
 import {
     configureDefaultCommands,
-    GlspServerLauncher,
-    SocketGlspVscodeServer
-} from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+    GlspVscodeConnector,
+    NavigateAction,
+    SocketGlspVscodeServer,
+    SocketServerLauncher
+} from '@eclipse-glsp/vscode-integration/node';
 import * as path from 'path';
 import * as process from 'process';
 import 'reflect-metadata';
@@ -30,21 +31,21 @@ const DEFAULT_SERVER_PORT = '5007';
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // Start server process using quickstart component
     if (process.env.GLSP_SERVER_DEBUG !== 'true') {
-        const serverProcess = new GlspServerLauncher({
+        const serverProcess = new SocketServerLauncher();
+        context.subscriptions.push(serverProcess);
+        console.log(`HELLO: serverPath: ${path.join(__dirname, '../server/org.eclipse.glsp.example.workflow-1.0.0-glsp.jar')}`);
+        await serverProcess.start({
             executable: path.join(__dirname, '../server/org.eclipse.glsp.example.workflow-1.0.0-glsp.jar'),
             socketConnectionOptions: { port: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT) },
             additionalArgs: ['--fileLog', 'true', '--logDir', path.join(__dirname, '../server')],
             logging: true,
             serverType: 'java'
         });
-        context.subscriptions.push(serverProcess);
-        await serverProcess.start();
     }
 
     // Wrap server with quickstart component
     const workflowServer = new SocketGlspVscodeServer({
         clientId: 'glsp.workflow',
-        clientName: 'workflow',
         serverPort: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT)
     });
 

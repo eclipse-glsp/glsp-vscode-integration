@@ -5,5 +5,5 @@
     "outDir": "lib",
     "baseUrl": "."
   },
-  "include": ["src"]
+  "include": ["src", "browser.d.ts"]
 }

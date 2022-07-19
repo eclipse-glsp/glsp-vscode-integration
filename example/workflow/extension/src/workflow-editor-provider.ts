@@ -13,8 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
-import { GlspEditorProvider } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import { GlspEditorProvider, GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 
 export default class WorkflowEditorProvider extends GlspEditorProvider {
@@ -36,6 +35,7 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
         const webview = webviewPanel.webview;
         const extensionUri = this.extensionContext.extensionUri;
         const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'pack', 'webview.js'));
+        console.log(`"HELLO": webviewScriptSourceUri: ${webviewScriptSourceUri}`);
         const codiconsUri = webview.asWebviewUri(
             vscode.Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css')
         );

@@ -2,6 +2,7 @@
 const path = require('path');
 
 const outputPath = path.resolve(__dirname, '../extension/pack');
+var CircularDependencyPlugin = require('circular-dependency-plugin');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
@@ -12,7 +13,7 @@ const config = {
         filename: 'webview.js',
         path: outputPath
     },
-    devtool: 'source-map-eval',
+    devtool: 'eval-source-map',
     mode: 'development',
 
     resolve: {
@@ -40,10 +41,13 @@ const config = {
             }
         ]
     },
-    node: { fs: 'empty', net: 'empty' },
-    stats: {
-        warningsFilter: [/Failed to parse source map/]
-    }
+    ignoreWarnings: [/Failed to parse source map/, /Can't resolve .* in '.*ws\/lib'/],
+    plugins: [
+        new CircularDependencyPlugin({
+            exclude: /(node_modules|examples)\/./,
+            failOnError: false
+        })
+    ]
 };
 
 module.exports = config;

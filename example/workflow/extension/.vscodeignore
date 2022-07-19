@@ -1,0 +1,10 @@
+.vscode
+node_modules
+lib/
+src/
+tsconfig.json
+webpack.config.js
+server/.gitkeep
+server/*.log
+tsconfig.tsbuildinfo
+.eslintrc.js
