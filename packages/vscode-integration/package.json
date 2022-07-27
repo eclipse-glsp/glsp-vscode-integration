@@ -46,7 +46,8 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo",
     "build": "tsc",
     "watch": "tsc -w",
-    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src"
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src"
   },
   "publishConfig": {
     "access": "public"

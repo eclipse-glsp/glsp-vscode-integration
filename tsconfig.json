@@ -1,9 +1,0 @@
-{
-  "extends": "@eclipse-glsp/ts-config/tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@eclipse-glsp/vscode-integration": ["vscode-extension/src/*"]
-    }
-  }
-}
