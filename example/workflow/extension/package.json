@@ -202,7 +202,7 @@
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
     "build": "tsc  && yarn download:Server",
     "publish": "vsce publish",
-    "download:Server": "ts-node ../scripts/download.ts"
+    "download:Server": "ts-node scripts/download.ts"
   },
   "workspaces": {
     "nohoist": [
