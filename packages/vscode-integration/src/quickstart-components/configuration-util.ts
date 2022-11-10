@@ -60,4 +60,11 @@ export function configureDefaultCommands(context: CommandContext): void {
             connector.sendActionToActiveClient(RequestExportSvgAction.create());
         })
     );
+
+    extensionContext.subscriptions.push(
+        connector.onSelectionUpdate(n => {
+            selectedElements = n;
+            vscode.commands.executeCommand('setContext', `${diagramPrefix}.editorSelectedElementsAmount`, n.length);
+        })
+    );
 }
