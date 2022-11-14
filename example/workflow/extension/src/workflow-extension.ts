@@ -23,15 +23,21 @@ import * as path from 'path';
 import * as process from 'process';
 import 'reflect-metadata';
 import * as vscode from 'vscode';
+import * as config from './server-config.json';
 import WorkflowEditorProvider from './workflow-editor-provider';
 
 const DEFAULT_SERVER_PORT = '5007';
+const { version, isSnapShot } = config;
+const JAVA_EXECUTABLE = path.join(
+    __dirname,
+    `../server/org.eclipse.glsp.example.workflow-${version}${isSnapShot ? '-SNAPSHOT' : ''}-glsp.jar`
+);
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // Start server process using quickstart component
     if (process.env.GLSP_SERVER_DEBUG !== 'true') {
         const serverProcess = new GlspServerLauncher({
-            executable: path.join(__dirname, '../server/org.eclipse.glsp.example.workflow-1.0.0-glsp.jar'),
+            executable: JAVA_EXECUTABLE,
             socketConnectionOptions: { port: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT) },
             additionalArgs: ['--fileLog', 'true', '--logDir', path.join(__dirname, '../server')],
             logging: true,
