@@ -195,14 +195,13 @@
     "workflow-glsp-webview": "1.1.0-next"
   },
   "scripts": {
-    "prepare": "yarn clean && yarn build && yarn lint",
-    "clean": "rimraf lib tsconfig.tsbuildinfo",
-    "watch": "tsc -w",
+    "build": "tsc -b",
+    "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "download:Server": "ts-node scripts/download.ts",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
-    "build": "tsc  && yarn download:Server",
-    "publish": "vsce publish",
-    "download:Server": "ts-node scripts/download.ts"
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "prepare": "yarn clean && yarn build",
+    "watch": "tsc -w"
   },
   "workspaces": {
     "nohoist": [
