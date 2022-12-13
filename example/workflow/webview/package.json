@@ -43,11 +43,11 @@
     "yargs": "^12.0.5"
   },
   "scripts": {
-    "prepare": "yarn clean && yarn build && yarn lint",
-    "clean": "rimraf lib ../extension/pack tsconfig.tsbuildinfo",
-    "build": "tsc && webpack --mode=development",
+    "build": "tsc -b",
+    "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "prepare": "yarn clean && yarn build",
     "watch": "tsc -w"
   }
 }
