@@ -20,6 +20,14 @@ Clone this repository and build the VSCode integration packages:
 yarn install
 ```
 
+Additionally you can download a precompiled version of the Workflow Diagram Server:
+
+```bash
+yarn --cwd example/workflow/extension download:Server
+```
+
+> The downloaded server will be launched automatically by the extension. To debug or modify the server and run it separately: see the instructions below.
+
 Now you can start the VSCode extension by opening this repository in VSCode and executing the "Workflow GLSP Example Extension" launch configuration, provided with this project.
 
 ### How to start the Workflow Diagram example server from the sources
