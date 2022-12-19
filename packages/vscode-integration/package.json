@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@eclipse-glsp/protocol": "next",
-    "vscode-jsonrpc": "^4.0.0"
+    "vscode-jsonrpc": "^8.0.2"
   },
   "devDependencies": {
     "@types/node": "^12.12.0",

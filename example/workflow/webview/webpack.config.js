@@ -12,10 +12,14 @@ const config = {
         filename: 'webview.js',
         path: outputPath
     },
-    devtool: 'source-map-eval',
+    devtool: 'eval-source-map',
     mode: 'development',
 
     resolve: {
+        fallback: {
+            fs: false,
+            net: false,
+        },
         extensions: ['.ts', '.tsx', '.js']
     },
     module: {
@@ -40,10 +44,7 @@ const config = {
             }
         ]
     },
-    node: { fs: 'empty', net: 'empty' },
-    stats: {
-        warningsFilter: [/Failed to parse source map/]
-    }
+    ignoreWarnings: [/Failed to parse source map/, /Can't resolve .* in '.*ws\/lib'/],
 };
 
 module.exports = config;
