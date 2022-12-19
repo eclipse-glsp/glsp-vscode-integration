@@ -1,5 +1,11 @@
 # Eclipse GLSP VSCode Integration Changelog
 
+## [1.1.0 - Upcoming]()
+
+### Changes
+
+-   [protocol] Update to vscode-jsonrpc 8.0.2 [#31](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/31)
+
 ## [v1.0.0 - 30/06/2022](https://github.com/eclipse-glsp/glsp-client/releases/tag/v1.0.0)
 
 ### Changes
