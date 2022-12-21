@@ -25,7 +25,7 @@
     "mvn-artifact-download": "5.1.0"
   },
   "resolutions": {
-    "**/sprotty": "0.13.0-next.1c4343c.328"
+    "**/sprotty": "0.13.0-next.f4445dd.342"
   },
   "workspaces": [
     "packages/*/",
