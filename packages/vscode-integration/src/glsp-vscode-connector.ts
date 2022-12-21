@@ -20,13 +20,13 @@ import {
     InitializeClientSessionParameters,
     InitializeResult,
     NavigateToExternalTargetAction,
-    RedoOperation,
+    RedoAction,
     RequestModelAction,
     SaveModelAction,
     SelectAction,
     SetDirtyStateAction,
     SetMarkersAction,
-    UndoOperation
+    UndoAction
 } from '@eclipse-glsp/protocol';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
@@ -305,10 +305,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 this.onDidChangeCustomDocumentEventEmitter.fire({
                     document: client.document,
                     undo: () => {
-                        this.sendActionToClient(client.clientId, UndoOperation.create());
+                        this.sendActionToClient(client.clientId, UndoAction.create());
                     },
                     redo: () => {
-                        this.sendActionToClient(client.clientId, RedoOperation.create());
+                        this.sendActionToClient(client.clientId, RedoAction.create());
                     }
                 });
             }
