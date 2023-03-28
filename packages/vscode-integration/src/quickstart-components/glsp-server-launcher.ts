@@ -74,6 +74,13 @@ export class GlspServerLauncher implements vscode.Disposable {
 
             process.stdout.on('data', data => {
                 if (data.toString().includes(START_UP_COMPLETE_MSG)) {
+                    const port = this.getPortFromStartupMessage(data.toString());
+                    if (port) {
+                        console.log(`GLSP server started on port ${port}`);
+                        this.options.socketConnectionOptions.port = port;
+                    } else {
+                        throw new Error('Could not find listening port in startup message of GLSP server!');
+                    }
                     resolve();
                 }
 
@@ -115,6 +122,14 @@ export class GlspServerLauncher implements vscode.Disposable {
         return childProcess.spawn('node', args);
     }
 
+    protected getPortFromStartupMessage(message: string): number | undefined {
+        if (message.includes(START_UP_COMPLETE_MSG)) {
+            const port = message.substring(message.lastIndexOf(':') + 1);
+            return parseInt(port, 10);
+        }
+        return undefined;
+    }
+
     protected handleStdoutData(data: string | Buffer): void {
         if (this.options.logging) {
             console.log('GLSP-Server:', data.toString());
@@ -133,6 +148,10 @@ export class GlspServerLauncher implements vscode.Disposable {
         }
 
         throw error;
+    }
+
+    getPort(): number {
+        return this.options.socketConnectionOptions.port;
     }
 
     /**

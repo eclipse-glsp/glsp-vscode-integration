@@ -54,7 +54,7 @@ import { GlspServerLauncher } from '@eclipse-glsp/vscode-integration/lib/quickst
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     const serverProcess = new GlspServerLauncher({
         jarPath: '/your/path/to/server.jar',
-        serverPort: 5007
+        serverPort: 0 // for auto port
     });
     context.subscriptions.push(serverProcess);
     await serverProcess.start();
@@ -82,7 +82,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const workflowServer = new SocketGlspVscodeServer({
         clientId: 'some.client.id',
         clientName: 'SomeClientName',
-        serverPort: 5007
+        serverPort: serverProcess.getPort()
     });
 
     const glspVscodeConnector = new GlspVscodeConnector({ server: workflowServer });
