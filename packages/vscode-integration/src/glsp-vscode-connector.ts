@@ -167,7 +167,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
                 if (typeof filteredMessage !== 'undefined') {
                     (filteredMessage as any)['relativeDocumentUri'] = this.getRelativeDocumentUri(client);
-                    (filteredMessage as any)['subclientId'] = 'H';
+                    (filteredMessage as any).action['subclientId'] = 'H';
                     this.options.server.onSendToServerEmitter.fire(filteredMessage);
                 }
             });
@@ -205,14 +205,18 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         await glspClient.initializeClientSession(initializeParams);
         return this.options.server.initializeResult;
     }
-    
+
     protected getRelativeDocumentUri(client: GlspVscodeClient<D>): string {
+        // FIXME %20 instead of blankspace
         let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.toString();
         workspacePath = workspacePath?.endsWith('/') ? workspacePath : workspacePath + '/';
         return client.document.uri.toString().replace(workspacePath, '');
     }
 
-    protected async createInitializeClientSessionParams(client: GlspVscodeClient<D>, relativeDocumentUri: string): Promise<InitializeClientSessionParameters> {
+    protected async createInitializeClientSessionParams(
+        client: GlspVscodeClient<D>,
+        relativeDocumentUri: string
+    ): Promise<InitializeClientSessionParameters> {
         return {
             clientSessionId: client.clientId,
             diagramType: client.diagramType,

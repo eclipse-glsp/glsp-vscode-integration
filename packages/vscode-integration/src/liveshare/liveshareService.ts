@@ -145,11 +145,8 @@ class LiveshareService {
                 this._service!.onRequest('SEND_ACTION_MESSAGE', async params => {
                     const actionMessage = params[1] as ActionMessage;
                     const subclientId = params[2] as string;
-                    const newActionMessage = {
-                        ...actionMessage,
-                        subclientId
-                    };
-                    (await this._server.glspClient).sendActionMessage(newActionMessage);
+                    (actionMessage.action as any)['subclientId'] = subclientId;
+                    (await this._server.glspClient).sendActionMessage(actionMessage);
                 });
 
                 // TODO DA here we could expose the file as GModel
@@ -186,7 +183,7 @@ class LiveshareService {
                 this._service!.onNotify('ON_ACTION_MESSAGE', (message: any) => {
                     message = message as ActionMessage;
                     // message is for this guest
-                    if (e.session.peerNumber === +(message as any)['subclientId']) {
+                    if (e.session.peerNumber === +((message.action as any)['subclientId'])) {
                         this._server.onServerSendEmitter.fire(message);
                     }
                 });

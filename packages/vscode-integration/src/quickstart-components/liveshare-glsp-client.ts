@@ -21,8 +21,10 @@ import {
     GLSPClient,
     InitializeClientSessionParameters,
     InitializeParameters,
-    InitializeResult
+    InitializeResult,
+    RequestModelAction
 } from '@eclipse-glsp/protocol';
+import * as vscode from 'vscode';
 
 import { liveshareService } from '../liveshare';
 
@@ -32,9 +34,9 @@ export class LiveshareGlspClient implements GLSPClient {
     protected jsonrpcClient: GLSPClient;
     // Map<relativeDocumentUri, Map<subclientId, local/original clientSessionId> subclientId H = host
     protected registeredSubclientMap = new Map<string, Map<string, string>>();
-    // overwritten clientSessionIds for Server: Map<relativeDocumentUri, temp clientSessionId>
+    // overwritten clientSessionIds for Server: Map<relativeDocumentUri, temp/unique clientSessionId>
     protected serverClientIdMap = new Map<string, string>();
-    // Map<temp requestId, {sublientId, local/original RequestId}>
+    // Map<temp/unique requestId, {sublientId, local/original RequestId}>
     protected requestSubclientMap = new Map<string, { subclientId: string, originalRequestId: string }>();
 
     protected nextUniqueRequestId = 10000;
@@ -99,8 +101,7 @@ export class LiveshareGlspClient implements GLSPClient {
         this.jsonrpcClient.onActionMessage((message) => {
             if (!liveshareService.isConnectionOpen()) {
                 const relativeDocumentUri = this.getRelativeDocumentUriByServerClientId(message.clientId) || '';
-                const subclientId = 'H';
-                (message as any)['subclientId'] = subclientId;
+                const subclientId = (message.action as any)['subclientId'] || 'H';
                 message.clientId = this.registeredSubclientMap?.get(relativeDocumentUri)?.get(subclientId) || '';
                 const tempRequestId = (message.action as any)['responseId'];
                 if (tempRequestId != null) {
@@ -116,7 +117,7 @@ export class LiveshareGlspClient implements GLSPClient {
                     const originalRequestId = this.requestSubclientMap.get(tempRequestId)?.originalRequestId || '';
                     this.requestSubclientMap.delete(tempRequestId);
                     (message.action as any)['responseId'] = originalRequestId;
-                    (message as any)['subclientId'] = subclientId;
+                    (message.action as any)['subclientId'] = subclientId;
                     // find initial local clientId to action
                     const relativeDocumentUri = this.getRelativeDocumentUriByServerClientId(message.clientId) || '';
                     message.clientId = this.registeredSubclientMap?.get(relativeDocumentUri)?.get(subclientId) || '';
@@ -129,9 +130,7 @@ export class LiveshareGlspClient implements GLSPClient {
                     const relativeDocumentUri = this.getRelativeDocumentUriByServerClientId(message.clientId) || '';
                     const subclientMap = this.registeredSubclientMap?.get(relativeDocumentUri)
                     if (subclientMap?.size! > 0) {
-                        // get host subclientId or first guest subclientId
-                        const subclientId = (subclientMap!.has('H') ? 'H' : Array.from(subclientMap!.keys())[0]) || '';
-                        (message as any)['subclientId'] = subclientId;
+                        const subclientId = (message.action as any)['subclientId'] || 'H';
                         message.clientId = subclientMap?.get(subclientId) || '';
                         if (subclientId === 'H') {
                             handler(message); // host over handler
@@ -150,7 +149,7 @@ export class LiveshareGlspClient implements GLSPClient {
                     const subclientMap = this.registeredSubclientMap.get(relativeDocumentUri);
                     if (subclientMap) {
                         for (const [subclientId, clientId] of subclientMap.entries()) {
-                            (message as any)['subclientId'] = subclientId;
+                            (message.action as any)['subclientId'] = subclientId;
                             message.clientId = clientId;
                             if (subclientId === 'H') {
                                 handler(message); // host over handler
@@ -168,11 +167,19 @@ export class LiveshareGlspClient implements GLSPClient {
         const relativeDocumentUri = (message as any)['relativeDocumentUri'] as string;
         if (!liveshareService.isConnectionOpen() || liveshareService.isHost()) {
             message.clientId = this.serverClientIdMap.get(relativeDocumentUri) || '';
+            // if requestModel action and originClient not host => change sourceUri
+            if (message.action.kind === 'requestModel' && (message.action as any)['subclientId'] !== 'H') {
+                const requestModelAction = message.action as RequestModelAction;
+                requestModelAction.options = {
+                    ...requestModelAction.options,
+                    sourceUri: this.getFullDocumentUri(relativeDocumentUri)
+                }
+            }
             const originalRequestId = (message.action as any)['requestId'];
             if (originalRequestId != null) {
                 const tempRequestId = this.generateRequestId();
                 (message.action as any)['requestId'] = tempRequestId;
-                const subclientId = (message as any)['subclientId'] as string;
+                const subclientId = (message.action as any)['subclientId'] as string;
                 this.requestSubclientMap.set(tempRequestId, { subclientId, originalRequestId });
             }
             this.jsonrpcClient.sendActionMessage(message);
@@ -205,5 +212,11 @@ export class LiveshareGlspClient implements GLSPClient {
                 return key;
         }
         return undefined;
+    }
+
+    protected getFullDocumentUri(relativeDocumentUri: string): string {
+        let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.toString();
+        workspacePath = workspacePath?.endsWith('/') ? workspacePath : workspacePath + '/';
+        return workspacePath + relativeDocumentUri;
     }
 }
