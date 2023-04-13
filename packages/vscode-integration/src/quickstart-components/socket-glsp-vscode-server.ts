@@ -26,6 +26,7 @@ import * as vscode from 'vscode';
 import { createMessageConnection } from 'vscode-jsonrpc';
 import { SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node';
 import { GlspVscodeServer } from '../types';
+import { LiveshareGlspClient } from './liveshare-glsp-client';
 
 interface SocketGlspVscodeServerOptions {
     /** Port of the running server. */
@@ -52,10 +53,10 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
     readonly onSendToServerEmitter = new vscode.EventEmitter<unknown>();
     readonly onServerMessage: vscode.Event<unknown>;
 
-    protected readonly onServerSendEmitter = new vscode.EventEmitter<unknown>();
+    readonly onServerSendEmitter = new vscode.EventEmitter<unknown>();
 
     protected readonly socket = new net.Socket();
-    protected readonly _glspClient: GLSPClient;
+    protected _glspClient: GLSPClient;
 
     protected readonly onReady: Promise<void>;
     protected setReady: () => void;
@@ -72,10 +73,10 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
         const writer = new SocketMessageWriter(this.socket);
         const connection = createMessageConnection(reader, writer);
 
-        this._glspClient = new BaseJsonrpcGLSPClient({
+        this._glspClient = new LiveshareGlspClient(options.clientId, new BaseJsonrpcGLSPClient({
             id: options.clientId,
             connectionProvider: connection
-        });
+        }));
 
         this.onSendToServerEmitter.event(message => {
             this.onReady.then(() => {
@@ -131,5 +132,16 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
 
     get glspClient(): Promise<GLSPClient> {
         return this.onReady.then(() => this._glspClient);
+    }
+
+    async initalizeNewGlspClient(glspClient: GLSPClient): Promise<void> {
+        // await this._glspClient.stop(); // old client
+
+        this._glspClient = glspClient;
+        await this._glspClient.start();
+
+        this._glspClient.onActionMessage(message => {
+            this.onServerSendEmitter.fire(message);
+        });
     }
 }

@@ -28,6 +28,9 @@
     "vscode": "^1.54.0"
   },
   "contributes": {
+    "liveshare.spaces": [
+      "vsls-workspace"
+    ],
     "customEditors": [
       {
         "viewType": "workflow.glspDiagram",
@@ -182,8 +185,12 @@
     "webview"
   ],
   "dependencies": {
-    "@vscode/codicons": "^0.0.25"
+    "@vscode/codicons": "^0.0.25",
+    "vsls": "^1.0.4753"
   },
+  "extensionDependencies": [
+    "ms-vsliveshare.vsliveshare"
+  ],
   "main": "./lib/index",
   "devDependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-next",

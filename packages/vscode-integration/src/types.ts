@@ -85,7 +85,8 @@ export interface GlspVscodeServer {
      * and processed.
      */
     readonly onSendToServerEmitter: vscode.EventEmitter<unknown>;
-
+    
+    readonly onServerSendEmitter: vscode.EventEmitter<unknown>;
     /**
      * An event the VSCode integration uses to receive messages from the server.
      * The messages are then propagated to the client or processed by the VSCode
@@ -110,6 +111,8 @@ export interface GlspVscodeServer {
      * to call this method during the their initialization phase.
      */
     readonly initializeResult: Promise<InitializeResult>;
+
+    initalizeNewGlspClient(glspClient: GLSPClient): Promise<void>;
 }
 
 interface InterceptorCallback {

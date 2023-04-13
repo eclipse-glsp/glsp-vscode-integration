@@ -13,8 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export * from '@eclipse-glsp/protocol';
-export * from './client-actions';
-export * from './glsp-vscode-connector';
-export * from './liveshare';
-export * from './types';
+export const GET_COUNT_REQUEST = 'getCount';
+export const INCREMENT_COUNT_COMMAND = 'liveshare.incrementCount';
+export const INCREMENT_COUNT_NOTIFICATION = 'incrementCount';
+export const SERVICE_NAME = 'counter';

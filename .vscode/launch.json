@@ -20,7 +20,7 @@
       "sourceMaps": true
     },
     {
-      "name": "Workflow GLSP Example Extension (External GLSP Server)",
+      "name": "Workflow GLSP Example Extension (External GLSP Server) 5007",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
@@ -36,6 +36,25 @@
       "env": {
         "GLSP_SERVER_DEBUG": "true",
         "GLSP_SERVER_PORT": "5007"
+      }
+    },
+    {
+      "name": "Workflow GLSP Example Extension (External GLSP Server) 5017",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "${workspaceFolder}/example/workflow/workspace",
+        "--extensionDevelopmentPath=${workspaceFolder}/example/workflow/extension"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/example/workflow/extension/lib/*.js",
+        "${workspaceFolder}/vscode-integration/lib/**/*.js"
+      ],
+      "sourceMaps": true,
+      "env": {
+        "GLSP_SERVER_DEBUG": "true",
+        "GLSP_SERVER_PORT": "5017"
       }
     }
   ]
