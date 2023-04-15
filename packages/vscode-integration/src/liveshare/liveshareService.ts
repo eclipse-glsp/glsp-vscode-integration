@@ -14,7 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import {ActionMessage, DisposeClientSessionParameters, GLSPClient, InitializeClientSessionParameters, Operation } from '@eclipse-glsp/protocol';
+import {
+    ActionMessage,
+    DisposeClientSessionParameters,
+    GLSPClient,
+    InitializeClientSessionParameters,
+    Operation
+} from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { LiveShare, Role, Session, SharedService, SharedServiceProxy, getApi } from 'vsls';
 import { GlspVscodeServer } from '../types';
@@ -67,7 +73,6 @@ class LiveshareService {
     get hostService(): SharedService {
         return this._service as SharedService;
     }
-
 
     async liveshare(context: vscode.ExtensionContext): Promise<void> {
         this.vsls = (await getApi())!;
@@ -129,7 +134,7 @@ class LiveshareService {
                         ...initializeClientSessionParams.args,
                         subclientId
                     };
-                    (await this._server.glspClient).initializeClientSession(initializeClientSessionParams);
+                    await (await this._server.glspClient).initializeClientSession(initializeClientSessionParams);
                 });
 
                 this._service!.onRequest('DISPOSE_CLIENT_SESSION', async params => {
@@ -139,7 +144,7 @@ class LiveshareService {
                         ...disposeClientSessionParams.args,
                         subclientId
                     };
-                    (await this._server.glspClient).disposeClientSession(disposeClientSessionParams);
+                    await (await this._server.glspClient).disposeClientSession(disposeClientSessionParams);
                 });
 
                 this._service!.onRequest('SEND_ACTION_MESSAGE', async params => {
@@ -183,7 +188,7 @@ class LiveshareService {
                 this._service!.onNotify('ON_ACTION_MESSAGE', (message: any) => {
                     message = message as ActionMessage;
                     // message is for this guest
-                    if (e.session.peerNumber === +((message.action as any)['subclientId'])) {
+                    if (e.session.peerNumber === +(message.action as any)['subclientId']) {
                         this._server.onServerSendEmitter.fire(message);
                     }
                 });
