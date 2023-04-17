@@ -195,7 +195,9 @@ export class CollaborateGlspClient implements GLSPClient {
 }
 
 function getFullDocumentUri(relativeDocumentUri: string): string {
-    let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.toString();
-    workspacePath = workspacePath?.endsWith('/') ? workspacePath : workspacePath + '/';
+    let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.path || '';
+    // FIXME test on microsoft
+    workspacePath = workspacePath.endsWith('/') ? workspacePath : `${workspacePath}/`;
+    workspacePath = workspacePath.startsWith('file://') ? workspacePath : `file://${workspacePath}`;
     return workspacePath + relativeDocumentUri;
 }

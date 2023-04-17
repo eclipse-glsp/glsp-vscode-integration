@@ -507,6 +507,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
 function getRelativeDocumentUri(client: GlspVscodeClient): string {
     let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.path;
+    // FIXME test on microsoft
     workspacePath = workspacePath?.endsWith('/') ? workspacePath : `${workspacePath}/`
     return client.document.uri.path.replace(workspacePath, '');
 }
