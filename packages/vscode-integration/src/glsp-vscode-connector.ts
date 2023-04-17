@@ -31,6 +31,7 @@ import {
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
+import { isActionMessage, SUBCLIENT_HOST_ID } from './action-types';
 
 // eslint-disable-next-line no-shadow
 export enum MessageOrigin {
@@ -147,6 +148,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         this.clientMap.set(client.clientId, client);
         this.documentMap.set(client.document, client.clientId);
 
+        const relativeDocumentUri = getRelativeDocumentUri(client);
+
         // Set up message listener for client
         const clientMessageListener = client.onClientMessage(message => {
             if (this.options.logging) {
@@ -166,8 +169,13 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 const filteredMessage = this.options.onBeforePropagateMessageToServer(newMessage, processedMessage, messageChanged);
 
                 if (typeof filteredMessage !== 'undefined') {
-                    (filteredMessage as any)['relativeDocumentUri'] = this.getRelativeDocumentUri(client);
-                    (filteredMessage as any).action['subclientId'] = 'H';
+                    if (isActionMessage(filteredMessage)) {
+                        filteredMessage.args = {
+                            ...filteredMessage.args,
+                            relativeDocumentUri
+                        }
+                        filteredMessage.action.subclientId = SUBCLIENT_HOST_ID;
+                    }
                     this.options.server.onSendToServerEmitter.fire(filteredMessage);
                 }
             });
@@ -179,7 +187,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             }
         });
 
-        const relativeDocumentUri = this.getRelativeDocumentUri(client);
+
 
         // Cleanup when client panel is closed
         const panelOnDisposeListener = client.webviewPanel.onDidDispose(async () => {
@@ -194,27 +202,21 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 clientSessionId: client.clientId,
                 args: {
                     relativeDocumentUri,
-                    subclientId: 'H'
+                    subclientId: SUBCLIENT_HOST_ID
                 }
             });
         });
 
         // Initialize client session
         const glspClient = await this.options.server.glspClient;
-        const initializeParams = await this.createInitializeClientSessionParams(client, relativeDocumentUri);
+        const initializeParams = await this.createInitializeClientSessionParams(client, SUBCLIENT_HOST_ID, relativeDocumentUri);
         await glspClient.initializeClientSession(initializeParams);
         return this.options.server.initializeResult;
     }
 
-    protected getRelativeDocumentUri(client: GlspVscodeClient<D>): string {
-        // FIXME %20 instead of blankspace
-        let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.toString();
-        workspacePath = workspacePath?.endsWith('/') ? workspacePath : workspacePath + '/';
-        return client.document.uri.toString().replace(workspacePath, '');
-    }
-
     protected async createInitializeClientSessionParams(
         client: GlspVscodeClient<D>,
+        subclientId: string,
         relativeDocumentUri: string
     ): Promise<InitializeClientSessionParameters> {
         return {
@@ -222,7 +224,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             diagramType: client.diagramType,
             args: {
                 relativeDocumentUri,
-                subclientId: 'H'
+                subclientId
             }
         };
     }
@@ -502,3 +504,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         this.disposables.forEach(disposable => disposable.dispose());
     }
 }
+
+function getRelativeDocumentUri(client: GlspVscodeClient): string {
+    let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.path;
+    workspacePath = workspacePath?.endsWith('/') ? workspacePath : `${workspacePath}/`
+    return client.document.uri.path.replace(workspacePath, '');
+}
+

@@ -111,8 +111,6 @@ export interface GlspVscodeServer {
      * to call this method during the their initialization phase.
      */
     readonly initializeResult: Promise<InitializeResult>;
-
-    initalizeNewGlspClient(glspClient: GLSPClient): Promise<void>;
 }
 
 interface InterceptorCallback {

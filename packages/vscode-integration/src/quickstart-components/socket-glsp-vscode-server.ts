@@ -22,11 +22,12 @@ import {
     InitializeResult
 } from '@eclipse-glsp/protocol';
 import * as net from 'net';
+import { LiveshareGlspClientProvider } from '../liveshare';
 import * as vscode from 'vscode';
 import { createMessageConnection } from 'vscode-jsonrpc';
 import { SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node';
 import { GlspVscodeServer } from '../types';
-import { LiveshareGlspClient } from './liveshare-glsp-client';
+import { CollaborateGlspClient } from './collaborate-glsp-client';
 
 interface SocketGlspVscodeServerOptions {
     /** Port of the running server. */
@@ -60,6 +61,7 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
 
     protected readonly onReady: Promise<void>;
     protected setReady: () => void;
+    protected liveshareGlspClientProvider: LiveshareGlspClientProvider;
     _initializeResult: InitializeResult;
 
     constructor(protected readonly options: SocketGlspVscodeServerOptions) {
@@ -72,11 +74,13 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
         const reader = new SocketMessageReader(this.socket);
         const writer = new SocketMessageWriter(this.socket);
         const connection = createMessageConnection(reader, writer);
+        
+        this.liveshareGlspClientProvider = new LiveshareGlspClientProvider();
 
-        this._glspClient = new LiveshareGlspClient(options.clientId, new BaseJsonrpcGLSPClient({
+        this._glspClient = new CollaborateGlspClient(new BaseJsonrpcGLSPClient({
             id: options.clientId,
             connectionProvider: connection
-        }));
+        }), this.liveshareGlspClientProvider);
 
         this.onSendToServerEmitter.event(message => {
             this.onReady.then(() => {
@@ -88,10 +92,12 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
     }
 
     /**
-     * Starts up the JSON-RPC client and connects it to a running server.
+     * Starts up the JSON-RPC client, initializes liveshare, and connects it to a running server.
      */
     async start(): Promise<void> {
         this.socket.connect(this.options.serverPort);
+
+        await this.liveshareGlspClientProvider.initialize(this);
 
         await this._glspClient.start();
         const parameters = await this.createInitializeParameters();
@@ -132,16 +138,5 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
 
     get glspClient(): Promise<GLSPClient> {
         return this.onReady.then(() => this._glspClient);
-    }
-
-    async initalizeNewGlspClient(glspClient: GLSPClient): Promise<void> {
-        // await this._glspClient.stop(); // old client
-
-        this._glspClient = glspClient;
-        await this._glspClient.start();
-
-        this._glspClient.onActionMessage(message => {
-            this.onServerSendEmitter.fire(message);
-        });
     }
 }
