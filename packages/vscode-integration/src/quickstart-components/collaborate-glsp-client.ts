@@ -153,13 +153,19 @@ export class CollaborateGlspClient implements GLSPClient {
         if (!this.provider.isInCollaborateMode() || this.provider.isHost()) {
             const relativeDocumentUri = this.getRelativeDocumentUriByArgs(message.args);
             message.clientId = this.serverClientIdMap.get(relativeDocumentUri) || '';
-            // if requestModel action and originClient not host => change sourceUri
-            if (message.action.kind === RequestModelAction.KIND && message.action.subclientId !== SUBCLIENT_HOST_ID) {
+            // if requestModel action => add disableReload and if originClient not host => change sourceUri
+            if (message.action.kind === RequestModelAction.KIND) {
                 const requestModelAction = message.action as RequestModelAction;
                 requestModelAction.options = {
                     ...requestModelAction.options,
-                    sourceUri: getFullDocumentUri(relativeDocumentUri)
+                    disableReload: true
                 };
+                if (message.action.subclientId !== SUBCLIENT_HOST_ID) {
+                    requestModelAction.options = {
+                        ...requestModelAction.options,
+                        sourceUri: getFullDocumentUri(relativeDocumentUri),
+                    };
+                }
             }
             this.glspClient.sendActionMessage(message);
         } else if (this.provider.isGuest()) {

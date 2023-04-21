@@ -77,7 +77,7 @@ export class LiveshareGlspClientProvider implements CollaborateGlspClientProvide
                     this.service.onNotify(ON_ACTION_MESSAGE, (message: any) => {
                         const typedMessage = message as ActionMessage;
                         const subclientId = typedMessage.action.subclientId;
-                        // checm ifmessage is adreeed to this guest
+                        // check if message is adrseeed to this guest
                         if (this.createSubclientIdFromSession() === subclientId) {
                             this.server.onServerSendEmitter.fire(message);
                         }
