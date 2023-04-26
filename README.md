@@ -23,7 +23,7 @@ yarn install
 Additionally you can download a precompiled version of the Workflow Diagram Server:
 
 ```bash
-yarn --cwd example/workflow/extension download:Server
+yarn download:exampleServer
 ```
 
 > The downloaded server will be launched automatically by the extension. To debug or modify the server and run it separately: see the instructions below.
