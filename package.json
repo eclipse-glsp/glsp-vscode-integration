@@ -1,34 +1,36 @@
 {
   "private": true,
-  "engines": {
-    "yarn": ">=1.7.0 <2.x.x",
-    "node": ">=14.18.0"
-  },
+  "workspaces": [
+    "packages/*/",
+    "example/workflow/*"
+  ],
   "scripts": {
     "all": "yarn install && yarn lint",
     "build": "lerna run build",
+    "check:headers": "glsp checkHeaders . -t lastCommit",
+    "check:pr": "yarn all && yarn check:headers",
     "clean": "lerna run clean",
+    "download:exampleServer": "yarn --cwd example/workflow/extension download:Server",
     "lint": "lerna run lint",
     "lint:ci": "lerna run lint:ci",
     "prepare": "lerna run prepare",
-    "publish:prepare": "lerna version --ignore-scripts --yes --no-push",
     "publish:latest": "lerna publish from-git --no-git-reset --no-git-tag-version --no-verify-access --no-push",
     "publish:next": "SHA=$(git rev-parse --short HEAD) && lerna publish preminor --exact --canary --preid next.${SHA} --dist-tag next --no-git-reset --no-git-tag-version --no-push --ignore-scripts --yes --no-verify-access",
+    "publish:prepare": "lerna version --ignore-scripts --yes --no-push",
     "upgrade:next": "yarn upgrade -p \"@eclipse-glsp.*|sprotty.*\" --next ",
     "watch": "lerna run --parallel watch"
-  },
-  "devDependencies": {
-    "@eclipse-glsp/config": "1.1.0-next.e31f2e5.119",
-    "@eclipse-glsp/config-test": "1.1.0-next.e31f2e5.119",
-    "@types/node": "16",
-    "@types/vscode": "^1.54.0",
-    "mvn-artifact-download": "5.1.0"
   },
   "resolutions": {
     "**/sprotty": "0.13.0-next.f4445dd.342"
   },
-  "workspaces": [
-    "packages/*/",
-    "example/workflow/*"
-  ]
+  "devDependencies": {
+    "@eclipse-glsp/dev": "next",
+    "@types/node": "16",
+    "@types/vscode": "^1.54.0",
+    "mvn-artifact-download": "5.1.0"
+  },
+  "engines": {
+    "node": ">=14.18.0",
+    "yarn": ">=1.7.0 <2.x.x"
+  }
 }
