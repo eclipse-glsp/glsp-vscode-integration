@@ -30,8 +30,8 @@ import {
 } from '@eclipse-glsp/protocol';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
+import { SUBCLIENT_HOST_ID } from './quickstart-components/collaborate-glsp-client-provider';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
-import { isActionMessage, SUBCLIENT_HOST_ID } from './action-types';
 
 // eslint-disable-next-line no-shadow
 export enum MessageOrigin {
@@ -169,7 +169,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 const filteredMessage = this.options.onBeforePropagateMessageToServer(newMessage, processedMessage, messageChanged);
 
                 if (typeof filteredMessage !== 'undefined') {
-                    if (isActionMessage(filteredMessage)) {
+                    if (ActionMessage.is(filteredMessage)) {
                         filteredMessage.args = {
                             ...filteredMessage.args,
                             relativeDocumentUri

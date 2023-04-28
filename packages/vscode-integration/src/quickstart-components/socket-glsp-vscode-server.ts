@@ -74,7 +74,7 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
         const reader = new SocketMessageReader(this.socket);
         const writer = new SocketMessageWriter(this.socket);
         const connection = createMessageConnection(reader, writer);
-        
+
         this.liveshareGlspClientProvider = new LiveshareGlspClientProvider();
 
         this._glspClient = new CollaborateGlspClient(new BaseJsonrpcGLSPClient({

@@ -17,9 +17,11 @@
 import {
     ActionMessage,
     DisposeClientSessionParameters,
-    InitializeClientSessionParameters} from '@eclipse-glsp/protocol';
-import { CollaborateGlspClientProvider } from '../quickstart-components/collaborate-glsp-client-provider';
+    InitializeClientSessionParameters,
+    SubclientInfo
+} from '@eclipse-glsp/protocol';
 import { LiveShare, Role, Session, SharedService, SharedServiceProxy, getApi } from 'vsls';
+import { CollaborateGlspClientProvider, SUBCLIENT_HOST_ID } from '../quickstart-components/collaborate-glsp-client-provider';
 import { GlspVscodeServer } from '../types';
 
 export const INITIALIZE_CLIENT_SESSION = 'INITIALIZE_CLIENT_SESSION';
@@ -28,12 +30,16 @@ export const SEND_ACTION_MESSAGE = 'SEND_ACTION_MESSAGE';
 export const ON_ACTION_MESSAGE = 'ON_ACTION_MESSAGE';
 export const SERVICE_NAME = 'GLSP-LIVESHARE-SERVICE';
 
+const COLORS = ["#5C2D91", "#FFF100", "#E3008C", "#FF8C00"];
+
 export class LiveshareGlspClientProvider implements CollaborateGlspClientProvider {
     protected session: Session | null;
     protected vsls: LiveShare | null;
     protected role: Role = Role.None;
     protected service: SharedService | SharedServiceProxy | null;
     protected server: GlspVscodeServer;
+    protected subclientId: string | null;
+    protected subclientInfo: SubclientInfo | null;
 
     protected get guestService(): SharedServiceProxy {
         return this.service as SharedServiceProxy;
@@ -51,6 +57,13 @@ export class LiveshareGlspClientProvider implements CollaborateGlspClientProvide
             this.vsls.onDidChangeSession(async e => {
                 this.role = e.session.role;
                 this.session = e.session;
+                this.subclientId = e.session.role === Role.Host ? SUBCLIENT_HOST_ID : `${this.session!.peerNumber}`;
+                const colorId = e.session.role === Role.Host ? 0 : (e.session.peerNumber - 1);
+                this.subclientInfo = {
+                    subclientId: this.subclientId,
+                    name: this.session.user!.emailAddress || this.session.user!.displayName,
+                    color: COLORS[colorId] || '#FFFFFF'
+                };
                 if (e.session.role === Role.Host) {
                     this.service = await this.vsls!.shareService(SERVICE_NAME);
                     if (!this.service) {
@@ -78,7 +91,7 @@ export class LiveshareGlspClientProvider implements CollaborateGlspClientProvide
                         const typedMessage = message as ActionMessage;
                         const subclientId = typedMessage.action.subclientId;
                         // check if message is adrseeed to this guest
-                        if (this.createSubclientIdFromSession() === subclientId) {
+                        if (this.getSubclientIdFromSession() === subclientId) {
                             this.server.onServerSendEmitter.fire(message);
                         }
                     });
@@ -108,14 +121,22 @@ export class LiveshareGlspClientProvider implements CollaborateGlspClientProvide
     }
 
     sendActionMessage(message: ActionMessage): void {
-        this.guestService.request(SEND_ACTION_MESSAGE, [message])
+        this.guestService.request(SEND_ACTION_MESSAGE, [message]);
     }
 
     handleActionMessage(message: ActionMessage): void {
         this.hostService.notify(ON_ACTION_MESSAGE, message);
     }
 
-    createSubclientIdFromSession(): string {
-        return `${this.session!.peerNumber}`;
+    getSubclientIdFromSession(): string {
+        return this.subclientId || '';
+    }
+
+    getSubclientInfoFromSession(): SubclientInfo {
+        return this.subclientInfo || {
+            subclientId: '',
+            name: '',
+            color: ''
+        };
     }
 }

@@ -19,9 +19,10 @@ import {
     ActionMessage,
     ComputedBoundsAction,
     DeleteElementOperation,
-    registerDefaultGLSPServerActions,
     SetEditModeAction,
-    TYPES
+    TYPES,
+    registerCollaborationActions,
+    registerDefaultGLSPServerActions
 } from '@eclipse-glsp/client';
 import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';
@@ -39,6 +40,7 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
 
     override initialize(registry: ActionHandlerRegistry): void {
         registerDefaultGLSPServerActions(registry, this);
+        registerCollaborationActions(registry, this);
         this.clientId = this.viewerOptions.baseDiv;
 
         window.addEventListener('message', message => {

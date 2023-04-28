@@ -13,13 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Action, ActionMessage, Args } from '@eclipse-glsp/protocol';
-import { hasOwnProperty } from 'sprotty-protocol';
+import { Action, Args } from '@eclipse-glsp/protocol';
 import * as sprotty from 'sprotty-protocol/lib/actions';
 
-export function isActionMessage(message: unknown): message is ActionMessage {
-    return hasOwnProperty(message, 'action');
-}
 export interface _Action extends sprotty.Action {
     /**
      * Unique identifier specifying the kind of action to process.
@@ -48,5 +44,3 @@ export interface _ActionMessage<A extends Action = Action> extends sprotty.Actio
      */
     args?: Args;
 }
-
-export const SUBCLIENT_HOST_ID = 'H';
