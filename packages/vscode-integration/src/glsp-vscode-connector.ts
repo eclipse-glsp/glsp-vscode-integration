@@ -16,6 +16,7 @@
 import {
     Action,
     ActionMessage,
+    CollaborationAction,
     ExportSvgAction,
     InitializeClientSessionParameters,
     InitializeResult,
@@ -112,7 +113,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         const serverMessageListener = this.options.server.onServerMessage(message => {
             if (this.options.logging) {
                 if (ActionMessage.is(message)) {
-                    console.log(`Server (${message.clientId}): ${message.action.kind}`, message.action);
+                    // don't log CollaborationActions
+                    if (!CollaborationAction.is(message.action)) {
+                        console.log(`Server (${message.clientId}): ${message.action.kind}`, message.action);
+                    }
                 } else {
                     console.log('Server (no action message):', message);
                 }
@@ -154,7 +158,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         const clientMessageListener = client.onClientMessage(message => {
             if (this.options.logging) {
                 if (ActionMessage.is(message)) {
-                    console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
+                    // don't log CollaborationActions
+                    if (!CollaborationAction.is(message.action)) {
+                        console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
+                    }
                 } else {
                     console.log('Client (no action message):', message);
                 }

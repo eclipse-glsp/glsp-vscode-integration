@@ -27,16 +27,13 @@ import {
     InitializeResult,
     RequestModelAction,
     SetModelAction,
-    UpdateModelAction,
+    UpdateModelAction
 } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { CollaborateGlspClientProvider, SUBCLIENT_HOST_ID } from './collaborate-glsp-client-provider';
 
 export class CollaborateGlspClient implements GLSPClient {
-    protected readonly BROADCAST_ACTION_TYPES = [
-        SetModelAction.KIND,
-        UpdateModelAction.KIND
-    ]
+    protected readonly BROADCAST_ACTION_TYPES = [SetModelAction.KIND, UpdateModelAction.KIND];
 
     readonly id: string;
 
@@ -92,24 +89,7 @@ export class CollaborateGlspClient implements GLSPClient {
 
     async disposeClientSession(params: DisposeClientSessionParameters): Promise<void> {
         if (this.provider.isInCollaborateMode() && this.provider.isHost()) {
-            const relativeDocumentUri = this.getRelativeDocumentUriByArgs(params.args);
-            const subclientMap = this.registeredSubclientMap.get(relativeDocumentUri);
-            const subclientId = params.args?.subclientId as string;
-            const disposeSubclientMessage: ActionMessage<DisposeSubclientAction> = {
-                clientId: '',
-                action: DisposeSubclientAction.create()
-            };
-            disposeSubclientMessage.action.initialSubclientInfo = {
-                name: '',
-                color: '',
-                subclientId
-            };
-            for (const [id, localClientId] of subclientMap?.entries() || []) {
-                // only handle to other subclients
-                if (subclientId !== id) {
-                    this.handleMessage(id, disposeSubclientMessage, localClientId);
-                }
-            }
+            this.handleDisposeSubclientMessage(params);
         }
 
         if (!this.provider.isInCollaborateMode() || this.provider.isHost()) {
@@ -132,6 +112,27 @@ export class CollaborateGlspClient implements GLSPClient {
         }
     }
 
+    private handleDisposeSubclientMessage(params: DisposeClientSessionParameters): void {
+        const relativeDocumentUri = this.getRelativeDocumentUriByArgs(params.args);
+        const subclientMap = this.registeredSubclientMap.get(relativeDocumentUri);
+        const subclientId = params.args?.subclientId as string;
+        const disposeSubclientMessage: ActionMessage<DisposeSubclientAction> = {
+            clientId: '',
+            action: DisposeSubclientAction.create()
+        };
+        disposeSubclientMessage.action.initialSubclientInfo = {
+            name: '',
+            color: '',
+            subclientId
+        };
+        for (const [id, localClientId] of subclientMap?.entries() || []) {
+            // only handle to other subclients
+            if (subclientId !== id) {
+                this.handleMessage(id, disposeSubclientMessage, localClientId);
+            }
+        }
+    }
+
     onActionMessage(handler: ActionMessageHandler): void {
         this.handlers.push(handler);
     }
@@ -145,7 +146,7 @@ export class CollaborateGlspClient implements GLSPClient {
                 subclientId
             },
             clientId
-        }
+        };
         if (subclientId === SUBCLIENT_HOST_ID) {
             this.handlers.forEach(handler => handler(clonedMessage)); // notify host
         } else {
@@ -154,27 +155,12 @@ export class CollaborateGlspClient implements GLSPClient {
     }
 
     sendActionMessage(message: ActionMessage): void {
-        // send to all other subclients
-        if (CollaborationAction.is(message.action) && this.provider.isInCollaborateMode()) {
-            if (this.provider.isHost()) {
-                const relativeDocumentUri = this.getRelativeDocumentUriByArgs(message.args);
-                const subclientMap = this.registeredSubclientMap.get(relativeDocumentUri);
-                const subclientId = message.action.subclientId;
-                // set initialSubclientInfo if host dispatches actions (not set yet)
-                if (!message.action.initialSubclientInfo) {
-                    message.action.initialSubclientInfo = this.provider.getSubclientInfoFromSession();
-                }
-                for (const [id, localClientId] of subclientMap?.entries() || []) {
-                    // only handle to other subclients
-                    if (subclientId !== id) {
-                        this.handleMessage(id, message, localClientId);
-                    }
-                }
-            } else if (this.provider.isGuest()) {
-                message.action.subclientId = this.provider.getSubclientIdFromSession();
-                message.action.initialSubclientInfo = this.provider.getSubclientInfoFromSession();
-                this.provider.sendActionMessage(message);
+        if (CollaborationAction.is(message.action)) {
+            // handle collabofration action without sending to glsp-server
+            if (!this.provider.isInCollaborateMode()) {
+                return;
             }
+            this.handleCollaborationAction(message as ActionMessage<CollaborationAction>);
         } else if (!this.provider.isInCollaborateMode() || this.provider.isHost()) {
             const relativeDocumentUri = this.getRelativeDocumentUriByArgs(message.args);
             message.clientId = this.serverClientIdMap.get(relativeDocumentUri) || '';
@@ -188,13 +174,35 @@ export class CollaborateGlspClient implements GLSPClient {
                 if (message.action.subclientId !== SUBCLIENT_HOST_ID) {
                     requestModelAction.options = {
                         ...requestModelAction.options,
-                        sourceUri: getFullDocumentUri(relativeDocumentUri),
+                        sourceUri: getFullDocumentUri(relativeDocumentUri)
                     };
                 }
             }
             this.glspClient.sendActionMessage(message);
         } else if (this.provider.isGuest()) {
             message.action.subclientId = this.provider.getSubclientIdFromSession();
+            this.provider.sendActionMessage(message);
+        }
+    }
+
+    private handleCollaborationAction(message: ActionMessage<CollaborationAction>): void {
+        if (this.provider.isHost()) {
+            const relativeDocumentUri = this.getRelativeDocumentUriByArgs(message.args);
+            const subclientMap = this.registeredSubclientMap.get(relativeDocumentUri);
+            const subclientId = message.action.subclientId;
+            // set initialSubclientInfo if host dispatches actions (not set yet)
+            if (!message.action.initialSubclientInfo) {
+                message.action.initialSubclientInfo = this.provider.getSubclientInfoFromSession();
+            }
+            for (const [id, localClientId] of subclientMap?.entries() || []) {
+                // only handle to other subclients
+                if (subclientId !== id) {
+                    this.handleMessage(id, message, localClientId);
+                }
+            }
+        } else if (this.provider.isGuest()) {
+            message.action.subclientId = this.provider.getSubclientIdFromSession();
+            message.action.initialSubclientInfo = this.provider.getSubclientInfoFromSession();
             this.provider.sendActionMessage(message);
         }
     }

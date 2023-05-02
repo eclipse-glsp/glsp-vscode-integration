@@ -30,7 +30,8 @@ export const SEND_ACTION_MESSAGE = 'SEND_ACTION_MESSAGE';
 export const ON_ACTION_MESSAGE = 'ON_ACTION_MESSAGE';
 export const SERVICE_NAME = 'GLSP-LIVESHARE-SERVICE';
 
-const COLORS = ["#5C2D91", "#FFF100", "#E3008C", "#FF8C00"];
+const COLORS = ["#FFF100", "#5C2D91", "#E3008C", "#FF8C00"];
+const FALLBACK_COLOR = '#ABABAB';
 
 export class LiveshareGlspClientProvider implements CollaborateGlspClientProvider {
     protected session: Session | null;
@@ -62,7 +63,7 @@ export class LiveshareGlspClientProvider implements CollaborateGlspClientProvide
                 this.subclientInfo = {
                     subclientId: this.subclientId,
                     name: this.session.user!.emailAddress || this.session.user!.displayName,
-                    color: COLORS[colorId] || '#FFFFFF'
+                    color: COLORS[colorId] || FALLBACK_COLOR
                 };
                 if (e.session.role === Role.Host) {
                     this.service = await this.vsls!.shareService(SERVICE_NAME);
