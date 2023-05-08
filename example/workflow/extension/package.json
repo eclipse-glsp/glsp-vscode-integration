@@ -29,7 +29,7 @@
   },
   "contributes": {
     "liveshare.spaces": [
-      "vsls-workspace"
+      "workflow-vscode-example"
     ],
     "customEditors": [
       {

@@ -16,5 +16,6 @@
 export * from '@eclipse-glsp/protocol';
 export * from './client-actions';
 export * from './glsp-vscode-connector';
+export * from './collaboration';
 export * from './liveshare';
 export * from './types';

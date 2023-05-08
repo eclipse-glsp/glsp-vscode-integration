@@ -19,6 +19,9 @@ import {
     configureDefaultCommands,
     SocketGlspVscodeServer
 } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import {
+    configureCollaborationCommands,
+} from '@eclipse-glsp/vscode-integration/lib/collaboration';
 import * as path from 'path';
 import * as process from 'process';
 import 'reflect-metadata';
@@ -74,6 +77,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     workflowServer.start();
 
     configureDefaultCommands({ extensionContext: context, connector: glspVscodeConnector, diagramPrefix: 'workflow' });
+
+    configureCollaborationCommands({ extensionContext: context, connector: glspVscodeConnector });
 
     context.subscriptions.push(
         vscode.commands.registerCommand('workflow.goToNextNode', () => {

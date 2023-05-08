@@ -27,7 +27,7 @@ import * as vscode from 'vscode';
 import { createMessageConnection } from 'vscode-jsonrpc';
 import { SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node';
 import { GlspVscodeServer } from '../types';
-import { CollaborateGlspClient } from './collaborate-glsp-client';
+import { CollaborationGlspClient } from '../collaboration/collaboration-glsp-client';
 
 interface SocketGlspVscodeServerOptions {
     /** Port of the running server. */
@@ -77,10 +77,10 @@ export class SocketGlspVscodeServer implements GlspVscodeServer, vscode.Disposab
 
         this.liveshareGlspClientProvider = new LiveshareGlspClientProvider();
 
-        this._glspClient = new CollaborateGlspClient(new BaseJsonrpcGLSPClient({
+        this._glspClient = new CollaborationGlspClient(new BaseJsonrpcGLSPClient({
             id: options.clientId,
             connectionProvider: connection
-        }), this.liveshareGlspClientProvider);
+        }), this.liveshareGlspClientProvider, this.liveshareGlspClientProvider, this.liveshareGlspClientProvider);
 
         this.onSendToServerEmitter.event(message => {
             this.onReady.then(() => {

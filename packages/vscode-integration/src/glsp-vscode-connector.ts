@@ -17,6 +17,7 @@ import {
     Action,
     ActionMessage,
     CollaborationAction,
+    CollaborationActionKinds,
     ExportSvgAction,
     InitializeClientSessionParameters,
     InitializeResult,
@@ -31,7 +32,8 @@ import {
 } from '@eclipse-glsp/protocol';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { SUBCLIENT_HOST_ID } from './quickstart-components/collaborate-glsp-client-provider';
+import { collaborationFeatureStore } from './collaboration/collaboration-feature-store';
+import { SUBCLIENT_HOST_ID } from './collaboration/collaboration-glsp-client-provider';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
 // eslint-disable-next-line no-shadow
@@ -131,6 +133,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 // Run message through second user-provided interceptor (pre-send) - processed
                 const filteredMessage = this.options.onBeforePropagateMessageToClient(newMessage, processedMessage, messageChanged);
                 if (typeof filteredMessage !== 'undefined' && ActionMessage.is(filteredMessage)) {
+                    if (CollaborationAction.is(filteredMessage.action)) {
+                        filteredMessage.action.visible = collaborationFeatureStore.getFeature(filteredMessage.action.kind as CollaborationActionKinds);
+                    }
                     this.sendMessageToClient(filteredMessage.clientId, filteredMessage);
                 }
             });
@@ -251,6 +256,22 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                     __localDispatch: true
                 });
             }
+        });
+    }
+
+    /**
+     * Send an action to all open clients/panels. If no registered
+     * panel is focused, the message will not be sent.
+     *
+     * @param action The action to send to all the clients.
+     */
+    public sendActionToAllClients(action: Action): void {
+        this.clientMap.forEach(client => {
+            client.onSendToClientEmitter.fire({
+                clientId: client.clientId,
+                action: action,
+                __localDispatch: true
+            });
         });
     }
 
