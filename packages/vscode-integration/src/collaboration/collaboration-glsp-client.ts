@@ -14,6 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 import {
+    Action,
     ActionMessage,
     ActionMessageHandler,
     Args,
@@ -22,6 +23,7 @@ import {
     DisposeClientSessionParameters,
     DisposeSubclientAction,
     GLSPClient,
+    hasObjectProp,
     InitializeClientSessionParameters,
     InitializeParameters,
     InitializeResult,
@@ -29,20 +31,31 @@ import {
     SetModelAction,
     UpdateModelAction
 } from '@eclipse-glsp/protocol';
-import * as vscode from 'vscode';
 import {
+    CollaborativeGlspClientProvider,
     CommonCollaborationGlspClientProvider,
     GuestCollaborationGlspClientProvider,
     HostCollaborationGlspClientProvider,
     SUBCLIENT_HOST_ID
 } from './collaboration-glsp-client-provider';
+import { getFullDocumentUri } from './collaboration-util';
+
+interface CollaborativeGlspClientDistributedConfig {
+    commonProvider: CommonCollaborationGlspClientProvider,
+    hostProvider: HostCollaborationGlspClientProvider,
+    guestProvider: GuestCollaborationGlspClientProvider
+}
+
+function isDistributedConfig(config: any): config is CollaborativeGlspClientDistributedConfig {
+    return hasObjectProp(config, 'commonProvider') && hasObjectProp(config, 'hostProvider') && hasObjectProp(config, 'guestProvider')
+}
+
+export type CollaborativeGlspClientConfig = CollaborativeGlspClientProvider | CollaborativeGlspClientDistributedConfig;
 
 export class CollaborationGlspClient implements GLSPClient {
     protected readonly BROADCAST_ACTION_TYPES = [SetModelAction.KIND, UpdateModelAction.KIND];
 
     readonly id: string;
-
-    protected glspClient: GLSPClient;
 
     protected commonProvider: CommonCollaborationGlspClientProvider;
     protected hostProvider: HostCollaborationGlspClientProvider;
@@ -56,18 +69,20 @@ export class CollaborationGlspClient implements GLSPClient {
     protected actionMessageHandlers: ActionMessageHandler[] = [];
 
     constructor(
-        glspClient: GLSPClient,
-        commonProvider: CommonCollaborationGlspClientProvider,
-        hostProvider: HostCollaborationGlspClientProvider,
-        guestProvider: GuestCollaborationGlspClientProvider
+        protected glspClient: GLSPClient,
+        config: CollaborativeGlspClientConfig
     ) {
         this.id = glspClient.id;
 
-        this.glspClient = glspClient;
-
-        this.commonProvider = commonProvider;
-        this.hostProvider = hostProvider;
-        this.guestProvider = guestProvider;
+        if (isDistributedConfig(config)) {
+            this.commonProvider = config.commonProvider;
+            this.hostProvider = config.hostProvider;
+            this.guestProvider = config.guestProvider;
+        } else {
+            this.commonProvider = config;
+            this.hostProvider = config;
+            this.guestProvider = config;
+        }
     }
 
     shutdownServer(): void {
@@ -79,6 +94,13 @@ export class CollaborationGlspClient implements GLSPClient {
     }
 
     async initializeClientSession(params: InitializeClientSessionParameters): Promise<void> {
+        if (!params.args?.subclientId) {
+            params.args = {
+                ...params.args,
+                subclientId: this.commonProvider.getSubclientIdFromSession()
+            };
+        }
+
         if (!this.commonProvider.isInCollaborationMode() || this.commonProvider.isHost()) {
             const relativeDocumentUri = this.getRelativeDocumentUriByArgs(params.args);
             const subclientId = params.args?.subclientId as string;
@@ -93,15 +115,18 @@ export class CollaborationGlspClient implements GLSPClient {
             this.serverClientIdMap.set(relativeDocumentUri, params.clientSessionId);
             return this.glspClient.initializeClientSession(params);
         } else if (this.commonProvider.isGuest()) {
-            params.args = {
-                ...params.args,
-                subclientId: this.commonProvider.getSubclientIdFromSession()
-            };
             return this.guestProvider.initializeClientSessionForGuest(params);
         }
     }
 
     async disposeClientSession(params: DisposeClientSessionParameters): Promise<void> {
+        if (!params.args?.subclientId) {
+            params.args = {
+                ...params.args,
+                subclientId: this.commonProvider.getSubclientIdFromSession()
+            };
+        }
+
         if (this.commonProvider.isInCollaborationMode() && this.commonProvider.isHost()) {
             this.handleDisposeSubclientMessage(params);
         }
@@ -118,10 +143,6 @@ export class CollaborationGlspClient implements GLSPClient {
             this.serverClientIdMap.delete(relativeDocumentUri);
             return this.glspClient.disposeClientSession(params);
         } else if (this.commonProvider.isGuest()) {
-            params.args = {
-                ...params.args,
-                subclientId: this.commonProvider.getSubclientIdFromSession()
-            };
             return this.guestProvider.disposeClientSessionForGuest(params);
         }
     }
@@ -131,11 +152,11 @@ export class CollaborationGlspClient implements GLSPClient {
     }
 
     sendActionMessage(message: ActionMessage): void {
+        if (!message.action.subclientId) {
+            message.action.subclientId = this.commonProvider.getSubclientIdFromSession();
+        }
+
         if (CollaborationAction.is(message.action)) {
-            // handle collabofration action without sending to glsp-server
-            if (!this.commonProvider.isInCollaborationMode()) {
-                return;
-            }
             this.handleCollaborationAction(message as ActionMessage<CollaborationAction>);
         } else if (!this.commonProvider.isInCollaborationMode() || this.commonProvider.isHost()) {
             const relativeDocumentUri = this.getRelativeDocumentUriByArgs(message.args);
@@ -156,12 +177,13 @@ export class CollaborationGlspClient implements GLSPClient {
             }
             this.glspClient.sendActionMessage(message);
         } else if (this.commonProvider.isGuest()) {
-            message.action.subclientId = this.commonProvider.getSubclientIdFromSession();
             this.guestProvider.sendActionMessageForGuest(message);
         }
     }
 
     async start(): Promise<void> {
+        await this.commonProvider.initialize({ collaborationGlspClient: this });
+
         await this.glspClient.start();
 
         this.glspClient.onActionMessage((message: ActionMessage) => {
@@ -212,7 +234,21 @@ export class CollaborationGlspClient implements GLSPClient {
         return this.glspClient.currentState;
     }
 
+    handleActionOnAllLocalHandlers(message: ActionMessage<Action>): void {
+        this.actionMessageHandlers.forEach(handler => handler(message));
+    }
+
     private handleCollaborationAction(message: ActionMessage<CollaborationAction>): void {
+        // handle collabofration action without sending to glsp-server
+        if (!this.commonProvider.isInCollaborationMode()) {
+            return;
+        }
+
+        // set initialSubclientInfo if not set yet
+        if (!message.action.initialSubclientInfo) {
+            message.action.initialSubclientInfo = this.commonProvider.getSubclientInfoFromSession();
+        }
+
         if (this.commonProvider.isHost()) {
             const relativeDocumentUri = this.getRelativeDocumentUriByArgs(message.args);
             const subclientMap = this.registeredSubclientMap.get(relativeDocumentUri);
@@ -220,14 +256,8 @@ export class CollaborationGlspClient implements GLSPClient {
                 return;
             }
             const subclientId = message.action.subclientId;
-            // set initialSubclientInfo if host dispatches actions (not set yet)
-            if (!message.action.initialSubclientInfo) {
-                message.action.initialSubclientInfo = this.commonProvider.getSubclientInfoFromSession();
-            }
             this.handleMultipleMessages(subclientMap, message, actualSubclientId => actualSubclientId !== subclientId);
         } else if (this.commonProvider.isGuest()) {
-            message.action.subclientId = this.commonProvider.getSubclientIdFromSession();
-            message.action.initialSubclientInfo = this.commonProvider.getSubclientInfoFromSession();
             this.guestProvider.sendActionMessageForGuest(message);
         }
     }
@@ -258,7 +288,7 @@ export class CollaborationGlspClient implements GLSPClient {
             clientId
         };
         if (subclientId === SUBCLIENT_HOST_ID) {
-            this.actionMessageHandlers.forEach(handler => handler(clonedMessage)); // notify host
+            this.handleActionOnAllLocalHandlers(clonedMessage); // notify host
         } else {
             this.hostProvider.handleActionMessageForHost(clonedMessage); // notify subclientId
         }
@@ -281,7 +311,7 @@ export class CollaborationGlspClient implements GLSPClient {
                     clientId: localClientId
                 };
                 if (subclientId === SUBCLIENT_HOST_ID) {
-                    this.actionMessageHandlers.forEach(handler => handler(clonedMessage)); // notify host
+                    this.handleActionOnAllLocalHandlers(clonedMessage); // notify host
                 } else {
                     messages.push(clonedMessage);
                 }
@@ -304,12 +334,4 @@ export class CollaborationGlspClient implements GLSPClient {
     private getRelativeDocumentUriByArgs(args: Args | undefined): string {
         return (args?.relativeDocumentUri || '') as string;
     }
-}
-
-function getFullDocumentUri(relativeDocumentUri: string): string {
-    let workspacePath = vscode.workspace.workspaceFolders?.[0].uri.path || '';
-    // FIXME test on microsoft
-    workspacePath = workspacePath.endsWith('/') ? workspacePath : `${workspacePath}/`;
-    workspacePath = workspacePath.startsWith('file://') ? workspacePath : `file://${workspacePath}`;
-    return workspacePath + relativeDocumentUri;
 }

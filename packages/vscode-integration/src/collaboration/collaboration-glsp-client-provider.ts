@@ -14,12 +14,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 import { ActionMessage, DisposeClientSessionParameters, InitializeClientSessionParameters, SubclientInfo } from '@eclipse-glsp/protocol';
+import { CollaborationGlspClient } from './collaboration-glsp-client';
 
 export const SUBCLIENT_HOST_ID = 'H';
 
 export type GuestsChangeHandler = (subclientIds: string[]) => void;
 
+export interface CollaborationGlspClientProviderInitializeConfig {
+    collaborationGlspClient: CollaborationGlspClient;
+}
+
+export type CollaborativeGlspClientProvider =
+    CommonCollaborationGlspClientProvider
+    & HostCollaborationGlspClientProvider
+    & GuestCollaborationGlspClientProvider;
+
 export interface CommonCollaborationGlspClientProvider {
+    initialize(config: CollaborationGlspClientProviderInitializeConfig): Promise<void>;
     isInCollaborationMode(): boolean;
     isHost(): boolean;
     isGuest(): boolean;

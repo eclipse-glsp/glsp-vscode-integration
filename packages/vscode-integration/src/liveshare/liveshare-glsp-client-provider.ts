@@ -23,14 +23,15 @@ import {
 } from '@eclipse-glsp/protocol';
 import { LiveShare, Peer, Role, Session, SharedService, SharedServiceProxy, getApi, View } from 'vsls';
 import {
+    CollaborationGlspClientProviderInitializeConfig,
     CommonCollaborationGlspClientProvider,
     GuestCollaborationGlspClientProvider,
     GuestsChangeHandler,
     HostCollaborationGlspClientProvider,
     SUBCLIENT_HOST_ID
 } from '../collaboration/Collaboration-glsp-client-provider';
-import { GlspVscodeServer } from '../types';
 import { ToggleFeatureTreeDataProvider } from './toggle-feature-tree-data-provider';
+import { CollaborationGlspClient } from '../collaboration/collaboration-glsp-client';
 
 export const INITIALIZE_CLIENT_SESSION = 'INITIALIZE_CLIENT_SESSION';
 export const DISPOSE_CLIENT_SESSION = 'DISPOSE_CLIENT_SESSION';
@@ -49,9 +50,12 @@ export class LiveshareGlspClientProvider
     protected vsls: LiveShare | null;
     protected role: Role = Role.None;
     protected service: SharedService | SharedServiceProxy | null;
-    protected server: GlspVscodeServer;
+
+    protected collaborationGlspClient: CollaborationGlspClient;
+
     protected subclientId: string | null;
     protected subclientInfo: SubclientInfo | null;
+
     protected guestsChangeHandler: GuestsChangeHandler[] = [];
 
     protected get guestService(): SharedServiceProxy {
@@ -62,8 +66,9 @@ export class LiveshareGlspClientProvider
         return this.service as SharedService;
     }
 
-    async initialize(server: GlspVscodeServer): Promise<void> {
-        this.server = server;
+    async initialize(config: CollaborationGlspClientProviderInitializeConfig): Promise<void> {
+        this.collaborationGlspClient = config.collaborationGlspClient;
+
         this.vsls = await getApi();
 
         if (!this.vsls) {
@@ -90,15 +95,15 @@ export class LiveshareGlspClientProvider
                 }
 
                 this.service.onRequest(INITIALIZE_CLIENT_SESSION, async params => {
-                    await (await this.server.glspClient).initializeClientSession(params[1] as InitializeClientSessionParameters);
+                    await this.collaborationGlspClient.initializeClientSession(params[1] as InitializeClientSessionParameters);
                 });
 
                 this.service.onRequest(DISPOSE_CLIENT_SESSION, async params => {
-                    await (await this.server.glspClient).disposeClientSession(params[1] as DisposeClientSessionParameters);
+                    await this.collaborationGlspClient.disposeClientSession(params[1] as DisposeClientSessionParameters);
                 });
 
                 this.service.onRequest(SEND_ACTION_MESSAGE, async params => {
-                    (await this.server.glspClient).sendActionMessage(params[1] as ActionMessage);
+                    this.collaborationGlspClient.sendActionMessage(params[1] as ActionMessage);
                 });
             } else if (e.session.role === Role.Guest) {
                 this.service = await this.vsls!.getSharedService(SERVICE_NAME);
@@ -159,7 +164,7 @@ export class LiveshareGlspClientProvider
     }
 
     getSubclientIdFromSession(): string {
-        return this.subclientId || '';
+        return this.subclientId || SUBCLIENT_HOST_ID;
     }
 
     getSubclientInfoFromSession(): SubclientInfo {
@@ -180,7 +185,7 @@ export class LiveshareGlspClientProvider
         const subclientId = message.action.subclientId;
         // check if message is adrseeed to this guest
         if (this.getSubclientIdFromSession() === subclientId) {
-            this.server.onServerSendEmitter.fire(message);
+            this.collaborationGlspClient.handleActionOnAllLocalHandlers(message);
         }
     }
 

@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { GlspVscodeConnector, NavigateAction } from '@eclipse-glsp/vscode-integration';
+import { GlspVscodeConnector, LiveshareGlspClientProvider, NavigateAction } from '@eclipse-glsp/vscode-integration';
 import {
     GlspServerLauncher,
     configureDefaultCommands,
@@ -50,11 +50,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         await serverProcess.start();
     }
 
+    const liveshareGlspClientProvider = new LiveshareGlspClientProvider();
+
     // Wrap server with quickstart component
     const workflowServer = new SocketGlspVscodeServer({
         clientId: 'glsp.workflow',
         clientName: 'workflow',
-        serverPort: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT)
+        serverPort: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT),
+        collaboration: liveshareGlspClientProvider
     });
 
     // Initialize GLSP-VSCode connector with server wrapper

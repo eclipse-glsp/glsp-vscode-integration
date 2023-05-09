@@ -18,3 +18,4 @@ export * from './collaboration-commands';
 export * from './collaboration-feature-store';
 export * from './collaboration-glsp-client';
 export * from './collaboration-glsp-client-provider';
+export * from './collaboration-util';
