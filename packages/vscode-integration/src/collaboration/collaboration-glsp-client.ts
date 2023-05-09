@@ -32,7 +32,7 @@ import {
     UpdateModelAction
 } from '@eclipse-glsp/protocol';
 import {
-    CollaborativeGlspClientProvider,
+    CollaborationGlspClientProvider,
     CommonCollaborationGlspClientProvider,
     GuestCollaborationGlspClientProvider,
     HostCollaborationGlspClientProvider,
@@ -50,7 +50,7 @@ function isDistributedConfig(config: any): config is CollaborativeGlspClientDist
     return hasObjectProp(config, 'commonProvider') && hasObjectProp(config, 'hostProvider') && hasObjectProp(config, 'guestProvider')
 }
 
-export type CollaborativeGlspClientConfig = CollaborativeGlspClientProvider | CollaborativeGlspClientDistributedConfig;
+export type CollaborativeGlspClientConfig = CollaborationGlspClientProvider | CollaborativeGlspClientDistributedConfig;
 
 export class CollaborationGlspClient implements GLSPClient {
     protected readonly BROADCAST_ACTION_TYPES = [SetModelAction.KIND, UpdateModelAction.KIND];

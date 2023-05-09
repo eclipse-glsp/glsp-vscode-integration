@@ -75,53 +75,16 @@ export class LiveshareGlspClientProvider
             return;
         }
 
+        if (this.vsls.session) {
+            await this.initializeSession(this.vsls.session);
+        }
+
         // Register the custom tree provider with Live Share
         const treeDataProvider = new ToggleFeatureTreeDataProvider();
         this.vsls.registerTreeDataProvider(View.Session, treeDataProvider);
 
         this.vsls.onDidChangeSession(async e => {
-            this.role = e.session.role;
-            this.session = e.session;
-            this.subclientId = this.createSubclientIdFromSession(e.session);
-            this.subclientInfo = {
-                subclientId: this.subclientId,
-                name: this.createNameFromSession(e.session),
-                color: this.createColorFromSession(e.session)
-            };
-            if (e.session.role === Role.Host) {
-                this.service = await this.vsls!.shareService(SERVICE_NAME);
-                if (!this.service) {
-                    return;
-                }
-
-                this.service.onRequest(INITIALIZE_CLIENT_SESSION, async params => {
-                    await this.collaborationGlspClient.initializeClientSession(params[1] as InitializeClientSessionParameters);
-                });
-
-                this.service.onRequest(DISPOSE_CLIENT_SESSION, async params => {
-                    await this.collaborationGlspClient.disposeClientSession(params[1] as DisposeClientSessionParameters);
-                });
-
-                this.service.onRequest(SEND_ACTION_MESSAGE, async params => {
-                    this.collaborationGlspClient.sendActionMessage(params[1] as ActionMessage);
-                });
-            } else if (e.session.role === Role.Guest) {
-                this.service = await this.vsls!.getSharedService(SERVICE_NAME);
-                if (!this.service) {
-                    return;
-                }
-
-                this.service.onNotify(ON_ACTION_MESSAGE, (message: any) => {
-                    this.checkActionMessageAndSendToClient(message);
-                });
-
-                this.service.onNotify(ON_MULTIPLE_ACTION_MESSAGES, (ev: any) => {
-                    const typedMessages = ev.messages as ActionMessage[];
-                    typedMessages.forEach(typedMessage => {
-                        this.checkActionMessageAndSendToClient(typedMessage);
-                    });
-                });
-            }
+            await this.initializeSession(e.session);
         });
 
         this.vsls.onDidChangePeers(e => {
@@ -181,6 +144,51 @@ export class LiveshareGlspClientProvider
         this.guestsChangeHandler.push(handler);
     }
 
+    private async initializeSession(session: Session): Promise<void> {
+        this.role = session.role;
+        this.session = session;
+        this.subclientId = session.role === Role.None ? null : this.createSubclientIdFromSession(session);
+        this.subclientInfo = session.role === Role.None ? null : {
+            subclientId: this.subclientId!,
+            name: this.createNameFromSession(session),
+            color: this.createColorFromSession(session)
+        };
+        if (session.role === Role.Host) {
+            this.service = await this.vsls!.shareService(SERVICE_NAME);
+            if (!this.service) {
+                return;
+            }
+
+            this.service.onRequest(INITIALIZE_CLIENT_SESSION, async params => {
+                await this.collaborationGlspClient.initializeClientSession(params[1] as InitializeClientSessionParameters);
+            });
+
+            this.service.onRequest(DISPOSE_CLIENT_SESSION, async params => {
+                await this.collaborationGlspClient.disposeClientSession(params[1] as DisposeClientSessionParameters);
+            });
+
+            this.service.onRequest(SEND_ACTION_MESSAGE, async params => {
+                this.collaborationGlspClient.sendActionMessage(params[1] as ActionMessage);
+            });
+        } else if (session.role === Role.Guest) {
+            this.service = await this.vsls!.getSharedService(SERVICE_NAME);
+            if (!this.service) {
+                return;
+            }
+
+            this.service.onNotify(ON_ACTION_MESSAGE, (message: any) => {
+                this.checkActionMessageAndSendToClient(message);
+            });
+
+            this.service.onNotify(ON_MULTIPLE_ACTION_MESSAGES, (ev: any) => {
+                const typedMessages = ev.messages as ActionMessage[];
+                typedMessages.forEach(typedMessage => {
+                    this.checkActionMessageAndSendToClient(typedMessage);
+                });
+            });
+        }
+    }
+
     private checkActionMessageAndSendToClient(message: ActionMessage): void {
         const subclientId = message.action.subclientId;
         // check if message is adrseeed to this guest
@@ -203,6 +211,6 @@ export class LiveshareGlspClientProvider
     }
 
     private createNameFromSession(session: Session): string {
-        return session.user!.emailAddress || session.user!.displayName;
+        return session.user?.emailAddress || session.user?.displayName || '';
     }
 }

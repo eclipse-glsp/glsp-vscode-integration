@@ -24,7 +24,7 @@ export interface CollaborationGlspClientProviderInitializeConfig {
     collaborationGlspClient: CollaborationGlspClient;
 }
 
-export type CollaborativeGlspClientProvider =
+export type CollaborationGlspClientProvider =
     CommonCollaborationGlspClientProvider
     & HostCollaborationGlspClientProvider
     & GuestCollaborationGlspClientProvider;
