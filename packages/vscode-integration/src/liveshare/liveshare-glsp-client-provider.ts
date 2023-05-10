@@ -211,6 +211,10 @@ export class LiveshareGlspClientProvider
     }
 
     private createNameFromSession(session: Session): string {
-        return session.user?.emailAddress || session.user?.displayName || '';
+        const user = session.user;
+        if (!user) {
+            return '';
+        }
+        return user.userName || user.displayName || user.emailAddress || '';
     }
 }
