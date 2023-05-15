@@ -1,5 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2020-2021 EclipseSource and others.
+ * Copyright (c) 2022 TypeFox and others.
+ * Modifications: 2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,17 +14,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { createWorkflowDiagramContainer } from '@eclipse-glsp-examples/workflow-glsp';
-import { GLSPDiagramIdentifier, GLSPStarter } from '@eclipse-glsp/vscode-integration-webview';
-import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
-import { Container } from 'inversify';
-
-class WorkflowGLSPStarter extends GLSPStarter {
-    createContainer(diagramIdentifier: GLSPDiagramIdentifier): Container {
-        return createWorkflowDiagramContainer(diagramIdentifier.clientId);
-    }
+// based on https://github.com/eclipse-sprotty/sprotty-vscode/blob/v0.3.0/sprotty-vscode-webview/src/services.ts
+export interface VsCodeApi {
+    postMessage: (message: any) => void;
 }
 
-export function launch(): void {
-    new WorkflowGLSPStarter();
+export const VsCodeApi = Symbol('VsCodeApi');
+
+export interface GLSPStarterServices {
+    vscodeApi?: VsCodeApi;
 }

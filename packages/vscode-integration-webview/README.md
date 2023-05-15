@@ -1,7 +1,6 @@
 # Eclipse GLSP VSCode Integration
 
 This package helps you to implement a [VS Code Webview](https://code.visualstudio.com/api/extension-guides/webview) that renders a [GLSP](https://www.eclipse.org/glsp/) diagram.
-Since GLSP is based on sprotty(https://github.com/eclipse/sprotty) this glue code is built on top of [sprotty-vscode-webview](https://www.npmjs.com/package/sprotty-vscode-webview).
 
 ## Where to find the sources?
 

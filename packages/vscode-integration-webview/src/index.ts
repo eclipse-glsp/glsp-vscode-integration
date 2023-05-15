@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,5 +13,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+export * from './copy-paste-handler-provider';
+export * from './diagram-identifier';
+export * from './extension-action-handler';
+export * from './glsp-diagram-widget';
 export * from './glsp-starter';
 export * from './glsp-vscode-diagramserver';
+export * from './services';

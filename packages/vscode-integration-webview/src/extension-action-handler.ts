@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 EclipseSource and others.
+ * Copyright (c) 2021-2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,8 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 import { Action, ActionHandlerRegistry, IActionHandler, IActionHandlerInitializer, ICommand } from '@eclipse-glsp/client';
-import { SprottyDiagramIdentifier } from 'sprotty-vscode-webview';
-import { VsCodeApi } from 'sprotty-vscode-webview/lib/services';
+import { GLSPDiagramIdentifier } from './diagram-identifier';
+import { VsCodeApi } from './services';
 
 /**
  * Delegates actions that should be handled inside of the glsp vscode extension instead
@@ -25,7 +25,7 @@ import { VsCodeApi } from 'sprotty-vscode-webview/lib/services';
 export class GLSPVscodeExtensionActionHandler implements IActionHandler, IActionHandlerInitializer {
     constructor(
         protected readonly actionKinds: string[],
-        protected readonly diagramIdentifier: SprottyDiagramIdentifier,
+        protected readonly diagramIdentifier: GLSPDiagramIdentifier,
         protected vscodeApi: VsCodeApi
     ) {}
 
