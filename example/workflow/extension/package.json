@@ -1,18 +1,20 @@
 {
   "name": "workflow-vscode-example",
-  "private": "true",
-  "version": "1.1.0-next",
-  "description": "An example graphical language used for modeling workflows",
   "displayName": "Workflow GLSP Example",
-  "publisher": "Eclipse-GLSP",
+  "version": "1.1.0-next",
+  "private": "true",
+  "description": "An example graphical language used for modeling workflows",
+  "categories": [
+    "Programming Languages"
+  ],
   "homepage": "https://www.eclipse.org/glsp/",
   "bugs": "https://github.com/eclipse-glsp/glsp/issues",
-  "author": {
-    "name": "EclipseGLSP"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
+  },
+  "author": {
+    "name": "EclipseGLSP"
   },
   "contributors": [
     {
@@ -21,24 +23,30 @@
       "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
-  "categories": [
-    "Programming Languages"
+  "publisher": "Eclipse-GLSP",
+  "main": "./lib/index",
+  "files": [
+    "lib",
+    "extension",
+    "server",
+    "webview"
   ],
-  "engines": {
-    "vscode": "^1.54.0"
+  "workspaces": {
+    "nohoist": [
+      "**/@vscode/codicons",
+      "**/@vscode/codicons/**"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "download:Server": "ts-node scripts/download.ts",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "prepare": "yarn clean && yarn build",
+    "watch": "tsc -w"
   },
   "contributes": {
-    "customEditors": [
-      {
-        "viewType": "workflow.glspDiagram",
-        "displayName": "Workflow Diagram Editor",
-        "selector": [
-          {
-            "filenamePattern": "*.wf"
-          }
-        ]
-      }
-    ],
     "commands": [
       {
         "command": "workflow.fit",
@@ -83,10 +91,53 @@
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
       }
     ],
-    "submenus": [
+    "customEditors": [
       {
-        "id": "workflow.editor.title",
-        "label": "Diagram"
+        "viewType": "workflow.glspDiagram",
+        "displayName": "Workflow Diagram Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.wf"
+          }
+        ]
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "alt+f",
+        "mac": "alt+f",
+        "command": "workflow.fit",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "key": "alt+c",
+        "mac": "alt+c",
+        "command": "workflow.center",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "key": "ctrl+a",
+        "mac": "ctrl+a",
+        "command": "workflow.selectAll",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "key": "alt+l",
+        "mac": "alt+l",
+        "command": "workflow.layout",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "key": "Ctrl+4",
+        "mac": "cmd+4",
+        "command": "workflow.goToNextNode",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      },
+      {
+        "key": "Ctrl+3",
+        "mac": "cmd+3",
+        "command": "workflow.goToPreviousNode",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       }
     ],
     "menus": {
@@ -133,60 +184,20 @@
         }
       ]
     },
-    "keybindings": [
+    "submenus": [
       {
-        "key": "alt+f",
-        "mac": "alt+f",
-        "command": "workflow.fit",
-        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
-      },
-      {
-        "key": "alt+c",
-        "mac": "alt+c",
-        "command": "workflow.center",
-        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
-      },
-      {
-        "key": "ctrl+a",
-        "mac": "ctrl+a",
-        "command": "workflow.selectAll",
-        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
-      },
-      {
-        "key": "alt+l",
-        "mac": "alt+l",
-        "command": "workflow.layout",
-        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
-      },
-      {
-        "key": "Ctrl+4",
-        "mac": "cmd+4",
-        "command": "workflow.goToNextNode",
-        "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
-      },
-      {
-        "key": "Ctrl+3",
-        "mac": "cmd+3",
-        "command": "workflow.goToPreviousNode",
-        "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+        "id": "workflow.editor.title",
+        "label": "Diagram"
       }
     ]
   },
   "activationEvents": [
     "*"
   ],
-  "files": [
-    "lib",
-    "extension",
-    "server",
-    "webview"
-  ],
-  "dependencies": {
-    "@vscode/codicons": "^0.0.25"
-  },
-  "main": "./lib/index",
   "devDependencies": {
+    "@eclipse-glsp-examples/workflow-server": "next",
     "@eclipse-glsp/vscode-integration": "1.1.0-next",
+    "@vscode/codicons": "^0.0.25",
     "@types/vscode": "^1.54.0",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
@@ -194,19 +205,7 @@
     "ts-node": "^10.8.2",
     "workflow-glsp-webview": "1.1.0-next"
   },
-  "scripts": {
-    "build": "tsc -b",
-    "clean": "rimraf lib tsconfig.tsbuildinfo ",
-    "download:Server": "ts-node scripts/download.ts",
-    "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
-    "prepare": "yarn clean && yarn build",
-    "watch": "tsc -w"
-  },
-  "workspaces": {
-    "nohoist": [
-      "**/@vscode/codicons",
-      "**/@vscode/codicons/**"
-    ]
+  "engines": {
+    "vscode": "^1.54.0"
   }
 }

@@ -110,6 +110,16 @@ export interface GlspVscodeServer {
      * to call this method during the their initialization phase.
      */
     readonly initializeResult: Promise<InitializeResult>;
+
+    /**
+     * A promise that resolves once the `GLSPVscodeServer` is ready i.e. has been started.
+     */
+    readonly onReady: Promise<void>;
+
+    /**
+     * Starts up the GLSP client and connects it to a GLSP server.
+     */
+    start(): Promise<void>;
 }
 
 interface InterceptorCallback {

@@ -13,47 +13,73 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import 'reflect-metadata';
+
+import { WorkflowDiagramModule, WorkflowLayoutConfigurator, WorkflowServerModule } from '@eclipse-glsp-examples/workflow-server/node';
+import { configureELKLayoutModule } from '@eclipse-glsp/layout-elk';
+import { GModelStorage, LogLevel, createAppModule } from '@eclipse-glsp/server/node';
 import { GlspVscodeConnector, NavigateAction } from '@eclipse-glsp/vscode-integration';
 import {
-    GlspServerLauncher,
+    GlspSocketServerLauncher,
+    NodeGlspVscodeServer,
     SocketGlspVscodeServer,
     configureDefaultCommands
 } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import { ContainerModule } from 'inversify';
 import * as path from 'path';
 import * as process from 'process';
-import 'reflect-metadata';
 import * as vscode from 'vscode';
-import * as config from './server-config.json';
 import WorkflowEditorProvider from './workflow-editor-provider';
 
 const DEFAULT_SERVER_PORT = '0';
-const { version, isSnapShot } = config;
-const JAVA_EXECUTABLE = path.join(
+const LOG_DIR = path.join(__dirname, '..', '..', '..', '..', 'logs');
+const NODE_EXECUTABLE = path.join(
     __dirname,
-    `../server/org.eclipse.glsp.example.workflow-${version}${isSnapShot ? '-SNAPSHOT' : ''}-glsp.jar`
+    '..',
+    '..',
+    '..',
+    '..',
+    'node_modules',
+    '@eclipse-glsp-examples',
+    'workflow-server',
+    'bundle',
+    'wf-glsp-server-node.js'
 );
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // Start server process using quickstart component
-    let serverProcess: GlspServerLauncher | undefined;
-    if (process.env.GLSP_SERVER_DEBUG !== 'true') {
-        serverProcess = new GlspServerLauncher({
-            executable: JAVA_EXECUTABLE,
+    let serverProcess: GlspSocketServerLauncher | undefined;
+    const useIntegratedServer = JSON.parse(process.env.GLSP_INTEGRATED_SERVER ?? 'false');
+    if (!useIntegratedServer && process.env.GLSP_SERVER_DEBUG !== 'true') {
+        const additionalArgs = ['--fileLog', 'true', '--logDir', LOG_DIR];
+        if (process.env.GLSP_WEBSOCKET_PATH) {
+            additionalArgs.push('--webSocket');
+        }
+        serverProcess = new GlspSocketServerLauncher({
+            executable: NODE_EXECUTABLE,
             socketConnectionOptions: { port: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT) },
-            additionalArgs: ['--fileLog', 'true', '--logDir', path.join(__dirname, '../server')],
-            logging: true,
-            serverType: 'java'
+            additionalArgs,
+            logging: true
         });
+
         context.subscriptions.push(serverProcess);
         await serverProcess.start();
     }
-
     // Wrap server with quickstart component
-    const workflowServer = new SocketGlspVscodeServer({
-        clientId: 'glsp.workflow',
-        clientName: 'workflow',
-        serverPort: serverProcess?.getPort() || JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT)
-    });
+    const workflowServer = useIntegratedServer
+        ? new NodeGlspVscodeServer({
+              clientId: 'glsp.workflow',
+              clientName: 'workflow',
+              serverModules: createServerModules()
+          })
+        : new SocketGlspVscodeServer({
+              clientId: 'glsp.workflow',
+              clientName: 'workflow',
+              options: {
+                  port: serverProcess?.getPort() || JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT),
+                  path: process.env.GLSP_WEBSOCKET_PATH
+              }
+          });
     // Initialize GLSP-VSCode connector with server wrapper
     const glspVscodeConnector = new GlspVscodeConnector({
         server: workflowServer,
@@ -85,4 +111,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('documentation'));
         })
     );
+}
+
+function createServerModules(): ContainerModule[] {
+    const appModule = createAppModule({ logLevel: LogLevel.info, logDir: LOG_DIR, fileLog: true, consoleLog: false });
+    const elkLayoutModule = configureELKLayoutModule({ algorithms: ['layered'], layoutConfigurator: WorkflowLayoutConfigurator });
+    const mainModule = new WorkflowServerModule().configureDiagramModule(new WorkflowDiagramModule(() => GModelStorage), elkLayoutModule);
+    return [appModule, mainModule];
 }
