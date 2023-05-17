@@ -7,7 +7,7 @@ const liveshareConfigFileName = '.vs-liveshare-settings.json';
 const homedir = os.homedir() + '/';
 const liveshareConfigPath = homedir + liveshareConfigFileName;
 
-function showError(publisher: string, err: Error) {
+function showError(publisher: string, err: Error, forced: boolean = false) {
     const publisherKey = createPublisherKey(publisher);
 
     console.error(err);
@@ -18,13 +18,17 @@ function showError(publisher: string, err: Error) {
             [publisherKey]: '*'
         }
     });
+
+    if (forced) {
+        vscode.window.showErrorMessage('Liveshare initializing failed!');
+    }
 }
 
 function createPublisherKey(publisher: string) {
     return publisher + '.*';
 }
 
-export function writeExtensionPermissionsForLiveshare(publisher: string) {
+export function writeExtensionPermissionsForLiveshare(publisher: string, forced: boolean = false) {
     const publisherKey = createPublisherKey(publisher);
     try {
         let data: string | null = null;
@@ -43,6 +47,9 @@ export function writeExtensionPermissionsForLiveshare(publisher: string) {
         }
 
         if (jsonData.extensionPermissions[publisherKey] === '*') {
+            if (forced) {
+                vscode.window.showInformationMessage('Liveshare already initialized. Everything fine!');
+            }
             return;
         }
 
@@ -54,9 +61,11 @@ export function writeExtensionPermissionsForLiveshare(publisher: string) {
         console.log('Content:');
         console.log(jsonData);
         console.log('Please restart VS Code, so Liveshare can re-load content of config file.');
-        vscode.window.showInformationMessage('Please restart VS Code, so Liveshare can re-load content of config file.');
+        vscode.window.showWarningMessage('Please restart VS Code, so Liveshare can re-load content of config file.', {
+            modal: true
+        });
     } catch(err: any) {
-        showError(publisher, err);
+        showError(publisher, err, forced);
     }
 }
 
