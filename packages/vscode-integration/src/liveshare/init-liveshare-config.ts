@@ -1,5 +1,6 @@
 import * as os from 'os';
 import * as fs from 'fs';
+import * as vscode from 'vscode';
 
 const fileNotFoundCode = 'ENOENT';
 const liveshareConfigFileName = '.vs-liveshare-settings.json';
@@ -53,6 +54,7 @@ export function writeExtensionPermissionsForLiveshare(publisher: string) {
         console.log('Content:');
         console.log(jsonData);
         console.log('Please restart VS Code, so Liveshare can re-load content of config file.');
+        vscode.window.showInformationMessage('Please restart VS Code, so Liveshare can re-load content of config file.');
     } catch(err: any) {
         showError(publisher, err);
     }
