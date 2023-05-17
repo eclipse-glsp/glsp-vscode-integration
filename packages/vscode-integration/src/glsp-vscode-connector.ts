@@ -186,7 +186,6 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                             ...filteredMessage.args,
                             relativeDocumentUri
                         }
-                        // filteredMessage.action.subclientId = SUBCLIENT_HOST_ID;
                     }
                     this.options.server.onSendToServerEmitter.fire(filteredMessage);
                 }
@@ -214,7 +213,6 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 clientSessionId: client.clientId,
                 args: {
                     relativeDocumentUri
-                    // subclientId: SUBCLIENT_HOST_ID
                 }
             });
         });
@@ -235,7 +233,6 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             diagramType: client.diagramType,
             args: {
                 relativeDocumentUri
-                // subclientId
             }
         };
     }

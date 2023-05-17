@@ -15,3 +15,4 @@
  ********************************************************************************/
 export * from './liveshare-glsp-client-provider';
 export * from './toggle-feature-tree-data-provider';
+export * from './init-liveshare-config';

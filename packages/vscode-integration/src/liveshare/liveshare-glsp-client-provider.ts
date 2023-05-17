@@ -29,7 +29,7 @@ import {
     GuestsChangeHandler,
     HostCollaborationGlspClientProvider,
     SUBCLIENT_HOST_ID
-} from '../collaboration/Collaboration-glsp-client-provider';
+} from '../collaboration/collaboration-glsp-client-provider';
 import { ToggleFeatureTreeDataProvider } from './toggle-feature-tree-data-provider';
 import { CollaborationGlspClient } from '../collaboration/collaboration-glsp-client';
 
