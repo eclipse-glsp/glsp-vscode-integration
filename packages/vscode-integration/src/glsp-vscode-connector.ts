@@ -73,7 +73,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     protected readonly diagnostics = vscode.languages.createDiagnosticCollection();
     protected readonly selectionUpdateEmitter = new vscode.EventEmitter<string[]>();
     protected readonly onDocumentSavedEmitter = new vscode.EventEmitter<D>();
-    protected readonly onDidChangeCustomDocumentEventEmitter = new vscode.EventEmitter<vscode.CustomDocumentEditEvent<D>>();
+    protected readonly onDidChangeCustomDocumentEventEmitter = new vscode.EventEmitter<
+        vscode.CustomDocumentEditEvent<D> | vscode.CustomDocumentContentChangeEvent<D>
+    >();
     protected readonly disposables: vscode.Disposable[] = [];
 
     /**
@@ -84,10 +86,14 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
     /**
      * A subscribable event which fires when a document changed. The event body
-     * will contain that document. Use this event for the onDidChangeCustomDocument
+     * will contain that document. Use this event for the `onDidChangeCustomDocument`
      * on your implementation of the `CustomEditorProvider`.
      */
-    public onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent<D>>;
+    get onDidChangeCustomDocument():
+        | vscode.Event<vscode.CustomDocumentEditEvent<D>>
+        | vscode.Event<vscode.CustomDocumentContentChangeEvent<D>> {
+        return this.onDidChangeCustomDocumentEventEmitter.event;
+    }
 
     constructor(options: GlspVscodeConnectorOptions) {
         // Create default options
@@ -105,7 +111,6 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         };
 
         this.onSelectionUpdate = this.selectionUpdateEmitter.event;
-        this.onDidChangeCustomDocument = this.onDidChangeCustomDocumentEventEmitter.event;
 
         // Set up message listener for server
         const serverMessageListener = this.options.server.onServerMessage(message => {
@@ -297,8 +302,14 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         client: GlspVscodeClient<D> | undefined,
         _origin: MessageOrigin
     ): MessageProcessingResult {
+        // The webview client cannot handle `SetDirtyStateAction`s. Avoid propagation
+        const result = { processedMessage: GlspVscodeConnector.NO_PROPAGATION_MESSAGE, messageChanged: true };
+
         if (client) {
-            const reason = message.action.reason || '';
+            const reason = message.action.reason;
+            if (reason === 'undo' || reason === 'redo') {
+                return result;
+            }
             if (reason === 'save') {
                 this.onDocumentSavedEmitter.fire(client.document);
             } else if (reason === 'operation' && message.action.isDirty) {
@@ -311,11 +322,12 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                         this.sendActionToClient(client.clientId, RedoAction.create());
                     }
                 });
+            } else if (message.action.isDirty) {
+                this.onDidChangeCustomDocumentEventEmitter.fire({ document: client.document });
             }
         }
 
-        // The webview client cannot handle `SetDirtyStateAction`s. Avoid propagation
-        return { processedMessage: GlspVscodeConnector.NO_PROPAGATION_MESSAGE, messageChanged: true };
+        return result;
     }
 
     protected handleSetMarkersAction(

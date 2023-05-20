@@ -15,7 +15,7 @@
       ],
       "outFiles": [
         "${workspaceFolder}/example/workflow/extension/lib/*.js",
-        "${workspaceFolder}/vscode-integration/lib/**/*.js"
+        "${workspaceFolder}/packages/vscode-integration/lib/**/*.js"
       ],
       "sourceMaps": true
     },
@@ -30,7 +30,7 @@
       ],
       "outFiles": [
         "${workspaceFolder}/example/workflow/extension/lib/*.js",
-        "${workspaceFolder}/vscode-integration/lib/**/*.js"
+        "${workspaceFolder}/packages/vscode-integration/lib/**/*.js"
       ],
       "sourceMaps": true,
       "env": {
