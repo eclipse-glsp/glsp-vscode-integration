@@ -39,6 +39,7 @@ export function isDiagramIdentifier(object: any): object is GLSPDiagramIdentifie
 export interface WebviewReadyMessage {
     readyMessage: string;
 }
+
 export namespace WebviewReadyMessage {
     export function is(object: unknown): object is WebviewReadyMessage {
         return AnyObject.is(object) && hasStringProp(object, 'readyMessage');

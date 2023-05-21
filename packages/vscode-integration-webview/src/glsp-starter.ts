@@ -49,6 +49,7 @@ export abstract class GLSPStarter {
     protected sendReadyMessage(): void {
         this.vscodeApi.postMessage({ readyMessage: 'Sprotty Webview ready' } as WebviewReadyMessage);
     }
+
     protected acceptDiagramIdentifier(): void {
         console.log('Waiting for diagram identifier...');
         const eventListener = (message: any): void => {
