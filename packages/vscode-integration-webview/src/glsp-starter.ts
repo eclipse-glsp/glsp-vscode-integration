@@ -1,5 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2020-2022 EclipseSource and others.
+ * Copyright (c) 2018 TypeFox and others.
+ * Modifications: (c) 2020-2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,6 +14,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+// based on https://github.com/eclipse-sprotty/sprotty-vscode/blob/v0.3.0/sprotty-vscode-webview/src/sprotty-starter.ts
 import {
     configureServerActions,
     DiagramServerProxy,
@@ -25,22 +27,30 @@ import {
     TYPES
 } from '@eclipse-glsp/client';
 import { Container } from 'inversify';
-import {
-    SprottyDiagramIdentifier,
-    SprottyStarter,
-    VscodeDiagramServer,
-    VscodeDiagramWidget,
-    VscodeDiagramWidgetFactory
-} from 'sprotty-vscode-webview';
-import { VsCodeApi } from 'sprotty-vscode-webview/lib/services';
 import { CopyPasteHandlerProvider } from './copy-paste-handler-provider';
-import { GLSPDiagramIdentifier, isDiagramIdentifier } from './diagram-identifer';
+import { GLSPDiagramIdentifier, isDiagramIdentifier, WebviewReadyMessage } from './diagram-identifier';
 import { GLSPVscodeExtensionActionHandler } from './extension-action-handler';
-import { GLSPVscodeDiagramWidget } from './glsp-vscode-diagram-widget';
+import { GLSPDiagramWidget, GLSPDiagramWidgetFactory } from './glsp-diagram-widget';
 import { GLSPVscodeDiagramServer } from './glsp-vscode-diagramserver';
+import { GLSPStarterServices, VsCodeApi } from './services';
 
-export abstract class GLSPStarter extends SprottyStarter {
-    protected override acceptDiagramIdentifier(): void {
+declare function acquireVsCodeApi(): VsCodeApi;
+
+export abstract class GLSPStarter {
+    protected container?: Container;
+    protected vscodeApi: VsCodeApi;
+
+    constructor(services: GLSPStarterServices = {}) {
+        this.vscodeApi = services.vscodeApi ?? acquireVsCodeApi();
+        this.sendReadyMessage();
+        this.acceptDiagramIdentifier();
+    }
+
+    protected sendReadyMessage(): void {
+        this.vscodeApi.postMessage({ readyMessage: 'Sprotty Webview ready' } as WebviewReadyMessage);
+    }
+
+    protected acceptDiagramIdentifier(): void {
         console.log('Waiting for diagram identifier...');
         const eventListener = (message: any): void => {
             if (isDiagramIdentifier(message.data)) {
@@ -50,8 +60,8 @@ export abstract class GLSPStarter extends SprottyStarter {
                     const newIdentifier = message.data as GLSPDiagramIdentifier;
                     oldIdentifier.diagramType = newIdentifier.diagramType;
                     oldIdentifier.uri = newIdentifier.uri;
-                    const diagramWidget = this.container.get(VscodeDiagramWidget);
-                    diagramWidget.requestModel();
+                    const diagramWidget = this.container.get(GLSPDiagramWidget);
+                    diagramWidget.dispatchInitialActions();
                 } else {
                     console.log('...received...', message);
                     const diagramIdentifier = message.data as GLSPDiagramIdentifier;
@@ -60,20 +70,19 @@ export abstract class GLSPStarter extends SprottyStarter {
                     if (diagramIdentifier.initializeResult) {
                         configureServerActions(diagramIdentifier.initializeResult, diagramIdentifier.diagramType, this.container);
                     }
-                    this.container.get(VscodeDiagramWidget);
+                    this.container.get(GLSPDiagramWidget);
                 }
             }
         };
         window.addEventListener('message', eventListener);
     }
 
-    protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
+    protected abstract createContainer(diagramIdentifier: GLSPDiagramIdentifier): Container;
+
+    protected addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
         container.bind(VsCodeApi).toConstantValue(this.vscodeApi);
-        container.bind(GLSPVscodeDiagramWidget).toSelf().inSingletonScope();
-        container.bind(VscodeDiagramWidget).toService(GLSPVscodeDiagramWidget);
-        container
-            .bind(VscodeDiagramWidgetFactory)
-            .toFactory(context => () => context.container.get<GLSPVscodeDiagramWidget>(GLSPVscodeDiagramWidget));
+        container.bind(GLSPDiagramWidget).toSelf().inSingletonScope();
+        container.bind(GLSPDiagramWidgetFactory).toFactory(context => () => context.container.get<GLSPDiagramWidget>(GLSPDiagramWidget));
         container.bind(GLSPDiagramIdentifier).toConstantValue(diagramIdentifier);
         container
             .bind(CopyPasteHandlerProvider)
@@ -81,16 +90,14 @@ export abstract class GLSPStarter extends SprottyStarter {
                 ctx => () =>
                     new Promise<ICopyPasteHandler>(resolve => resolve(ctx.container.get<ICopyPasteHandler>(TYPES.ICopyPasteHandler)))
             );
-        container.bind(SprottyDiagramIdentifier).toService(GLSPDiagramIdentifier);
         container.bind(GLSPVscodeDiagramServer).toSelf().inSingletonScope();
-        container.bind(VscodeDiagramServer).toService(GLSPVscodeDiagramServer);
         container.bind(TYPES.ModelSource).toService(GLSPVscodeDiagramServer);
         container.bind(DiagramServerProxy).toService(GLSPVscodeDiagramServer);
 
         this.configureExtensionActionHandler(container, diagramIdentifier);
     }
 
-    protected configureExtensionActionHandler(container: Container, diagramIdentifier: SprottyDiagramIdentifier): void {
+    protected configureExtensionActionHandler(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
         const extensionActionHandler = new GLSPVscodeExtensionActionHandler(this.extensionActionKinds, diagramIdentifier, this.vscodeApi);
         container.bind(GLSPVscodeExtensionActionHandler).toConstantValue(extensionActionHandler);
         container.bind(TYPES.IActionHandlerInitializer).toService(GLSPVscodeExtensionActionHandler);

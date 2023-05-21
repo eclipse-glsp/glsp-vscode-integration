@@ -1,5 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2020-2022 EclipseSource and others.
+ * Copyright (c) 2018 TypeFox and others.
+ * Modifications: (c) 2020-2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,26 +14,36 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+// based on https://github.com/eclipse-sprotty/sprotty-vscode/blob/v0.3.0/sprotty-vscode-webview/src/vscode-diagram-server.ts
 import {
     Action,
     ActionHandlerRegistry,
     ActionMessage,
     ComputedBoundsAction,
     DeleteElementOperation,
+    DiagramServerProxy,
     registerDefaultGLSPServerActions,
+    ServerStatusAction,
     SetEditModeAction,
     TYPES
 } from '@eclipse-glsp/client';
 import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';
-import { VscodeDiagramServer } from 'sprotty-vscode-webview/lib/vscode-diagram-server';
 import { CopyPasteHandlerProvider } from './copy-paste-handler-provider';
+import { GLSPDiagramWidgetFactory } from './glsp-diagram-widget';
+import { VsCodeApi } from './services';
 export const receivedFromServerProperty = '__receivedFromServer';
 export const localDispatchProperty = '__localDispatch';
 
-export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
+export class GLSPVscodeDiagramServer extends DiagramServerProxy {
     @inject(TYPES.SelectionService)
     protected selectionService: SelectionService;
+
+    @inject(VsCodeApi)
+    protected vscodeApi: VsCodeApi;
+
+    @inject(GLSPDiagramWidgetFactory)
+    protected diagramWidgetFactory: GLSPDiagramWidgetFactory;
 
     @inject(CopyPasteHandlerProvider)
     protected copyPasteHandlerProvider: CopyPasteHandlerProvider;
@@ -62,6 +73,10 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
         });
     }
 
+    protected sendMessage(message: ActionMessage): void {
+        this.vscodeApi.postMessage(message);
+    }
+
     override handleLocally(action: Action): boolean {
         if (SetEditModeAction.is(action)) {
             return this.handleSetEditModeAction(action);
@@ -70,6 +85,11 @@ export class GLSPVscodeDiagramServer extends VscodeDiagramServer {
             return this.handleDeleteElementOperation(action);
         }
         return super.handleLocally(action);
+    }
+
+    protected override handleServerStateAction(status: ServerStatusAction): boolean {
+        this.diagramWidgetFactory().setStatus(status);
+        return false;
     }
 
     protected override messageReceived(data: any): void {

@@ -23,8 +23,7 @@ import {
 } from '@eclipse-glsp/protocol';
 import * as net from 'net';
 import * as vscode from 'vscode';
-import { createMessageConnection } from 'vscode-jsonrpc';
-import { SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node';
+import { SocketMessageReader, SocketMessageWriter, createMessageConnection } from 'vscode-jsonrpc/node';
 import { GlspVscodeServer } from '../types';
 
 interface SocketGlspVscodeServerOptions {

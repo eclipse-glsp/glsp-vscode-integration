@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 EclipseSource and others.
+ * Copyright (c) 2021-2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { hasStringProp, InitializeResult } from '@eclipse-glsp/client';
+import { AnyObject, hasStringProp, InitializeResult } from '@eclipse-glsp/client';
 
 export const GLSPDiagramIdentifier = Symbol('GLSPDiagramIdentifier');
 
@@ -26,10 +26,22 @@ export interface GLSPDiagramIdentifier {
 
 export function isDiagramIdentifier(object: any): object is GLSPDiagramIdentifier {
     return (
-        object !== undefined &&
-        typeof object === 'object' &&
+        AnyObject.is(object) && //
         hasStringProp(object, 'clientId') &&
         hasStringProp(object, 'diagramType') &&
         hasStringProp(object, 'uri')
     );
+}
+
+// ----------------------------------
+// Initial Handshake
+
+export interface WebviewReadyMessage {
+    readyMessage: string;
+}
+
+export namespace WebviewReadyMessage {
+    export function is(object: unknown): object is WebviewReadyMessage {
+        return AnyObject.is(object) && hasStringProp(object, 'readyMessage');
+    }
 }

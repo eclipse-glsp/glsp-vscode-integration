@@ -14,10 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
 import { ActionMessage } from '@eclipse-glsp/protocol';
-import { isWebviewReadyMessage } from 'sprotty-vscode-protocol';
 import * as vscode from 'vscode';
 import { GlspVscodeConnector } from '../glsp-vscode-connector';
-import { GLSPDiagramIdentifier } from '../types';
+import { GLSPDiagramIdentifier, WebviewReadyMessage } from '../types';
 
 /**
  * An extensible base class to create a CustomEditorProvider that takes care of
@@ -87,7 +86,7 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         // Promise that resolves when sprotty sends its ready-message
         const webviewReadyPromise = new Promise<void>(resolve => {
             const messageListener = webviewPanel.webview.onDidReceiveMessage((message: unknown) => {
-                if (isWebviewReadyMessage(message)) {
+                if (WebviewReadyMessage.is(message)) {
                     resolve();
                     messageListener.dispose();
                 }

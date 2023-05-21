@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { GLSPClient, InitializeResult } from '@eclipse-glsp/protocol';
+import { AnyObject, GLSPClient, InitializeResult, hasStringProp } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 
 /**
@@ -206,9 +206,32 @@ export interface GlspVscodeConnectorOptions {
     onBeforePropagateMessageToClient?(originalMessage: unknown, processedMessage: unknown, messageChanged: boolean): unknown | undefined;
 }
 
+export const GLSPDiagramIdentifier = Symbol('GLSPDiagramIdentifier');
+
 export interface GLSPDiagramIdentifier {
     clientId: string;
     diagramType: string;
     uri: string;
     initializeResult?: InitializeResult;
+}
+
+export function isDiagramIdentifier(object: any): object is GLSPDiagramIdentifier {
+    return (
+        AnyObject.is(object) && //
+        hasStringProp(object, 'clientId') &&
+        hasStringProp(object, 'diagramType') &&
+        hasStringProp(object, 'uri')
+    );
+}
+
+// ----------------------------------
+// Initial Handshake
+
+export interface WebviewReadyMessage {
+    readyMessage: string;
+}
+export namespace WebviewReadyMessage {
+    export function is(object: unknown): object is WebviewReadyMessage {
+        return AnyObject.is(object) && hasStringProp(object, 'readyMessage');
+    }
 }
