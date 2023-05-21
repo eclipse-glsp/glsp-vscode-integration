@@ -32,7 +32,7 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
     /** Used to generate continuous and unique clientIds - TODO: consider replacing this with uuid. */
     private viewCount = 0;
 
-    onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentContentChangeEvent<vscode.CustomDocument>>;
+    onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent> | vscode.Event<vscode.CustomDocumentContentChangeEvent>;
 
     constructor(protected readonly glspVscodeConnector: GlspVscodeConnector) {
         this.onDidChangeCustomDocument = glspVscodeConnector.onDidChangeCustomDocument;
