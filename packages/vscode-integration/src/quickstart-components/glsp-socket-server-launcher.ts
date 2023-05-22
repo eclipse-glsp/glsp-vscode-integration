@@ -60,35 +60,29 @@ export class GlspSocketServerLauncher implements vscode.Disposable {
      * Starts up the server.
      */
     async start(): Promise<void> {
+        const executable = this.options.executable;
+
+        if (!executable) {
+            throw new Error('Could not launch GLSP server. No executable path is provided via the launch options');
+        }
+
+        if (!fs.existsSync(executable)) {
+            throw Error(`Could not launch GLSP server. The given server executable path is not valid: ${executable}`);
+        }
+
+        if (isNaN(this.options.socketConnectionOptions.port)) {
+            throw new Error(
+                `Could not launch GLSP Server. The given server port is not a number: ${this.options.socketConnectionOptions.port}`
+            );
+        }
+
+        const process = this.startProcess();
+        this.serverProcess = process;
+        return this.configureProcess(process);
+    }
+
+    protected configureProcess(process: childProcess.ChildProcessWithoutNullStreams): Promise<void> {
         return new Promise(resolve => {
-            const executable = this.options.executable;
-
-            if (!executable) {
-                throw new Error('Could not launch GLSP server. No executable path is provided via the launch options');
-            }
-
-            if (!fs.existsSync(executable)) {
-                throw Error(`Could not launch GLSP server. The given server executable path is not valid: ${executable}`);
-            }
-
-            if (isNaN(this.options.socketConnectionOptions.port)) {
-                throw new Error(
-                    `Could not launch GLSP Server. The given server port is not a number: ${this.options.socketConnectionOptions.port}`
-                );
-            }
-
-            let process: childProcess.ChildProcessWithoutNullStreams;
-
-            if (this.options.executable.endsWith('.jar')) {
-                process = this.startJavaProcess();
-            } else if (this.options.executable.endsWith('.js')) {
-                process = this.startNodeProcess();
-            } else {
-                throw new Error(`Could not launch GLSP Server. Invalid executable path ${this.options.executable}`);
-            }
-
-            this.serverProcess = process;
-
             process.stdout.on('data', data => {
                 if (data.toString().includes(START_UP_COMPLETE_MSG)) {
                     const port = this.getPortFromStartupMessage(data.toString());
@@ -115,6 +109,16 @@ export class GlspSocketServerLauncher implements vscode.Disposable {
             process.stderr.on('data', error => this.handleStderrData(error));
             process.on('error', error => this.handleProcessError(error));
         });
+    }
+
+    protected startProcess(): childProcess.ChildProcessWithoutNullStreams {
+        if (this.options.executable.endsWith('.jar')) {
+            return this.startJavaProcess();
+        } else if (this.options.executable.endsWith('.js')) {
+            return this.startNodeProcess();
+        } else {
+            throw new Error(`Could not launch GLSP Server. Invalid executable path ${this.options.executable}`);
+        }
     }
 
     protected startJavaProcess(): childProcess.ChildProcessWithoutNullStreams {

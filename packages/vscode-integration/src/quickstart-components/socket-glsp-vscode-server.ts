@@ -55,10 +55,8 @@ export type SocketConnectionOptions =
  * at the `GlspServerStarter` quickstart component.
  */
 export class SocketGlspVscodeServer extends BaseGlspVscodeServer<BaseJsonrpcGLSPClient> {
-    protected webSocketAddress?: string;
     constructor(protected override readonly options: SocketGlspVscodeServerOptions) {
         super(options);
-        this.webSocketAddress = this.getWebSocketAddress();
     }
 
     protected getWebSocketAddress(): string | undefined {
@@ -87,7 +85,7 @@ export class SocketGlspVscodeServer extends BaseGlspVscodeServer<BaseJsonrpcGLSP
     protected async createConnection(): Promise<MessageConnection> {
         const webSocketAddress = this.getWebSocketAddress();
         if (webSocketAddress && !isValidWebSocketAddress(webSocketAddress)) {
-            throw new Error(`Could not connect to to GLSP Server. The WebSocket address is invalid: '${this.webSocketAddress}'`);
+            throw new Error(`Could not connect to to GLSP Server. The WebSocket address is invalid: '${webSocketAddress}'`);
         }
         if (webSocketAddress) {
             return this.createWebSocketConnection(webSocketAddress);
@@ -125,8 +123,12 @@ export class SocketGlspVscodeServer extends BaseGlspVscodeServer<BaseJsonrpcGLSP
 }
 
 export function isValidWebSocketAddress(address: string): boolean {
-    const websocketRegex = /^(ws|wss):\/\/([^\s/$.?#]+\.?)+(:\d+)?(\/[^\s]*)?$/i;
-    return websocketRegex.test(address);
+    try {
+        const { protocol } = new URL(address);
+        return protocol === 'ws:' || protocol === 'wss:';
+    } catch (error) {
+        return false;
+    }
 }
 
 export function wrapNodeWs(socket: WebSocket): WebSocketWrapper {

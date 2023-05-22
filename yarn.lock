@@ -297,7 +297,7 @@
     rimraf "^3.0.2"
     typescript "^4.9.3"
 
-"@eclipse-glsp/dev@^1.1.0-next.acae6b0.132":
+"@eclipse-glsp/dev@next":
   version "1.1.0-next.acae6b0.132"
   resolved "https://registry.yarnpkg.com/@eclipse-glsp/dev/-/dev-1.1.0-next.acae6b0.132.tgz#085b31f786909c9a5bc9a7af852c1ecf61aef6c3"
   integrity sha512-Ckk/Iyg4LU3bEnt19dh/CADQnmwr5TItXfeMBlzZ7huGgEuDWsWs6HpXTrKurq6aYhqRrPnzhli4skAHFTtUhw==
