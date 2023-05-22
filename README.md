@@ -10,7 +10,10 @@ The example can be used to try out different GLSP features, as well as several a
 As the example is fully open source, you can also use it as a blueprint for a custom implementation of a GLSP diagram editor.
 See [our project website](https://www.eclipse.org/glsp/documentation/#workflowoverview) for an overview of the workflow example and all components implementing it.
 
-https://user-images.githubusercontent.com/588090/154449892-a9693efb-21f3-4105-85ae-dbf97fffd442.mp4
+> _**Remark:**_ The workflow example is a fully dev example, as it combines a variety of integration and connectivity options to easily test the different use cases.
+> However, it should not be used as a blueprint for your custom implementation, for this we recommend the [GLSP project templates](https://github.com/eclipse-glsp/glsp-examples/tree/master/project-templates) in the GLSP example repository.
+
+<https://user-images.githubusercontent.com/588090/154449892-a9693efb-21f3-4105-85ae-dbf97fffd442.mp4>
 
 ### How to start the Workflow Diagram example?
 
@@ -20,28 +23,39 @@ Clone this repository and build the VSCode integration packages:
 yarn install
 ```
 
-Additionally you can download a precompiled version of the Workflow Diagram Server:
+Now you can start the VSCode extension by opening this repository in VSCode and executing the `Workflow GLSP Example Extension` launch configuration, provided with this project.
 
-```bash
-yarn download:exampleServer
-```
-
-> The downloaded server will be launched automatically by the extension. To debug or modify the server and run it separately: see the instructions below.
-
-Now you can start the VSCode extension by opening this repository in VSCode and executing the "Workflow GLSP Example Extension" launch configuration, provided with this project.
+> A precompiled version of the Workflow Diagram Server will be launched automatically by the extension.
+> To debug or modify the server and run it separately: see the instructions below.
 
 ### How to start the Workflow Diagram example server from the sources
 
-If you want to explore or change the Workflow Diagram Server too, you can clone, build and start the [`workflow example glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) from your IDE instead of using the embedded pre-built version of the Workflow Diagram Server.
-See [`workflow example glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) for instructions on building and running the Workflow Diagram Server example.
+If you want to explore or change the Workflow Diagram Server too, you can clone, build and start the Java or Node variant of the `workflow example glsp-server` from your IDE instead of using the pre-built version of the Workflow Diagram Server.
+Checkout the [`glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) or [`glsp-server-node`](https://github.com/eclipse-glsp/glsp-server-node#workflow-diagram-example) repo for instructions on building and running the Workflow Diagram Server example.
 
-To test the VSCode extension with an external server (e.g started from your IDE) the launch configuration "Workflow GLSP Example Extension (External GLSP Server)" can be used.
+To test the VSCode extension with an external server (e.g started from your IDE) the launch configuration `Workflow GLSP Example Extension (External GLSP Server)` can be used.
+
+### Start Workflow Diagram example in WebSocket mode
+
+The default example use case uses a socket communication from the extension to the GLSP server.
+To communicate with the server via WebSockets, the `Workflow GLSP Example Extension (Websocket)` launch configuration can be used.
+This launch config establishes a connection to the server via the endpoint `ws://localhost:8081/workflow`.
+To test the websocket connection with an external server the `Workflow GLSP Example Extension (External WebSocket GLSP Server)` launch config can be used
+
+### Start Workflow Diagram example without a dedicated server process
+
+The default example use case uses a socket communication from the extension to a GLSP server process.
+To directly start the server in the extension context without an extra process, the the `Workflow GLSP Example Extension (Integrated Node GLSP Server)` launch configuration can be used.
+
+> _**Remark:**_ In production, one would decide for one way of connectivity, and would not implement all the different options as we do in the workflow diagram example.
+> This was setup to easily show and switch between the different possibilities.
 
 ### Where to find the sources?
 
 In addition to this repository, the related source code can be found here:
 
 -   <https://github.com/eclipse-glsp/glsp-server>
+-   <https://github.com/eclipse-glsp/glsp-server-node>
 -   <https://github.com/eclipse-glsp/glsp-client>
 
 ## More information

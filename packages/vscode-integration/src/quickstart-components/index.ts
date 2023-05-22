@@ -13,7 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+export * from './base-glsp-vscode-server';
 export * from './configuration-util';
 export * from './glsp-editor-provider';
-export * from './glsp-server-launcher';
+export * from './glsp-socket-server-launcher';
+export * from './node-glsp-vscode-server';
 export * from './socket-glsp-vscode-server';
