@@ -28,7 +28,6 @@ import {
     SetMarkersAction,
     UndoAction
 } from '@eclipse-glsp/protocol';
-import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { Disposable } from 'vscode-jsonrpc';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
@@ -427,7 +426,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             })
             .then((uri: vscode.Uri | undefined) => {
                 if (uri) {
-                    fs.writeFile(uri.fsPath, message.action.svg, { encoding: 'utf-8' }, err => {
+                    const content = new TextEncoder().encode(message.action.svg);
+                    vscode.workspace.fs.writeFile(uri, content).then(undefined, err => {
                         if (err) {
                             console.error(err);
                         }

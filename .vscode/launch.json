@@ -93,6 +93,21 @@
         "GLSP_SERVER_PORT": "8081",
         "GLSP_WEBSOCKET_PATH": "workflow"
       }
+    },
+    {
+      "name": "Workflow GLSP Example Web Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "${workspaceFolder}/example/workflow/workspace",
+        "--extensionDevelopmentPath=${workspaceFolder}/example/workflow/web-extension"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/example/workflow/web-extension/lib/**/*.js",
+        "${workspaceFolder}/packages/vscode-integration/lib/**/*.js"
+      ],
+      "sourceMaps": true
     }
   ]
 }

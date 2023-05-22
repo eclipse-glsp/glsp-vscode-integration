@@ -7,6 +7,7 @@
 -   [launch] Socket-based launch quickstart components now support auto-assigned ports [#33](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/33)
 -   [launch ] Provide `NodeGlspVscodeServer` to enable direct server integration in the extension context without a dedicated server process [#37](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/37)
 -   [diagram] Fixed a bug that prevented proper server-side disposal of diagram sessions [#40](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/40)
+-   [API] Restructured packages to also provide a node-dependency free entry point for web-extensions ('@eclipse-glsp/vscode-integration/browser`) [#39](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/39)
 
 ### Breaking Changes
 

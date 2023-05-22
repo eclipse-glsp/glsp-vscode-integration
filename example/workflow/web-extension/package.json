@@ -1,6 +1,6 @@
 {
-  "name": "workflow-vscode-example",
-  "displayName": "Workflow GLSP Example",
+  "name": "workflow-vscode-example-web",
+  "displayName": "Workflow GLSP Example (Web)",
   "version": "1.1.0-next",
   "private": "true",
   "description": "An example graphical language used for modeling workflows",
@@ -24,13 +24,14 @@
     }
   ],
   "publisher": "Eclipse-GLSP",
-  "main": "./lib/workflow-extension",
+  "browser": "./dist/extension",
   "files": [
     "lib",
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && yarn bundle",
+    "bundle": "webpack",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
@@ -187,7 +188,10 @@
   ],
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-server": "next",
-    "@eclipse-glsp/vscode-integration": "1.1.0-next"
+    "@eclipse-glsp/vscode-integration": "1.1.0-next",
+    "@types/node": "16.x",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "engines": {
     "vscode": "^1.54.0"

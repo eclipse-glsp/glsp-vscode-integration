@@ -1,9 +1,8 @@
 {
   "name": "workflow-glsp-webview",
-  "private": "true",
   "version": "1.1.0-next",
+  "private": "true",
   "description": "Example of the Workflow GLSP diagram in a VS Code extensions (WebView part)",
-  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "keywords": [
     "vscode",
     "graph",
@@ -13,12 +12,13 @@
   ],
   "homepage": "https://www.eclipse.org/glsp/",
   "bugs": "https://github.com/eclipse-glsp/glsp/issues",
-  "author": {
-    "name": "Eclipse GLSP"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
+  },
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "author": {
+    "name": "Eclipse GLSP"
   },
   "contributors": [
     {
@@ -27,6 +27,14 @@
       "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
+  "scripts": {
+    "build": "tsc -b && webpack --mode=development && cp -r  ../extension/dist/webview.js ../web-extension/dist/",
+    "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "prepare": "yarn clean && yarn build",
+    "watch": "tsc -w"
+  },
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-glsp": "next",
     "@eclipse-glsp/vscode-integration-webview": "1.1.0-next",
@@ -40,13 +48,5 @@
     "ts-loader": "^9.4.2",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"
-  },
-  "scripts": {
-    "build": "tsc -b && webpack --mode=development",
-    "clean": "rimraf lib tsconfig.tsbuildinfo ",
-    "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
-    "prepare": "yarn clean && yarn build",
-    "watch": "tsc -w"
   }
 }

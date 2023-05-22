@@ -26,11 +26,17 @@
       "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
-  "main": "lib/index",
-  "types": "lib/index",
+  "main": "lib/node/index",
+  "browser": {
+    "lib/node/index": "lib/browser/index"
+  },
   "files": [
     "lib",
-    "src"
+    "src",
+    "node.js",
+    "node.d.ts",
+    "browser.d.ts",
+    "browser.js"
   ],
   "scripts": {
     "build": "tsc -b",

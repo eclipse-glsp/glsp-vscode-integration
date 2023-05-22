@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 EclipseSource and others.
+ * Copyright (c) 2021-2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -16,6 +16,4 @@
 export * from './base-glsp-vscode-server';
 export * from './configuration-util';
 export * from './glsp-editor-provider';
-export * from './glsp-socket-server-launcher';
 export * from './node-glsp-vscode-server';
-export * from './socket-glsp-vscode-server';
