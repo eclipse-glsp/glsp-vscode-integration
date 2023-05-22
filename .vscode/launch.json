@@ -19,7 +19,6 @@
       ],
       "sourceMaps": true
     },
-
     {
       "name": "Workflow GLSP Example Extension (External GLSP Server)",
       "type": "extensionHost",

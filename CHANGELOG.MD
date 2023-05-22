@@ -5,6 +5,7 @@
 ### Changes
 
 -   [launch] Socket-based launch quickstart components now support auto-assigned ports [#33](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/33)
+-   [launch ] Provide `NodeGlspVscodeServer` to enable direct server integration in the extension context without a dedicated server process [#37](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/37)
 
 ### Breaking Changes
 
@@ -14,7 +15,6 @@
     -   Renamed `GlspServerLauncher` -> `GLSPSocketServerLauncher`
     -   Replaced `serverPort` property of `SocketGlspVscodeServerOptions` with `connectionOptions`
     -   Added `start()` and `onReady` to `GlspVscodeServer` interface
-    -   Introduced new `NodeGlspVscodeServer`
 
 ## [v1.0.0 - 30/06/2022](https://github.com/eclipse-glsp/glsp-client/releases/tag/v1.0.0)
 
