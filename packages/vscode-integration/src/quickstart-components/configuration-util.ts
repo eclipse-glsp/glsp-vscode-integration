@@ -15,7 +15,7 @@
  ********************************************************************************/
 import { CenterAction, FitToScreenAction, LayoutOperation, RequestExportSvgAction, SelectAllAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
-import { GlspVscodeConnector } from '../glsp-vscode-connector';
+import { GlspVscodeConnector, SelectionState } from '../glsp-vscode-connector';
 
 /**
  * The `CommandContext` provides the necessary information to
@@ -39,16 +39,16 @@ export function configureDefaultCommands(context: CommandContext): void {
     // keep track of diagram specific element selection.
     const { extensionContext, diagramPrefix, connector } = context;
 
-    let selectedElements: string[] = [];
+    let selectionState: SelectionState | undefined;
 
-    extensionContext.subscriptions.push(connector.onSelectionUpdate(_selectedElements => (selectedElements = _selectedElements)));
+    extensionContext.subscriptions.push(connector.onSelectionUpdate(_selectionState => (selectionState = _selectionState)));
 
     extensionContext.subscriptions.push(
         vscode.commands.registerCommand(`${diagramPrefix}.fit`, () => {
-            connector.sendActionToActiveClient(FitToScreenAction.create(selectedElements));
+            connector.sendActionToActiveClient(FitToScreenAction.create(selectionState?.selectedElementsIDs ?? []));
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.center`, () => {
-            connector.sendActionToActiveClient(CenterAction.create(selectedElements));
+            connector.sendActionToActiveClient(CenterAction.create(selectionState?.selectedElementsIDs ?? []));
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.layout`, () => {
             connector.sendActionToActiveClient(LayoutOperation.create([]));
@@ -62,9 +62,8 @@ export function configureDefaultCommands(context: CommandContext): void {
     );
 
     extensionContext.subscriptions.push(
-        connector.onSelectionUpdate(n => {
-            selectedElements = n;
-            vscode.commands.executeCommand('setContext', `${diagramPrefix}.editorSelectedElementsAmount`, n.length);
+        connector.onSelectionUpdate(state => {
+            vscode.commands.executeCommand('setContext', `${diagramPrefix}.editorSelectedElementsAmount`, state.selectedElementsIDs.length);
         })
     );
 }
