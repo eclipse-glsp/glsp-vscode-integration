@@ -128,6 +128,12 @@
         "when": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
+        "key": "alt+e",
+        "mac": "alt+e",
+        "command": "workflow.exportAsSVG",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
         "key": "Ctrl+4",
         "mac": "cmd+4",
         "command": "workflow.goToNextNode",
@@ -197,8 +203,8 @@
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-server": "next",
     "@eclipse-glsp/vscode-integration": "1.1.0-next",
-    "@vscode/codicons": "^0.0.25",
     "@types/vscode": "^1.54.0",
+    "@vscode/codicons": "^0.0.25",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
     "ts-loader": "^6.2.1",
