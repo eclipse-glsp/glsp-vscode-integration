@@ -15,4 +15,5 @@
  ********************************************************************************/
 
 export * from '../common';
-export * from './websocket-glsp-vscode-server';
+export * from './quickstart-components/browser-glsp-vscode-server';
+export * from './quickstart-components/websocket-glsp-vscode-server';

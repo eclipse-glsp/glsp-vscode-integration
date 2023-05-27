@@ -15,7 +15,7 @@
  ********************************************************************************/
 import { BaseJsonrpcGLSPClient, listen } from '@eclipse-glsp/protocol';
 import { MessageConnection } from 'vscode-jsonrpc';
-import { BaseGlspVscodeServer, GlspVscodeServerOptions } from '../common';
+import { BaseGlspVscodeServer, GlspVscodeServerOptions } from '../../common';
 
 export interface WebsocketGlspVscodeServerOptions extends GlspVscodeServerOptions {
     /** (Web)socket connection options of the running server. */

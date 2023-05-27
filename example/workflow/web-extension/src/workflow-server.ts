@@ -13,18 +13,27 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import { WorkflowDiagramModule, WorkflowServerModule } from '@eclipse-glsp-examples/workflow-server/browser';
 import {
     GLSPServerError,
     GModelElementSchema,
     GModelSerializer,
+    LogLevel,
     Logger,
     ModelState,
     SOURCE_URI_ARG,
-    SourceModelStorage
+    SourceModelStorage,
+    createAppModule
 } from '@eclipse-glsp/server/browser';
 import { MaybePromise, RequestModelAction, SaveModelAction, TypeGuard } from '@eclipse-glsp/vscode-integration/browser';
-import { inject, injectable } from 'inversify';
+import { ContainerModule, inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
+
+export function createServerModules(): ContainerModule[] {
+    const appModule = createAppModule({ logLevel: LogLevel.info, consoleLog: true });
+    const mainModule = new WorkflowServerModule().configureDiagramModule(new WorkflowDiagramModule(() => GModelVSCodeStorage));
+    return [appModule, mainModule];
+}
 
 @injectable()
 export class GModelVSCodeStorage implements SourceModelStorage {

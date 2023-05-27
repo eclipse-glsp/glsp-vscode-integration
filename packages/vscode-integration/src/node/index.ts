@@ -15,4 +15,5 @@
  ********************************************************************************/
 export * from '../common';
 export * from './quickstart-components/glsp-socket-server-launcher';
+export * from './quickstart-components/node-glsp-vscode-server';
 export * from './quickstart-components/socket-glsp-vscode-server';

@@ -13,9 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { ContainerConfiguration, GLSPClientProxy, GLSPServer, NodeGLSPClient, initializeContainer } from '@eclipse-glsp/protocol';
+import { BaseGLSPClient, ContainerConfiguration, GLSPClientProxy, GLSPServer, initializeContainer } from '@eclipse-glsp/protocol';
 import { Container, ContainerModule } from 'inversify';
-import { BaseGlspVscodeServer, GlspVscodeServerOptions } from './base-glsp-vscode-server';
+import { BaseGlspVscodeServer, GlspVscodeServerOptions } from '../../common/quickstart-components/base-glsp-vscode-server';
 
 export interface NodeGlspVscodeServerOptions extends GlspVscodeServerOptions {
     /** The server DI modules*/
@@ -24,22 +24,22 @@ export interface NodeGlspVscodeServerOptions extends GlspVscodeServerOptions {
 
 /**
  * This component can be used to bootstrap your extension when using the node
- * GLSP server implementation, which you can find here:
+ * GLSP server implementation directly in an extension without a dedicated process, which you can find here:
  * https://github.com/eclipse-glsp/glsp-server-node
  *
  * It sets up a a server running directly in the extension context and
  * provides an interface, ready to be used by the `GlspVscodeConnector` for the
  * GLSP-VSCode integration.
  */
-export class NodeGlspVscodeServer extends BaseGlspVscodeServer<NodeGLSPClient> {
+export class NodeGlspVscodeServer extends BaseGlspVscodeServer<BaseGLSPClient> {
     protected serverContainer: Container;
 
     constructor(protected override readonly options: NodeGlspVscodeServerOptions) {
         super(options);
     }
 
-    override createGLSPClient(): NodeGLSPClient {
-        const client = new NodeGLSPClient({
+    override createGLSPClient(): BaseGLSPClient {
+        const client = new BaseGLSPClient({
             id: this.options.clientId
         });
         const proxyModule = new ContainerModule(bind => {

@@ -16,15 +16,15 @@
 import 'reflect-metadata';
 
 import {
+    BrowserGlspVscodeServer,
     GlspVscodeConnector,
     NavigateAction,
-    NodeGlspVscodeServer,
     WebSocketGlspVscodeServer,
     configureDefaultCommands
 } from '@eclipse-glsp/vscode-integration/browser';
 import * as vscode from 'vscode';
-import { createServerModules } from './server/main';
 import WorkflowEditorProvider from './workflow-editor-provider';
+import { createServerModules } from './workflow-server';
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // Env variables are no available in the web extension context. So we have to check wether
     // the websocket address for the external usecase is reachable to decide which server variant should be used
@@ -38,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
               clientName: 'workflow',
               connectionOptions: { webSocketAddress }
           })
-        : new NodeGlspVscodeServer({
+        : new BrowserGlspVscodeServer({
               clientId: 'glsp.workflow',
               clientName: 'workflow',
               serverModules: createServerModules()

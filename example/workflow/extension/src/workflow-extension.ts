@@ -25,7 +25,7 @@ import {
     NodeGlspVscodeServer,
     SocketGlspVscodeServer,
     configureDefaultCommands
-} from '@eclipse-glsp/vscode-integration';
+} from '@eclipse-glsp/vscode-integration/node';
 import { ContainerModule } from 'inversify';
 import * as path from 'path';
 import * as process from 'process';
