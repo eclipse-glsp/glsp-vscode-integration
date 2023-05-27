@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["reflect-metadata"]
   },
-  "include": ["src", "server", "dist"]
+  "include": ["src", "dist"]
 }

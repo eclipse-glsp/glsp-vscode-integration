@@ -18,7 +18,7 @@ import * as net from 'net';
 import { MessageConnection, createMessageConnection } from 'vscode-jsonrpc';
 import { SocketMessageReader, SocketMessageWriter } from 'vscode-jsonrpc/node';
 import { WebSocket } from 'ws';
-import { BaseGlspVscodeServer, GlspVscodeServerOptions } from './base-glsp-vscode-server';
+import { BaseGlspVscodeServer, GlspVscodeServerOptions } from '../../common/quickstart-components/base-glsp-vscode-server';
 
 export interface SocketGlspVscodeServerOptions extends GlspVscodeServerOptions {
     /** (Web)socket connection options of the running server. */

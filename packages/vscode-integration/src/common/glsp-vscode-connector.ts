@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 EclipseSource and others.
+ * Copyright (c) 2021-2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -28,8 +28,8 @@ import {
     SetMarkersAction,
     UndoAction
 } from '@eclipse-glsp/protocol';
-import * as fs from 'fs';
 import * as vscode from 'vscode';
+import { Disposable } from 'vscode-jsonrpc';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
 // eslint-disable-next-line no-shadow
@@ -43,6 +43,7 @@ export interface MessageProcessingResult {
     messageChanged: boolean;
 }
 
+export type SelectionState = Omit<SelectAction, 'kind'>;
 /**
  * The `GlspVscodeConnector` acts as the bridge between GLSP-Clients and the GLSP-Server
  * and is at the core of the Glsp-VSCode integration.
@@ -67,11 +68,11 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     /** Maps Documents to corresponding clientId. */
     protected readonly documentMap = new Map<D, string>();
     /** Maps clientId to selected elementIDs for that client. */
-    protected readonly clientSelectionMap = new Map<string, string[]>();
+    protected readonly clientSelectionMap = new Map<string, SelectionState>();
 
     protected readonly options: Required<GlspVscodeConnectorOptions>;
     protected readonly diagnostics = vscode.languages.createDiagnosticCollection();
-    protected readonly selectionUpdateEmitter = new vscode.EventEmitter<string[]>();
+    protected readonly selectionUpdateEmitter = new vscode.EventEmitter<SelectionState>();
     protected readonly onDocumentSavedEmitter = new vscode.EventEmitter<D>();
     protected readonly onDidChangeCustomDocumentEventEmitter = new vscode.EventEmitter<
         vscode.CustomDocumentEditEvent<D> | vscode.CustomDocumentContentChangeEvent<D>
@@ -80,9 +81,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
     /**
      * A subscribable event which fires with an array containing the IDs of all
-     * selected elements when the selection of the editor changes.
+     * selected  & deselected elements when the selection of the editor changes.
      */
-    public onSelectionUpdate: vscode.Event<string[]>;
+    public onSelectionUpdate: vscode.Event<SelectionState>;
 
     /**
      * A subscribable event which fires when a document changed. The event body
@@ -149,54 +150,63 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      * @returns the {@link InitializeResult} of the server to enable further configuration.
      */
     public async registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
+        const toDispose: Disposable[] = [
+            Disposable.create(() => {
+                this.diagnostics.set(client.document.uri, undefined); // this clears the diagnostics for the file
+                this.clientMap.delete(client.clientId);
+                this.documentMap.delete(client.document);
+                this.clientSelectionMap.delete(client.clientId);
+            })
+        ];
+        // Cleanup when client panel is closed
+        const panelOnDisposeListener = client.webviewPanel.onDidDispose(async () => {
+            toDispose.forEach(disposable => disposable.dispose());
+            panelOnDisposeListener.dispose();
+        });
+
         this.clientMap.set(client.clientId, client);
         this.documentMap.set(client.document, client.clientId);
 
-        // Set up message listener for client
-        const clientMessageListener = client.onClientMessage(message => {
-            if (this.options.logging) {
-                if (ActionMessage.is(message)) {
-                    console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
-                } else {
-                    console.log('Client (no action message):', message);
+        toDispose.push(
+            client.onClientMessage(message => {
+                if (this.options.logging) {
+                    if (ActionMessage.is(message)) {
+                        console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
+                    } else {
+                        console.log('Client (no action message):', message);
+                    }
                 }
-            }
 
-            // Run message through first user-provided interceptor (pre-receive)
-            this.options.onBeforeReceiveMessageFromClient(message, (newMessage, shouldBeProcessedByConnector = true) => {
-                const { processedMessage, messageChanged } = shouldBeProcessedByConnector
-                    ? this.processMessage(newMessage, MessageOrigin.CLIENT)
-                    : { processedMessage: message, messageChanged: false };
+                // Run message through first user-provided interceptor (pre-receive)
+                this.options.onBeforeReceiveMessageFromClient(message, (newMessage, shouldBeProcessedByConnector = true) => {
+                    const { processedMessage, messageChanged } = shouldBeProcessedByConnector
+                        ? this.processMessage(newMessage, MessageOrigin.CLIENT)
+                        : { processedMessage: message, messageChanged: false };
 
-                const filteredMessage = this.options.onBeforePropagateMessageToServer(newMessage, processedMessage, messageChanged);
+                    const filteredMessage = this.options.onBeforePropagateMessageToServer(newMessage, processedMessage, messageChanged);
 
-                if (typeof filteredMessage !== 'undefined') {
-                    this.options.server.onSendToServerEmitter.fire(filteredMessage);
+                    if (typeof filteredMessage !== 'undefined') {
+                        this.options.server.onSendToServerEmitter.fire(filteredMessage);
+                    }
+                });
+            })
+        );
+
+        toDispose.push(
+            client.webviewPanel.onDidChangeViewState(e => {
+                if (e.webviewPanel.active) {
+                    this.selectionUpdateEmitter.fire(
+                        this.clientSelectionMap.get(client.clientId) || { selectedElementsIDs: [], deselectedElementsIDs: [] }
+                    );
                 }
-            });
-        });
-
-        const viewStateListener = client.webviewPanel.onDidChangeViewState(e => {
-            if (e.webviewPanel.active) {
-                this.selectionUpdateEmitter.fire(this.clientSelectionMap.get(client.clientId) || []);
-            }
-        });
-
-        // Cleanup when client panel is closed
-        const panelOnDisposeListener = client.webviewPanel.onDidDispose(() => {
-            this.diagnostics.set(client.document.uri, undefined); // this clears the diagnostics for the file
-            this.clientMap.delete(client.clientId);
-            this.documentMap.delete(client.document);
-            this.clientSelectionMap.delete(client.clientId);
-            viewStateListener.dispose();
-            clientMessageListener.dispose();
-            panelOnDisposeListener.dispose();
-        });
+            })
+        );
 
         // Initialize client session
         const glspClient = await this.options.server.glspClient;
         const initializeParams = await this.createInitializeClientSessionParams(client);
         await glspClient.initializeClientSession(initializeParams);
+        toDispose.unshift(Disposable.create(() => glspClient.disposeClientSession({ clientSessionId: initializeParams.clientSessionId })));
         return this.options.server.initializeResult;
     }
 
@@ -389,8 +399,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         origin: MessageOrigin
     ): MessageProcessingResult {
         if (client) {
-            this.clientSelectionMap.set(client.clientId, message.action.selectedElementsIDs);
-            this.selectionUpdateEmitter.fire(message.action.selectedElementsIDs);
+            this.clientSelectionMap.set(client.clientId, message.action);
+            this.selectionUpdateEmitter.fire(message.action);
         }
 
         if (origin === MessageOrigin.CLIENT) {
@@ -416,7 +426,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             })
             .then((uri: vscode.Uri | undefined) => {
                 if (uri) {
-                    fs.writeFile(uri.fsPath, message.action.svg, { encoding: 'utf-8' }, err => {
+                    const content = new TextEncoder().encode(message.action.svg);
+                    vscode.workspace.fs.writeFile(uri, content).then(undefined, err => {
                         if (err) {
                             console.error(err);
                         }

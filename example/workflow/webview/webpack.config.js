@@ -1,7 +1,7 @@
 // @ts-check
 const path = require('path');
 
-const outputPath = path.resolve(__dirname, '../extension/pack');
+const outputPath = path.resolve(__dirname, '../extension/dist/');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
@@ -18,7 +18,7 @@ const config = {
     resolve: {
         fallback: {
             fs: false,
-            net: false,
+            net: false
         },
         extensions: ['.ts', '.tsx', '.js']
     },
@@ -44,7 +44,7 @@ const config = {
             }
         ]
     },
-    ignoreWarnings: [/Failed to parse source map/, /Can't resolve .* in '.*ws\/lib'/],
+    ignoreWarnings: [/Failed to parse source map/, /Can't resolve .* in '.*ws\/lib'/]
 };
 
 module.exports = config;

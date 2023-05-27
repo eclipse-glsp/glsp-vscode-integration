@@ -45,7 +45,15 @@ To test the websocket connection with an external server the `Workflow GLSP Exam
 ### Start Workflow Diagram example without a dedicated server process
 
 The default example use case uses a socket communication from the extension to a GLSP server process.
-To directly start the server in the extension context without an extra process, the the `Workflow GLSP Example Extension (Integrated Node GLSP Server)` launch configuration can be used.
+To directly start the server in the extension context without an extra process, the `Workflow GLSP Example Extension (Integrated Node GLSP Server)` launch configuration can be used.
+
+### Start Workflow Diagram example as a Web extension
+
+In addition, to a classic node-based VS Code extension it is also possible to start the Workflow Diagram example as a VSCode web extension.
+For this, the `Workflow GLSP Example Web Extension` launch configuration can be used.
+Per default, this extension starts the GLSP server within the extension context and uses direct communication without json-rpc.
+In addition, it is also possible to use an external GLSP server via WebSocket. To use this approach simply start a Workflow GLSP server that is listening on `ws://localhost:8081/workflow` (default websocket config for the Workflow example server) and then start the web extension via `Workflow GLSP Example Web Extension` launch configuration.
+When available (i.e. the websocket address is reachable) the extension will automatically use the external server instead of the default in-context server.
 
 > _**Remark:**_ In production, one would decide for one way of connectivity, and would not implement all the different options as we do in the workflow diagram example.
 > This was setup to easily show and switch between the different possibilities.

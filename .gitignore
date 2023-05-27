@@ -2,7 +2,7 @@ node_modules
 .browser_modules
 lib
 *.log
-pack
 *.jar
+dist
 tsconfig.tsbuildinfo
 eslint.xml

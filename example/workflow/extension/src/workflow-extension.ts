@@ -18,13 +18,14 @@ import 'reflect-metadata';
 import { WorkflowDiagramModule, WorkflowLayoutConfigurator, WorkflowServerModule } from '@eclipse-glsp-examples/workflow-server/node';
 import { configureELKLayoutModule } from '@eclipse-glsp/layout-elk';
 import { GModelStorage, LogLevel, createAppModule } from '@eclipse-glsp/server/node';
-import { GlspVscodeConnector, NavigateAction } from '@eclipse-glsp/vscode-integration';
 import {
     GlspSocketServerLauncher,
+    GlspVscodeConnector,
+    NavigateAction,
     NodeGlspVscodeServer,
     SocketGlspVscodeServer,
     configureDefaultCommands
-} from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+} from '@eclipse-glsp/vscode-integration/node';
 import { ContainerModule } from 'inversify';
 import * as path from 'path';
 import * as process from 'process';

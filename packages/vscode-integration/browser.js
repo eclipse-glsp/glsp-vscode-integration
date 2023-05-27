@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 EclipseSource and others.
+ * Copyright (c) 2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,9 +13,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export * from './base-glsp-vscode-server';
-export * from './configuration-util';
-export * from './glsp-editor-provider';
-export * from './glsp-socket-server-launcher';
-export * from './node-glsp-vscode-server';
-export * from './socket-glsp-vscode-server';
+'use strict';
+
+module.exports = require('./lib/browser/index');
