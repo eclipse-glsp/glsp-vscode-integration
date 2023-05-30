@@ -119,6 +119,12 @@
         "when": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
+        "key": "alt+e",
+        "mac": "alt+e",
+        "command": "workflow.exportAsSVG",
+        "when": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
         "key": "Ctrl+4",
         "mac": "cmd+4",
         "command": "workflow.goToNextNode",
