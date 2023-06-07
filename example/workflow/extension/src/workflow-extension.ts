@@ -42,8 +42,7 @@ const NODE_EXECUTABLE = path.join(
     '..',
     'node_modules',
     '@eclipse-glsp-examples',
-    'workflow-server',
-    'bundle',
+    'workflow-server-bundled',
     'wf-glsp-server-node.js'
 );
 

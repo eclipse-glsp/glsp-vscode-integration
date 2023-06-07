@@ -23,7 +23,7 @@
     "**/sprotty": "0.13.0-next.f4445dd.342"
   },
   "devDependencies": {
-    "@eclipse-glsp/dev": "next",
+    "@eclipse-glsp/dev": "1.1.0-next.7026c40.129",
     "@types/node": "16",
     "@types/vscode": "^1.54.0",
     "mvn-artifact-download": "5.1.0"
