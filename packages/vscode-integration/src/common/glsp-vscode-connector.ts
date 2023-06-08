@@ -242,7 +242,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      * @param clientId Id of client.
      * @param message Message to send.
      */
-    protected sendMessageToClient(clientId: string, message: unknown): void {        
+    protected sendMessageToClient(clientId: string, message: unknown): void {
         const client = this.clientMap.get(clientId);
         if (client) {
             client.onSendToClientEmitter.fire(message);
