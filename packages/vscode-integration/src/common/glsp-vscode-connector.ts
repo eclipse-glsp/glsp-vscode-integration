@@ -24,6 +24,7 @@ import {
     RequestModelAction,
     SaveModelAction,
     SelectAction,
+    ServerMessageAction,
     SetDirtyStateAction,
     SetMarkersAction,
     UndoAction
@@ -242,9 +243,28 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      * @param message Message to send.
      */
     protected sendMessageToClient(clientId: string, message: unknown): void {
+        this.handleServerMessageAction(message);
+        
         const client = this.clientMap.get(clientId);
         if (client) {
             client.onSendToClientEmitter.fire(message);
+        }
+    }
+
+    /**
+     * Client message notification.
+     *
+     * @param message Message to show.
+     */
+    private handleServerMessageAction(message: unknown): void {
+        if (ActionMessage.is(message) && ServerMessageAction.is(message.action)) {
+            if (message.action.severity === 'ERROR') {
+                vscode.window.showErrorMessage(message.action.message);
+            } else if (message.action.severity === 'WARNING') {
+                vscode.window.showWarningMessage(message.action.message);
+            } else if (message.action.severity === 'INFO') {
+                vscode.window.showInformationMessage(message.action.message);
+            }
         }
     }
 
