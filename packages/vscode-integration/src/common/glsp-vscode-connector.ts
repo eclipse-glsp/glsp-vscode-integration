@@ -24,6 +24,7 @@ import {
     RequestModelAction,
     SaveModelAction,
     SelectAction,
+    ServerMessageAction,
     SetDirtyStateAction,
     SetMarkersAction,
     UndoAction
@@ -277,6 +278,11 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         if (ActionMessage.is(message)) {
             const client = this.clientMap.get(message.clientId);
 
+            // server message
+            if (ServerMessageAction.is(message.action)) {
+                return this.handleServerMessageAction(message as ActionMessage<ServerMessageAction>, client, origin);
+            }
+
             // Dirty state & save actions
             if (SetDirtyStateAction.is(message.action)) {
                 return this.handleSetDirtyStateAction(message as ActionMessage<SetDirtyStateAction>, client, origin);
@@ -305,6 +311,23 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
         // Propagate unchanged message
         return { processedMessage: message, messageChanged: false };
+    }
+
+    protected handleServerMessageAction(
+        message: ActionMessage<ServerMessageAction>,
+        _client: GlspVscodeClient<D> | undefined,
+        _origin: MessageOrigin
+    ): MessageProcessingResult {
+        if (message.action.severity === 'ERROR') {
+            vscode.window.showErrorMessage(message.action.message);
+        } else if (message.action.severity === 'WARNING') {
+            vscode.window.showWarningMessage(message.action.message);
+        } else if (message.action.severity === 'INFO') {
+            vscode.window.showInformationMessage(message.action.message);
+        }
+
+        // Do not propagate action
+        return { processedMessage: undefined, messageChanged: true };
     }
 
     protected handleSetDirtyStateAction(
