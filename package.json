@@ -19,14 +19,12 @@
     "upgrade:next": "yarn upgrade -p \"@eclipse-glsp.*|sprotty.*\" --next ",
     "watch": "lerna run --parallel watch"
   },
-  "resolutions": {
-    "**/sprotty": "0.13.0-next.f4445dd.342"
-  },
   "devDependencies": {
-    "@eclipse-glsp/dev": "1.1.0-next.7026c40.129",
+    "@eclipse-glsp/dev": "next",
     "@types/node": "16",
     "@types/vscode": "^1.54.0",
-    "mvn-artifact-download": "5.1.0"
+    "lerna": "^6.6.2",
+    "typescript": "^5.0.4"
   },
   "engines": {
     "node": ">=16.11.0",
