@@ -32,9 +32,13 @@
   "scripts": {
     "build": "tsc -b",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "esbuild": "yarn esbuild-base --sourcemap",
+    "esbuild-base": "esbuild ./src/workflow-extension.ts --bundle --outfile=lib/workflow-extension.js --external:vscode --format=cjs --platform=node",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "package": "yarn clean && vsce package --yarn --allow-star-activation",
     "prepare": "yarn clean && yarn build",
+    "vscode:prepublish": "yarn esbuild-base",
     "watch": "tsc -w"
   },
   "contributes": {
@@ -194,7 +198,9 @@
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-server": "next",
     "@eclipse-glsp-examples/workflow-server-bundled": "next",
-    "@eclipse-glsp/vscode-integration": "1.1.0-next"
+    "@eclipse-glsp/vscode-integration": "1.1.0-next",
+    "@vscode/vsce": "^2.19.0",
+    "esbuild": "^0.18.11"
   },
   "engines": {
     "vscode": "^1.54.0"
