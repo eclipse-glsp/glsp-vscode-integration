@@ -23,11 +23,10 @@ import {
     DeleteElementOperation,
     DiagramServerProxy,
     registerDefaultGLSPServerActions,
+    SelectionService,
     ServerStatusAction,
-    SetEditModeAction,
-    TYPES
+    SetEditModeAction
 } from '@eclipse-glsp/client';
-import { SelectionService } from '@eclipse-glsp/client/lib/features/select/selection-service';
 import { inject } from 'inversify';
 import { CopyPasteHandlerProvider } from './copy-paste-handler-provider';
 import { GLSPDiagramWidgetFactory } from './glsp-diagram-widget';
@@ -36,7 +35,7 @@ export const receivedFromServerProperty = '__receivedFromServer';
 export const localDispatchProperty = '__localDispatch';
 
 export class GLSPVscodeDiagramServer extends DiagramServerProxy {
-    @inject(TYPES.SelectionService)
+    @inject(SelectionService)
     protected selectionService: SelectionService;
 
     @inject(VsCodeApi)
