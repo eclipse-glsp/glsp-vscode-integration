@@ -16,6 +16,8 @@
 import {
     Action,
     ActionMessage,
+    Deferred,
+    EndProgressAction,
     ExportSvgAction,
     InitializeClientSessionParameters,
     InitializeResult,
@@ -27,7 +29,9 @@ import {
     ServerMessageAction,
     SetDirtyStateAction,
     SetMarkersAction,
-    UndoAction
+    StartProgressAction,
+    UndoAction,
+    UpdateProgressAction
 } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { Disposable } from 'vscode-jsonrpc';
@@ -45,6 +49,15 @@ export interface MessageProcessingResult {
 }
 
 export type SelectionState = Omit<SelectAction, 'kind'>;
+
+interface ProgressReporter {
+    deferred: Deferred<void>;
+    progress: vscode.Progress<{
+        message?: string | undefined;
+        increment?: number | undefined;
+    }>;
+}
+
 /**
  * The `GlspVscodeConnector` acts as the bridge between GLSP-Clients and the GLSP-Server
  * and is at the core of the Glsp-VSCode integration.
@@ -79,6 +92,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         vscode.CustomDocumentEditEvent<D> | vscode.CustomDocumentContentChangeEvent<D>
     >();
     protected readonly disposables: vscode.Disposable[] = [];
+    protected readonly progressReporters: Map<string, ProgressReporter> = new Map();
 
     /**
      * A subscribable event which fires with an array containing the IDs of all
@@ -283,6 +297,17 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 return this.handleServerMessageAction(message as ActionMessage<ServerMessageAction>, client, origin);
             }
 
+            // progress reporting
+            if (StartProgressAction.is(message.action)) {
+                return this.handleStartProgressAction(message as ActionMessage<StartProgressAction>, client, origin);
+            }
+            if (UpdateProgressAction.is(message.action)) {
+                return this.handleUpdateProgressAction(message as ActionMessage<UpdateProgressAction>, client, origin);
+            }
+            if (EndProgressAction.is(message.action)) {
+                return this.handleEndProgressAction(message as ActionMessage<EndProgressAction>, client, origin);
+            }
+
             // Dirty state & save actions
             if (SetDirtyStateAction.is(message.action)) {
                 return this.handleSetDirtyStateAction(message as ActionMessage<SetDirtyStateAction>, client, origin);
@@ -328,6 +353,68 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
         // Do not propagate action
         return { processedMessage: undefined, messageChanged: true };
+    }
+
+    protected handleStartProgressAction(
+        actionMessage: ActionMessage<StartProgressAction>,
+        client: GlspVscodeClient<D> | undefined,
+        origin: MessageOrigin
+    ): MessageProcessingResult {
+        if (client) {
+            const { progressId, title, message, percentage } = actionMessage.action;
+            const deferred = new Deferred<void>();
+            const location = vscode.ProgressLocation.Notification;
+            vscode.window.withProgress({ title, location }, progress => {
+                const reporterId = this.progressReporterId(client, progressId);
+                this.progressReporters.set(reporterId, { deferred, progress });
+                progress.report({ message, increment: percentage });
+                return deferred.promise;
+            });
+        }
+
+        // Do not propagate action
+        return { processedMessage: undefined, messageChanged: true };
+    }
+
+    protected handleUpdateProgressAction(
+        actionMessage: ActionMessage<UpdateProgressAction>,
+        client: GlspVscodeClient<D> | undefined,
+        origin: MessageOrigin
+    ): MessageProcessingResult {
+        if (client) {
+            const { progressId, message, percentage } = actionMessage.action;
+            const reporterId = this.progressReporterId(client, progressId);
+            const reporter = this.progressReporters.get(reporterId);
+            if (reporter) {
+                reporter.progress.report({ message, increment: percentage });
+            }
+        }
+
+        // Do not propagate action
+        return { processedMessage: undefined, messageChanged: true };
+    }
+
+    protected handleEndProgressAction(
+        actionMessage: ActionMessage<EndProgressAction>,
+        client: GlspVscodeClient<D> | undefined,
+        origin: MessageOrigin
+    ): MessageProcessingResult {
+        if (client) {
+            const { progressId } = actionMessage.action;
+            const reporterId = this.progressReporterId(client, progressId);
+            const reporter = this.progressReporters.get(reporterId);
+            if (reporter) {
+                reporter.deferred.resolve();
+                this.progressReporters.delete(reporterId);
+            }
+        }
+
+        // Do not propagate action
+        return { processedMessage: undefined, messageChanged: true };
+    }
+
+    protected progressReporterId(client: GlspVscodeClient<D>, progressId: string): string {
+        return `${client.clientId}_${progressId}`;
     }
 
     protected handleSetDirtyStateAction(
