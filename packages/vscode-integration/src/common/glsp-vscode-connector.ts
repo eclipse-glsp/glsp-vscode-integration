@@ -56,6 +56,7 @@ interface ProgressReporter {
         message?: string | undefined;
         increment?: number | undefined;
     }>;
+    currentPercentage?: number | undefined;
 }
 
 /**
@@ -362,11 +363,12 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     ): MessageProcessingResult {
         if (client) {
             const { progressId, title, message, percentage } = actionMessage.action;
+            const initialPercentage = (percentage ?? -1) >= 0 ? percentage : undefined;
             const deferred = new Deferred<void>();
             const location = vscode.ProgressLocation.Notification;
             vscode.window.withProgress({ title, location }, progress => {
                 const reporterId = this.progressReporterId(client, progressId);
-                this.progressReporters.set(reporterId, { deferred, progress });
+                this.progressReporters.set(reporterId, { deferred, progress, currentPercentage: initialPercentage });
                 progress.report({ message, increment: percentage });
                 return deferred.promise;
             });
@@ -386,7 +388,13 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             const reporterId = this.progressReporterId(client, progressId);
             const reporter = this.progressReporters.get(reporterId);
             if (reporter) {
-                reporter.progress.report({ message, increment: percentage });
+                const currentPercentage = reporter.currentPercentage ?? 0;
+                const newPercentage = (percentage ?? -1) >= 0 ? percentage : undefined;
+                const increment = newPercentage ? (newPercentage  - currentPercentage) : undefined;
+                reporter.progress.report({ message, increment });
+                if (newPercentage) {
+                    reporter.currentPercentage = newPercentage;
+                }
             }
         }
 
