@@ -53,10 +53,10 @@ export type SelectionState = Omit<SelectAction, 'kind'>;
 interface ProgressReporter {
     deferred: Deferred<void>;
     progress: vscode.Progress<{
-        message?: string | undefined;
-        increment?: number | undefined;
+        message?: string;
+        increment?: number;
     }>;
-    currentPercentage?: number | undefined;
+    currentPercentage?: number;
 }
 
 /**
