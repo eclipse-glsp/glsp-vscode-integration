@@ -49,7 +49,7 @@ To directly start the server in the extension context without an extra process, 
 
 ### Start Workflow Diagram example as a Web extension
 
-In addition, to a classic node-based VS Code extension it is also possible to start the Workflow Diagram example as a VS Code web extension.
+In addition to a classic node-based VS Code extension, it is also possible to start the Workflow Diagram example as a VS Code web extension.
 For this, the `Workflow GLSP Example Web Extension` launch configuration can be used.
 Per default, this extension starts the GLSP server within the extension context and uses direct communication without json-rpc.
 In addition, it is also possible to use an external GLSP server via WebSocket. To use this approach simply start a Workflow GLSP server that is listening on `ws://localhost:8081/workflow` (default websocket config for the Workflow example server) and then start the web extension via `Workflow GLSP Example Web Extension` launch configuration.
