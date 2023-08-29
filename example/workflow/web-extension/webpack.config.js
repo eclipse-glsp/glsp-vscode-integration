@@ -1,9 +1,8 @@
-//@ts-check
-
 'use strict';
 
 const path = require('path');
 const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
@@ -42,8 +41,16 @@ const config = {
     plugins: [
         new webpack.ProvidePlugin({
             process: 'process/browser' // provide a shim for the global `process` variable
+        }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, '..', 'webview', 'dist')
+                }
+            ]
         })
     ],
+    ignoreWarnings: [/Can't resolve .* in '.*ws\/lib'/],
     performance: {
         hints: false
     }

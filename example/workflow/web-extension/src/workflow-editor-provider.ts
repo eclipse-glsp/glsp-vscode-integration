@@ -35,9 +35,6 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
         const webview = webviewPanel.webview;
         const extensionUri = this.extensionContext.extensionUri;
         const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
-        const codiconsUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css')
-        );
 
         webviewPanel.webview.options = {
             enableScripts: true
@@ -52,7 +49,6 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
 					<meta http-equiv="Content-Security-Policy" content="
                 default-src http://*.fontawesome.com  ${webview.cspSource} 'unsafe-inline' 'unsafe-eval';
                 ">
-				<link href="${codiconsUri}" rel="stylesheet" />
 
                 </head>
                 <body>

@@ -25,6 +25,7 @@ import {
 import * as vscode from 'vscode';
 import WorkflowEditorProvider from './workflow-editor-provider';
 import { createServerModules } from './workflow-server';
+
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // Env variables are no available in the web extension context. So we have to check wether
     // the websocket address for the external usecase is reachable to decide which server variant should be used

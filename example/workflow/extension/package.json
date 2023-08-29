@@ -24,16 +24,18 @@
     }
   ],
   "publisher": "Eclipse-GLSP",
-  "main": "./lib/workflow-extension",
+  "main": "./dist/workflow-extension",
   "files": [
-    "lib",
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b",
-    "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "build": "tsc -b && yarn bundle",
+    "bundle": "webpack",
+    "bundle:prod": "webpack --config ./webpack.prod.js",
+    "clean": "rimraf lib tsconfig.tsbuildinfo dist",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
     "watch": "tsc -w"
   },
@@ -189,12 +191,19 @@
     ]
   },
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-server": "next",
     "@eclipse-glsp-examples/workflow-server-bundled": "next",
-    "@eclipse-glsp/vscode-integration": "1.1.0-next"
+    "@eclipse-glsp/vscode-integration": "1.1.0-next",
+    "@vscode/vsce": "^2.19.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.4.4",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.9.0",
+    "workflow-glsp-webview": "1.1.0-next"
   },
   "engines": {
     "vscode": "^1.54.0"
