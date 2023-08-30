@@ -17,8 +17,8 @@ import { createWorkflowDiagramContainer } from '@eclipse-glsp-examples/workflow-
 import { GLSPDiagramIdentifier, GLSPStarter } from '@eclipse-glsp/vscode-integration-webview';
 import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
 import '@vscode/codicons/dist/codicon.css';
-
 import { Container } from 'inversify';
+
 class WorkflowGLSPStarter extends GLSPStarter {
     createContainer(diagramIdentifier: GLSPDiagramIdentifier): Container {
         return createWorkflowDiagramContainer(diagramIdentifier.clientId);
