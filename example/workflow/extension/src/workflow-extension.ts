@@ -33,25 +33,18 @@ import * as vscode from 'vscode';
 import WorkflowEditorProvider from './workflow-editor-provider';
 
 const DEFAULT_SERVER_PORT = '0';
-const LOG_DIR = path.join(__dirname, '..', '..', '..', '..', 'logs');
-const NODE_EXECUTABLE = path.join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    'node_modules',
-    '@eclipse-glsp-examples',
-    'workflow-server-bundled',
-    'wf-glsp-server-node.js'
-);
+const NODE_EXECUTABLE = path.join(__dirname, '..', 'dist', 'wf-glsp-server-node.js');
+const LOG_DIR = process.env.GLSP_LOG_DIR;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // Start server process using quickstart component
     let serverProcess: GlspSocketServerLauncher | undefined;
     const useIntegratedServer = JSON.parse(process.env.GLSP_INTEGRATED_SERVER ?? 'false');
     if (!useIntegratedServer && process.env.GLSP_SERVER_DEBUG !== 'true') {
-        const additionalArgs = ['--fileLog', 'true', '--logDir', LOG_DIR];
+        const additionalArgs = [];
+        if (LOG_DIR) {
+            additionalArgs.push('--fileLog', 'true', '--logDir', LOG_DIR);
+        }
         if (process.env.GLSP_WEBSOCKET_PATH) {
             additionalArgs.push('--webSocket');
         }

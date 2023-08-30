@@ -6,3 +6,4 @@ lib
 dist
 tsconfig.tsbuildinfo
 eslint.xml
+*.vsix

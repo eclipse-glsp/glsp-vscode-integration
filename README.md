@@ -58,6 +58,30 @@ When available (i.e. the websocket address is reachable) the extension will auto
 > _**Remark:**_ In production, one would decide for one way of connectivity, and would not implement all the different options as we do in the workflow diagram example.
 > This was setup to easily show and switch between the different possibilities.
 
+### How to package the Workflow Diagram example extension
+
+The `vsce` CLI tool can be used to package/publish a vscode extension.
+
+Before packaging it's recommended to execute a `production build` with
+
+```bash
+yarn bundle:prod
+```
+
+This ensures that the extension sources are bundled efficiently without development overhead like source maps.
+Both example extension (normal & web) have a `package` utility script that will automatically create the corresponding `*.vsix` file with `vsce`.
+To package the normal extension use
+
+```bash
+yarn workflow package
+```
+
+and for the web extension use
+
+```bash
+yarn workflow:web package
+```
+
 ### Where to find the sources?
 
 In addition to this repository, the related source code can be found here:
