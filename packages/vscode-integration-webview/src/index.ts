@@ -13,10 +13,15 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export * from './copy-paste-handler-provider';
+
+export * from './default-modules';
 export * from './diagram-identifier';
-export * from './extension-action-handler';
+export * from './features/copyPaste/copy-paste-module';
+export * from './features/copyPaste/copy-paste-startup';
+export * from './features/default/default-module';
+export * from './features/default/vscode-glsp-modelsource';
+export * from './features/export/export-module';
+export * from './features/navigation/navigation-module';
 export * from './glsp-diagram-widget';
 export * from './glsp-starter';
-export * from './glsp-vscode-diagramserver';
-export * from './services';
+export * from './webview-glsp-client';

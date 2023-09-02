@@ -35,6 +35,7 @@ import {
 } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { Disposable } from 'vscode-jsonrpc';
+import { Messenger } from 'vscode-messenger';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
 // eslint-disable-next-line no-shadow
@@ -94,6 +95,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     >();
     protected readonly disposables: vscode.Disposable[] = [];
     protected readonly progressReporters: Map<string, ProgressReporter> = new Map();
+    readonly messenger = new Messenger();
 
     /**
      * A subscribable event which fires with an array containing the IDs of all
@@ -175,7 +177,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             })
         ];
         // Cleanup when client panel is closed
-        const panelOnDisposeListener = client.webviewPanel.onDidDispose(async () => {
+        const panelOnDisposeListener = client.webviewEndpoint.webviewPanel.onDidDispose(async () => {
             toDispose.forEach(disposable => disposable.dispose());
             panelOnDisposeListener.dispose();
         });
@@ -184,7 +186,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         this.documentMap.set(client.document, client.clientId);
 
         toDispose.push(
-            client.onClientMessage(message => {
+            client.webviewEndpoint.onActionMessage(message => {
                 if (this.options.logging) {
                     if (ActionMessage.is(message)) {
                         console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
@@ -209,7 +211,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         );
 
         toDispose.push(
-            client.webviewPanel.onDidChangeViewState(e => {
+            client.webviewEndpoint.webviewPanel.onDidChangeViewState(e => {
                 if (e.webviewPanel.active) {
                     this.selectionUpdateEmitter.fire(
                         this.clientSelectionMap.get(client.clientId) || { selectedElementsIDs: [], deselectedElementsIDs: [] }
@@ -220,6 +222,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
         // Initialize client session
         const glspClient = await this.options.server.glspClient;
+        toDispose.push(client.webviewEndpoint.initialize(glspClient));
         const initializeParams = await this.createInitializeClientSessionParams(client);
         await glspClient.initializeClientSession(initializeParams);
         toDispose.unshift(Disposable.create(() => glspClient.disposeClientSession({ clientSessionId: initializeParams.clientSessionId })));
@@ -241,12 +244,13 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      */
     public sendActionToActiveClient(action: Action): void {
         this.clientMap.forEach(client => {
-            if (client.webviewPanel.active) {
-                client.onSendToClientEmitter.fire({
+            if (client.webviewEndpoint.webviewPanel.active) {
+                const message = {
                     clientId: client.clientId,
                     action: action,
                     __localDispatch: true
-                });
+                };
+                client.webviewEndpoint.sendMessage(message);
             }
         });
     }
@@ -259,8 +263,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      */
     protected sendMessageToClient(clientId: string, message: unknown): void {
         const client = this.clientMap.get(clientId);
-        if (client) {
-            client.onSendToClientEmitter.fire(message);
+        if (client && ActionMessage.is(message)) {
+            client.webviewEndpoint.sendMessage(message);
         }
     }
 
@@ -390,7 +394,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             if (reporter) {
                 const currentPercentage = reporter.currentPercentage ?? 0;
                 const newPercentage = (percentage ?? -1) >= 0 ? percentage : undefined;
-                const increment = newPercentage ? (newPercentage  - currentPercentage) : undefined;
+                const increment = newPercentage ? newPercentage - currentPercentage : undefined;
                 reporter.progress.report({ message, increment });
                 if (newPercentage) {
                     reporter.currentPercentage = newPercentage;
@@ -597,15 +601,18 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     public async revertDocument(document: D, diagramType: string): Promise<void> {
         const clientId = this.documentMap.get(document);
         if (clientId) {
-            this.sendActionToClient(
-                clientId,
-                RequestModelAction.create({
-                    options: {
-                        sourceUri: document.uri.toString(),
-                        diagramType
-                    }
-                })
-            );
+            const client = this.clientMap.get(clientId);
+            if (client?.webviewEndpoint.webviewPanel.active) {
+                this.sendActionToClient(
+                    clientId,
+                    RequestModelAction.create({
+                        options: {
+                            sourceUri: document.uri.toString(),
+                            diagramType
+                        }
+                    })
+                );
+            }
         } else {
             if (this.options.logging) {
                 console.error('Backup failed: Document not registered');

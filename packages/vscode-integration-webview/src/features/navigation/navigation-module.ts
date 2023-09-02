@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2022 EclipseSource and others.
+ * Copyright (c) 2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,11 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { ICopyPasteHandler } from '@eclipse-glsp/client';
+import { FeatureModule, NavigateToExternalTargetAction, navigationModule } from '@eclipse-glsp/client';
+import { ExtensionActionKind } from '../default/extension-action-handler';
 
-export const CopyPasteHandlerProvider = Symbol('CopyPasteHandlerProvider');
-/**
- * Service identifier and type definition to bind the {@link ICopyPasteHandler} to an provider.
- * This enables asynchronous injections and can be used to bypass circular dependency issues.
- */
-export type CopyPasteHandlerProvider = () => Promise<ICopyPasteHandler>;
+export const vscodeNavigationModule = new FeatureModule(bind => {
+    bind(ExtensionActionKind).toConstantValue(NavigateToExternalTargetAction.KIND);
+}, navigationModule);

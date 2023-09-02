@@ -17,7 +17,9 @@
         "${workspaceRoot}/example/workflow/extension/dist/workflow-extension.js",
         "${workspaceRoot}/example/workflow/extension/lib/**/*.js",
         "${workspaceRoot}/packages/vscode-integration/lib/**/*.js",
-        "${workspaceRoot}/node_modules/@eclipse-glsp/*/lib/**/*.js"
+        "${workspaceRoot}/node_modules/@eclipse-glsp/*/lib/**/*.js",
+        "${workspaceRoot}/node_modules/vscode-messenger/*/lib/**/*.js",
+        "${workspaceRoot}/node_modules/vscode-messenger-common/*/lib/**/*.js"
       ],
       "sourceMaps": true,
       "sourceMapPathOverrides": {
