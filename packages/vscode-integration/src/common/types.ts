@@ -15,6 +15,7 @@
  ********************************************************************************/
 import { AnyObject, GLSPClient, InitializeResult, hasStringProp } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
+import { WebviewEndpoint } from '.';
 
 /**
  * Any clients registered on the GLSP VSCode integration need to implement this
@@ -33,40 +34,14 @@ export interface GlspVscodeClient<D extends vscode.CustomDocument = vscode.Custo
     readonly diagramType: string;
 
     /**
-     * The webview belonging to the client.
+     * The {@link WebviewEndpoint} belonging to the client.
      */
-    readonly webviewPanel: vscode.WebviewPanel;
+    readonly webviewEndpoint: WebviewEndpoint;
 
     /**
      * The document object belonging to the client;
      */
     readonly document: D;
-
-    /**
-     * This event emitter is used by the VSCode integration to pass messages/actions
-     * to the client. These messages can come from the server or the VSCode integration
-     * itself.
-     *
-     * You should subscribe to the attached event and pass contents of the event
-     * to the webview.
-     *
-     * Use the properties `onBeforeReceiveMessageFromServer` and `onBeforePropagateMessageToClient`
-     * of the GlspVscodeConnector in order to control what messages are propagated
-     * and processed.
-     */
-    readonly onSendToClientEmitter: vscode.EventEmitter<unknown>;
-
-    /**
-     * The VSCode integration will subscribe to this event to listen to messages
-     * from the client.
-     *
-     * Fire this event with the message the client wants to send to the server.
-     *
-     * Use the properties `onBeforeReceiveMessageFromClient` and `onBeforePropagateMessageToServer`
-     * of the GlspVscodeConnector in order to control what messages are propagated
-     * and processed.
-     */
-    readonly onClientMessage: vscode.Event<unknown>;
 }
 
 /**

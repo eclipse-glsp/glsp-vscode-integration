@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020-2021 EclipseSource and others.
+ * Copyright (c) 2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,19 +13,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { createWorkflowDiagramContainer } from '@eclipse-glsp-examples/workflow-glsp';
-import { ContainerConfiguration } from '@eclipse-glsp/client';
-import { GLSPStarter } from '@eclipse-glsp/vscode-integration-webview';
-import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
-import '@vscode/codicons/dist/codicon.css';
-import { Container } from 'inversify';
 
-class WorkflowGLSPStarter extends GLSPStarter {
-    createContainer(...containerConfiguration: ContainerConfiguration): Container {
-        return createWorkflowDiagramContainer(...containerConfiguration);
-    }
-}
+import { ExportSvgAction, FeatureModule } from '@eclipse-glsp/client';
+import { ExtensionActionKind } from '../default/extension-action-handler';
 
-export function launch(): void {
-    new WorkflowGLSPStarter();
-}
+export const vscodeExportModule = new FeatureModule(bind => {
+    bind(ExtensionActionKind).toConstantValue(ExportSvgAction.KIND);
+});

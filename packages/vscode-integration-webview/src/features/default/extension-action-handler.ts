@@ -13,21 +13,48 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Action, ActionHandlerRegistry, IActionHandler, IActionHandlerInitializer, ICommand } from '@eclipse-glsp/client';
-import { GLSPDiagramIdentifier } from './diagram-identifier';
-import { VsCodeApi } from './services';
+import {
+    Action,
+    ActionHandlerRegistry,
+    GLSPClient,
+    IActionHandler,
+    IActionHandlerInitializer,
+    ICommand,
+    IDiagramOptions,
+    TYPES
+} from '@eclipse-glsp/client';
+import { inject, injectable, multiInject, optional, postConstruct } from 'inversify';
 
 /**
- * Delegates actions that should be handled inside of the glsp vscode extension instead
+ * Service identifier to define action kinds that should be delegated to the vscode extension.
+ *
+ * Usage:
+ * ```ts
+ * bind(ExtensionActionKind).toConstantValue(SomeAction.KIND)
+ * ```
+ */
+export const ExtensionActionKind = Symbol('ExtensionActionKind');
+
+/**
+ * Delegates actions that should be handled inside of the glsp host extension instead
  * of the webview. This enables the implementation of action handlers that require access
  * to the vscode API and/or node backend.
  */
-export class GLSPVscodeExtensionActionHandler implements IActionHandler, IActionHandlerInitializer {
-    constructor(
-        protected readonly actionKinds: string[],
-        protected readonly diagramIdentifier: GLSPDiagramIdentifier,
-        protected vscodeApi: VsCodeApi
-    ) {}
+@injectable()
+export class HostExtensionActionHandler implements IActionHandler, IActionHandlerInitializer {
+    @multiInject(ExtensionActionKind)
+    @optional()
+    protected actionKinds: string[] = [];
+
+    @inject(TYPES.IDiagramOptions)
+    protected diagramOptions: IDiagramOptions;
+
+    protected glspClient?: GLSPClient;
+
+    @postConstruct()
+    protected postConstruct(): void {
+        this.diagramOptions.glspClientProvider().then(glspClient => (this.glspClient = glspClient));
+    }
 
     initialize(registry: ActionHandlerRegistry): void {
         this.actionKinds.forEach(kind => registry.register(kind, this));
@@ -36,11 +63,11 @@ export class GLSPVscodeExtensionActionHandler implements IActionHandler, IAction
     handle(action: Action): void | Action | ICommand {
         if (this.actionKinds.includes(action.kind)) {
             const message = {
-                clientId: this.diagramIdentifier.clientId,
+                clientId: this.diagramOptions.clientId,
                 action,
                 __localDispatch: true
             };
-            this.vscodeApi.postMessage(message);
+            this.glspClient?.sendActionMessage(message);
         }
     }
 }

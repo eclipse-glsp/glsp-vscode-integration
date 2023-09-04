@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { AnyObject, hasStringProp, InitializeResult } from '@eclipse-glsp/client';
+import { AnyObject, hasStringProp } from '@eclipse-glsp/client';
 
 export const GLSPDiagramIdentifier = Symbol('GLSPDiagramIdentifier');
 
@@ -21,7 +21,6 @@ export interface GLSPDiagramIdentifier {
     clientId: string;
     diagramType: string;
     uri: string;
-    initializeResult?: InitializeResult;
 }
 
 export function isDiagramIdentifier(object: any): object is GLSPDiagramIdentifier {

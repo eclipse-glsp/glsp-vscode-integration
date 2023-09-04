@@ -13,11 +13,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-import { ActionMessage } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { GlspVscodeConnector } from '../glsp-vscode-connector';
-import { GLSPDiagramIdentifier, WebviewReadyMessage } from '../types';
-
+import { GLSPDiagramIdentifier } from '../types';
+import { WebviewEndpoint } from './webview-endpoint';
 /**
  * An extensible base class to create a CustomEditorProvider that takes care of
  * diagram initialization and custom document events.
@@ -83,67 +82,17 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
             clientId: `${this.diagramType}_${this.viewCount++}`
         };
 
-        // Promise that resolves when sprotty sends its ready-message
-        const webviewReadyPromise = new Promise<void>(resolve => {
-            const messageListener = webviewPanel.webview.onDidReceiveMessage((message: unknown) => {
-                if (WebviewReadyMessage.is(message)) {
-                    resolve();
-                    messageListener.dispose();
-                }
-            });
-        });
-
-        const sendMessageToWebview = async (message: unknown): Promise<void> => {
-            webviewReadyPromise.then(() => {
-                if (webviewPanel.active) {
-                    webviewPanel.webview.postMessage(message);
-                } else {
-                    console.log('Message stalled for webview:', document.uri.path, message);
-                    const viewStateListener = webviewPanel.onDidChangeViewState(() => {
-                        viewStateListener.dispose();
-                        sendMessageToWebview(message);
-                    });
-                }
-            });
-        };
-
-        const receiveMessageFromServerEmitter = new vscode.EventEmitter<unknown>();
-        const sendMessageToServerEmitter = new vscode.EventEmitter<unknown>();
-
-        webviewPanel.onDidDispose(() => {
-            receiveMessageFromServerEmitter.dispose();
-            sendMessageToServerEmitter.dispose();
-        });
-
-        // Listen for Messages from webview (only after ready-message has been received)
-        webviewReadyPromise.then(() => {
-            webviewPanel.webview.onDidReceiveMessage((message: unknown) => {
-                if (ActionMessage.is(message)) {
-                    sendMessageToServerEmitter.fire(message);
-                }
-            });
-        });
-
-        // Listen for Messages from server
-        receiveMessageFromServerEmitter.event(message => {
-            if (ActionMessage.is(message)) {
-                sendMessageToWebview(message);
-            }
-        });
+        const endpoint = new WebviewEndpoint({ diagramIdentifier, messenger: this.glspVscodeConnector.messenger, webviewPanel });
 
         // Register document/diagram panel/model in vscode connector
         const initializeResult = await this.glspVscodeConnector.registerClient({
             clientId: diagramIdentifier.clientId,
             diagramType: diagramIdentifier.diagramType,
             document: document,
-            webviewPanel: webviewPanel,
-            onClientMessage: sendMessageToServerEmitter.event,
-            onSendToClientEmitter: receiveMessageFromServerEmitter
+            webviewEndpoint: endpoint
         });
 
         diagramIdentifier.initializeResult = initializeResult;
-        // Initialize diagram
-        sendMessageToWebview(diagramIdentifier);
 
         this.setUpWebview(document, webviewPanel, token, diagramIdentifier.clientId);
     }

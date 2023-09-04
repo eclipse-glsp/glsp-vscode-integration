@@ -1,6 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2022 TypeFox and others.
- * Modifications: 2023 EclipseSource and others.
+ * Copyright (c) 2023 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,13 +13,15 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-// based on https://github.com/eclipse-sprotty/sprotty-vscode/blob/v0.3.0/sprotty-vscode-webview/src/services.ts
-export interface VsCodeApi {
-    postMessage: (message: any) => void;
-}
 
-export const VsCodeApi = Symbol('VsCodeApi');
+import { ModuleConfiguration } from '@eclipse-glsp/client';
+import { vscodeCopyPasteModule } from './features/copyPaste/copy-paste-module';
+import { vscodeDefaultModule } from './features/default/default-module';
+import { vscodeExportModule } from './features/export/export-module';
+import { vscodeNavigationModule } from './features/navigation/navigation-module';
 
-export interface GLSPStarterServices {
-    vscodeApi?: VsCodeApi;
-}
+export const VSCODE_DEFAULT_MODULES = [vscodeDefaultModule, vscodeCopyPasteModule, vscodeExportModule, vscodeNavigationModule] as const;
+
+export const VSCODE_DEFAULT_MODULE_CONFIG: ModuleConfiguration = {
+    add: [...VSCODE_DEFAULT_MODULES]
+};
