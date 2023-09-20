@@ -26,7 +26,7 @@ import {
 import { inject, injectable, multiInject, optional, postConstruct } from 'inversify';
 
 /**
- * Service identifier to define action kinds that should be delegated to the vscode extension.
+ * Service identifier to define action kinds that should be delegated to the vscode extension (when locally dispatched)
  *
  * Usage:
  * ```ts
@@ -36,9 +36,9 @@ import { inject, injectable, multiInject, optional, postConstruct } from 'invers
 export const ExtensionActionKind = Symbol('ExtensionActionKind');
 
 /**
- * Delegates actions that should be handled inside of the glsp host extension instead
+ * Delegates actions that should be handled inside of the  host extension instead
  * of the webview. This enables the implementation of action handlers that require access
- * to the vscode API and/or node backend.
+ * to the vscode API.
  */
 @injectable()
 export class HostExtensionActionHandler implements IActionHandler, IActionHandlerInitializer {

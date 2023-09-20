@@ -130,6 +130,8 @@ export class GlspSocketServerLauncher implements vscode.Disposable {
             this.options.executable,
             '--port',
             `${this.options.socketConnectionOptions.port}`,
+            '--host',
+            `${this.options.socketConnectionOptions.host ?? '127.0.0.1'}`,
             ...this.options.additionalArgs
         ];
 
@@ -143,11 +145,15 @@ export class GlspSocketServerLauncher implements vscode.Disposable {
         if (!this.options.executable.endsWith('.js')) {
             throw new Error(`Could not launch Node GLSP server. The given executable is no node module: ${this.options.executable}`);
         }
-        const args = [this.options.executable, '--port', `${this.options.socketConnectionOptions.port}`, ...this.options.additionalArgs];
+        const args = [
+            this.options.executable,
+            '--port',
+            `${this.options.socketConnectionOptions.port}`,
+            '--host',
+            `${this.options.socketConnectionOptions.host ?? '127.0.0.1'}`,
+            ...this.options.additionalArgs
+        ];
 
-        if (this.options.socketConnectionOptions.host) {
-            args.push('--host', `${this.options.socketConnectionOptions.host}`);
-        }
         return childProcess.spawn('node', args);
     }
 

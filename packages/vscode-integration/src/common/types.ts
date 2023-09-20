@@ -197,7 +197,6 @@ export interface GLSPDiagramIdentifier {
     clientId: string;
     diagramType: string;
     uri: string;
-    initializeResult?: InitializeResult;
 }
 
 export function isDiagramIdentifier(object: any): object is GLSPDiagramIdentifier {
