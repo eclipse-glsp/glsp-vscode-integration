@@ -85,14 +85,12 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         const endpoint = new WebviewEndpoint({ diagramIdentifier, messenger: this.glspVscodeConnector.messenger, webviewPanel });
 
         // Register document/diagram panel/model in vscode connector
-        const initializeResult = await this.glspVscodeConnector.registerClient({
+        this.glspVscodeConnector.registerClient({
             clientId: diagramIdentifier.clientId,
             diagramType: diagramIdentifier.diagramType,
             document: document,
             webviewEndpoint: endpoint
         });
-
-        diagramIdentifier.initializeResult = initializeResult;
 
         this.setUpWebview(document, webviewPanel, token, diagramIdentifier.clientId);
     }

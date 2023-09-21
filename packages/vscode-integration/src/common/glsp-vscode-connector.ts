@@ -19,14 +19,12 @@ import {
     Deferred,
     EndProgressAction,
     ExportSvgAction,
-    InitializeClientSessionParameters,
-    InitializeResult,
+    MessageAction,
     NavigateToExternalTargetAction,
     RedoAction,
     RequestModelAction,
     SaveModelAction,
     SelectAction,
-    ServerMessageAction,
     SetDirtyStateAction,
     SetMarkersAction,
     StartProgressAction,
@@ -75,10 +73,6 @@ interface ProgressReporter {
  * Selection updates can be listened to using the `onSelectionUpdate` property.
  */
 export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> implements vscode.Disposable {
-    /** Can be returned as processedMessage of {@link MessageProcessingResult} to indicate that the message
-     * should not be propagated to the webview GLSP client
-     */
-    static NO_PROPAGATION_MESSAGE = 'NO_PROPAGATION_MESSAGE';
     /** Maps clientId to corresponding GlspVscodeClient. */
     protected readonly clientMap = new Map<string, GlspVscodeClient<D>>();
     /** Maps Documents to corresponding clientId. */
@@ -165,9 +159,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      *
      * @param client The client to register.
      *
-     * @returns the {@link InitializeResult} of the server to enable further configuration.
      */
-    public async registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
+    public async registerClient(client: GlspVscodeClient<D>): Promise<void> {
         const toDispose: Disposable[] = [
             Disposable.create(() => {
                 this.diagnostics.set(client.document.uri, undefined); // this clears the diagnostics for the file
@@ -220,20 +213,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             })
         );
 
-        // Initialize client session
+        // Initialize glsp client
         const glspClient = await this.options.server.glspClient;
         toDispose.push(client.webviewEndpoint.initialize(glspClient));
-        const initializeParams = await this.createInitializeClientSessionParams(client);
-        await glspClient.initializeClientSession(initializeParams);
-        toDispose.unshift(Disposable.create(() => glspClient.disposeClientSession({ clientSessionId: initializeParams.clientSessionId })));
-        return this.options.server.initializeResult;
-    }
-
-    protected async createInitializeClientSessionParams(client: GlspVscodeClient<D>): Promise<InitializeClientSessionParameters> {
-        return {
-            clientSessionId: client.clientId,
-            diagramType: client.diagramType
-        };
+        toDispose.unshift(Disposable.create(() => glspClient.disposeClientSession({ clientSessionId: client.clientId })));
     }
 
     /**
@@ -298,8 +281,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             const client = this.clientMap.get(message.clientId);
 
             // server message
-            if (ServerMessageAction.is(message.action)) {
-                return this.handleServerMessageAction(message as ActionMessage<ServerMessageAction>, client, origin);
+            if (MessageAction.is(message.action)) {
+                return this.handleMessageAction(message as ActionMessage<MessageAction>, client, origin);
             }
 
             // progress reporting
@@ -343,8 +326,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         return { processedMessage: message, messageChanged: false };
     }
 
-    protected handleServerMessageAction(
-        message: ActionMessage<ServerMessageAction>,
+    protected handleMessageAction(
+        message: ActionMessage<MessageAction>,
         _client: GlspVscodeClient<D> | undefined,
         _origin: MessageOrigin
     ): MessageProcessingResult {
@@ -435,7 +418,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         _origin: MessageOrigin
     ): MessageProcessingResult {
         // The webview client cannot handle `SetDirtyStateAction`s. Avoid propagation
-        const result = { processedMessage: GlspVscodeConnector.NO_PROPAGATION_MESSAGE, messageChanged: true };
+        const result = { processedMessage: message, messageChanged: false };
 
         if (client) {
             const reason = message.action.reason;

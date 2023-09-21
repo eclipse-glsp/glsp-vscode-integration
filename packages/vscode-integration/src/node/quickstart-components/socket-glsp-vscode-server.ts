@@ -66,7 +66,7 @@ export class SocketGlspVscodeServer extends BaseGlspVscodeServer<BaseJsonrpcGLSP
         }
         if ('path' in opts && opts.path !== undefined) {
             const protocol = opts.protocol ?? 'ws';
-            const host = opts.host ?? 'localhost';
+            const host = opts.host ?? '127.0.0.1';
             return `${protocol}://${host}:${opts.port}/${opts.path}`;
         }
 

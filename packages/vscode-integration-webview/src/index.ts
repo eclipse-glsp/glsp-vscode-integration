@@ -22,6 +22,7 @@ export * from './features/default/default-module';
 export * from './features/default/vscode-glsp-modelsource';
 export * from './features/export/export-module';
 export * from './features/navigation/navigation-module';
+export * from './features/notification/notification-module';
 export * from './glsp-diagram-widget';
 export * from './glsp-starter';
 export * from './webview-glsp-client';

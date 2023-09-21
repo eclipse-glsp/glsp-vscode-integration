@@ -14,9 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { FeatureModule, GLSPModelSource, TYPES, bindAsService, defaultModule } from '@eclipse-glsp/client';
+import { FeatureModule, GLSPModelSource, SelectAction, TYPES, bindAsService, defaultModule } from '@eclipse-glsp/client';
 import { GLSPDiagramWidget, GLSPDiagramWidgetFactory } from '../../glsp-diagram-widget';
-import { HostExtensionActionHandler } from './extension-action-handler';
+import { ExtensionActionKind, HostExtensionActionHandler } from './extension-action-handler';
 import { VsCodeGLSPModelSource } from './vscode-glsp-modelsource';
 
 export const vscodeDefaultModule = new FeatureModule(
@@ -26,6 +26,7 @@ export const vscodeDefaultModule = new FeatureModule(
         bind(VsCodeGLSPModelSource).toSelf().inSingletonScope();
         rebind(GLSPModelSource).toService(VsCodeGLSPModelSource);
         bindAsService(bind, TYPES.IActionHandlerInitializer, HostExtensionActionHandler);
+        bind(ExtensionActionKind).toConstantValue(SelectAction.KIND);
     },
     { requires: defaultModule }
 );

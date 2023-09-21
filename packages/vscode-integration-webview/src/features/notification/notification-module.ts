@@ -14,21 +14,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { ModuleConfiguration } from '@eclipse-glsp/client';
-import { vscodeCopyPasteModule } from './features/copyPaste/copy-paste-module';
-import { vscodeDefaultModule } from './features/default/default-module';
-import { vscodeExportModule } from './features/export/export-module';
-import { vscodeNavigationModule } from './features/navigation/navigation-module';
-import { vscodeNotificationModule } from './features/notification/notification-module';
+import { EndProgressAction, FeatureModule, MessageAction, StartProgressAction, UpdateProgressAction } from '@eclipse-glsp/client';
+import { ExtensionActionKind } from '../default/extension-action-handler';
 
-export const VSCODE_DEFAULT_MODULES = [
-    vscodeDefaultModule,
-    vscodeCopyPasteModule,
-    vscodeExportModule,
-    vscodeNavigationModule,
-    vscodeNotificationModule
-] as const;
-
-export const VSCODE_DEFAULT_MODULE_CONFIG: ModuleConfiguration = {
-    add: [...VSCODE_DEFAULT_MODULES]
-};
+export const vscodeNotificationModule = new FeatureModule(bind => {
+    bind(ExtensionActionKind).toConstantValue(MessageAction.KIND);
+    bind(ExtensionActionKind).toConstantValue(StartProgressAction.KIND);
+    bind(ExtensionActionKind).toConstantValue(EndProgressAction.KIND);
+    bind(ExtensionActionKind).toConstantValue(UpdateProgressAction.KIND);
+});
