@@ -16,7 +16,6 @@
 import { WorkflowDiagramModule, WorkflowServerModule } from '@eclipse-glsp-examples/workflow-server/browser';
 import {
     GLSPServerError,
-    GModelElementSchema,
     GModelSerializer,
     LogLevel,
     Logger,
@@ -25,7 +24,13 @@ import {
     SourceModelStorage,
     createAppModule
 } from '@eclipse-glsp/server/browser';
-import { MaybePromise, RequestModelAction, SaveModelAction, TypeGuard } from '@eclipse-glsp/vscode-integration/browser';
+import {
+    MaybePromise,
+    RequestModelAction,
+    SaveModelAction,
+    TypeGuard,
+    isGModelElementSchema
+} from '@eclipse-glsp/vscode-integration/browser';
 import { ContainerModule, inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
 
@@ -48,7 +53,7 @@ export class GModelVSCodeStorage implements SourceModelStorage {
 
     async loadSourceModel(action: RequestModelAction): Promise<void> {
         const sourceUri = this.getSourceUri(action);
-        const rootSchema = await this.loadFromFile(sourceUri, GModelElementSchema.is);
+        const rootSchema = await this.loadFromFile(sourceUri, isGModelElementSchema);
         const root = this.modelSerializer.createRoot(rootSchema);
         this.modelState.updateRoot(root);
     }
