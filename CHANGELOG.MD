@@ -1,14 +1,18 @@
 # Eclipse GLSP VSCode Integration Changelog
 
-## [1.1.0 - Upcoming]()
+## [2.0.0 - 14/10/2023](https://github.com/eclipse-glsp/glsp-client/releases/tag/v1.0.0)
 
 ### Changes
 
 -   [launch] Socket-based launch quickstart components now support auto-assigned ports [#33](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/33)
--   [launch] Provide `NodeGlspVscodeServer` to enable direct server integration in the extension context without a dedicated server process [#37](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/37)
+-   [diagram] Fix a bug where the context key for selected elements was not updated properly [#28](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/28)
+-   [diagram] Implement support for `MessageAction` notifications [#35](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/35)
+-   [diagram] Improve dirty state handling to also enable dirty state change evens that have not been triggered by an operation [#37](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/37)
+-   [launch] Provide `NodeGlspVscodeServer` to enable direct server integration in the extension context without a dedicated server process [#38](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/37)
 -   [diagram] Fixed a bug that prevented proper server-side disposal of diagram sessions [#40](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/40)
 -   [API] Restructured packages to also provide a node-dependency free entry point for web-extensions ('@eclipse-glsp/vscode-integration/browser`) [#39](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/39)
 -   [diagram] Add support for server progress reporting [#47](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/47)
+-   [example] Add keybinding for triggering `ExportSvgAction`s [#41](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/41)
 
 ### Breaking Changes
 
@@ -20,6 +24,14 @@
     -   Added `start()` and `onReady` to `GlspVscodeServer` interface
 -   [API] Refactored `GlspVscodeConnector.onSelectionUpdate` event [#40](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/40)
     -   `Event<string[]>` -> `Event<{selectedElementIDs:string[], deselectedElementIDs:[]}>`
+-   [API] Drop dependency to `sprotty-vscode-webview` [#36](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/36)
+    -   Classes,Types and symbols provide by `sprotty-vscode-webview` are no longer exported via main index
+    -   `SprottyDiagramIdentifier`->`GLSPDiagramIdentifier`
+    -   `SprottyStarter`-> `GLSPStarter`
+    -   `GLSPVscodeDiagramWidget`-> `GLSPDiagramWidget`
+-   [API] Refactor webview communication into a `WebviewEndpoint` service and use `vscode-messenger` protocol for webview communication [#51](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/51) [#52](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/52)
+    -   Extract vscode specific diagram bindings into custom feature modules
+    -   Replace `GLSPVscodeExtensionHandler` with `HostExtensionHandler`
 
 ## [v1.0.0 - 30/06/2022](https://github.com/eclipse-glsp/glsp-client/releases/tag/v1.0.0)
 
