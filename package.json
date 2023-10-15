@@ -24,7 +24,7 @@
     "workflow:web": "yarn --cwd example/workflow/web-extension"
   },
   "devDependencies": {
-    "@eclipse-glsp/dev": "^1.1.0-next.cbae4df.145",
+    "@eclipse-glsp/dev": "2.0.0",
     "@types/node": "16",
     "@types/vscode": "^1.54.0",
     "lerna": "^6.6.2",
