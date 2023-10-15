@@ -1,7 +1,7 @@
 {
   "name": "workflow-vscode-example",
   "displayName": "Workflow GLSP Example",
-  "version": "2.0.0",
+  "version": "2.1.0-next",
   "private": "true",
   "description": "An example graphical language used for modeling workflows",
   "categories": [
@@ -194,16 +194,16 @@
     "onStartupFinished"
   ],
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-server": "~2.0.0",
-    "@eclipse-glsp-examples/workflow-server-bundled": "~2.0.0",
-    "@eclipse-glsp/vscode-integration": "~2.0.0",
+    "@eclipse-glsp-examples/workflow-server": "next",
+    "@eclipse-glsp-examples/workflow-server-bundled": "next",
+    "@eclipse-glsp/vscode-integration": "2.1.0-next",
     "@vscode/vsce": "^2.19.0",
     "copy-webpack-plugin": "^11.0.0",
     "ts-loader": "^9.4.4",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.9.0",
-    "workflow-glsp-webview": "~2.0.0"
+    "workflow-glsp-webview": "2.1.0-next"
   },
   "engines": {
     "vscode": "^1.54.0"

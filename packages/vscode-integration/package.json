@@ -1,7 +1,7 @@
 {
   "name": "@eclipse-glsp/vscode-integration",
   "displayName": "GLSP VSCode Integration",
-  "version": "2.0.0",
+  "version": "2.1.0-next",
   "description": "Glue code to integrate GLSP diagrams in VSCode extensions (extension part)",
   "keywords": [
     "eclipse",
@@ -47,7 +47,7 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@eclipse-glsp/protocol": "~2.0.0",
+    "@eclipse-glsp/protocol": "next",
     "vscode-jsonrpc": "^8.0.2",
     "vscode-messenger": "^0.4.5",
     "ws": "^8.13.0"
