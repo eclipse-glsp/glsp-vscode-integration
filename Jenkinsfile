@@ -77,7 +77,7 @@ pipeline {
         stage('Deploy (master only)') {
             when {
                 allOf {
-                    branch 'skipForRelease'
+                    branch 'master'
                     expression {  
                       /* Only trigger the deployment job if the changeset contains changes in 
                       the `packages` or `example` directory */
