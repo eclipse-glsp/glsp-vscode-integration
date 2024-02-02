@@ -84,6 +84,11 @@
         "title": "Export as SVG",
         "category": "Workflow Diagram",
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "command": "workflow.liveshare.init",
+        "title": "Initialize Liveshare for Workflow",
+        "category": "Workflow Diagram"
       }
     ],
     "submenus": [
@@ -176,7 +181,8 @@
     ]
   },
   "activationEvents": [
-    "*"
+    "*",
+    "onCommand:bigUML.liveshare.init"
   ],
   "files": [
     "lib",

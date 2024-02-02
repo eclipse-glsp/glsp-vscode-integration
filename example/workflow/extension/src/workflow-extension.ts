@@ -13,7 +13,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { GlspVscodeConnector, LiveshareGlspClientProvider, NavigateAction } from '@eclipse-glsp/vscode-integration';
+import {
+    GlspVscodeConnector,
+    LiveshareGlspClientProvider,
+    NavigateAction,
+    writeExtensionPermissionsForLiveshare
+} from '@eclipse-glsp/vscode-integration';
 import {
     GlspServerLauncher,
     configureDefaultCommands,
@@ -49,6 +54,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         context.subscriptions.push(serverProcess);
         await serverProcess.start();
     }
+
+    writeExtensionPermissionsForLiveshare('Eclipse-GLSP');
 
     const liveshareGlspClientProvider = new LiveshareGlspClientProvider();
 
@@ -92,6 +99,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }),
         vscode.commands.registerCommand('workflow.showDocumentation', () => {
             glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('documentation'));
+        }),
+        vscode.commands.registerCommand('workflow.liveshare.init', () => {
+            writeExtensionPermissionsForLiveshare('Eclipse-GLSP', true);
         })
     );
 }
