@@ -106,6 +106,20 @@ export class LiveshareGlspClientProvider
         return this.role === Role.Guest;
     }
 
+    getSubclientIdFromSession(): string {
+        return this.subclientId || SUBCLIENT_HOST_ID;
+    }
+
+    getSubclientInfoFromSession(): SubclientInfo {
+        return (
+            this.subclientInfo || {
+                subclientId: '',
+                name: '',
+                color: ''
+            }
+        );
+    }
+
     initializeClientSessionForGuest(params: InitializeClientSessionParameters): Promise<void> {
         return this.guestService.request(INITIALIZE_CLIENT_SESSION, [params]);
     }
@@ -124,20 +138,6 @@ export class LiveshareGlspClientProvider
 
     handleMultipleActionMessagesForHost(messages: ActionMessage<Action>[]): void {
         this.hostService.notify(ON_MULTIPLE_ACTION_MESSAGES, { messages }); // sending arrays is not allowed
-    }
-
-    getSubclientIdFromSession(): string {
-        return this.subclientId || SUBCLIENT_HOST_ID;
-    }
-
-    getSubclientInfoFromSession(): SubclientInfo {
-        return (
-            this.subclientInfo || {
-                subclientId: '',
-                name: '',
-                color: ''
-            }
-        );
     }
 
     onGuestsChangeForHost(handler: GuestsChangeHandler): void {
