@@ -47,7 +47,7 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@eclipse-glsp/protocol": "next",
+    "@eclipse-glsp/protocol": "2.1.0",
     "vscode-jsonrpc": "^8.0.2",
     "vscode-messenger": "^0.4.5",
     "ws": "^8.13.0"

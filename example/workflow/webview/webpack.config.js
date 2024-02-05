@@ -20,6 +20,9 @@ const config = {
             fs: false,
             net: false
         },
+        alias: {
+            process: 'process/browser'
+        },
         extensions: ['.ts', '.tsx', '.js']
     },
     module: {
