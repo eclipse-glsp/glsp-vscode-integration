@@ -1,6 +1,8 @@
 # Eclipse GLSP VSCode Integration Changelog
 
-## [2.0.0 - 14/10/2023](https://github.com/eclipse-glsp/glsp-client/releases/tag/v1.0.0)
+## [2.1.0 - 24/01/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.1.0)
+
+## [2.0.0 - 14/10/2023](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.0.0)
 
 ### Changes
 
@@ -33,7 +35,7 @@
     -   Extract vscode specific diagram bindings into custom feature modules
     -   Replace `GLSPVscodeExtensionHandler` with `HostExtensionHandler`
 
-## [v1.0.0 - 30/06/2022](https://github.com/eclipse-glsp/glsp-client/releases/tag/v1.0.0)
+## [v1.0.0 - 30/06/2022](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v1.0.0)
 
 ### Changes
 

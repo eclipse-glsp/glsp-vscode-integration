@@ -42,7 +42,7 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@eclipse-glsp/client": "next",
+    "@eclipse-glsp/client": "2.1.0",
     "vscode-messenger-webview": "^0.4.5"
   },
   "devDependencies": {

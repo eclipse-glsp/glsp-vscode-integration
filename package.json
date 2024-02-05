@@ -1,7 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*/",
+    "packages/*",
     "example/workflow/*"
   ],
   "scripts": {
@@ -27,7 +27,7 @@
     "@eclipse-glsp/dev": "2.0.0",
     "@types/node": "16",
     "@types/vscode": "^1.54.0",
-    "lerna": "^6.6.2",
+    "lerna": "^7.0.0",
     "typescript": "^5.0.4"
   },
   "engines": {
