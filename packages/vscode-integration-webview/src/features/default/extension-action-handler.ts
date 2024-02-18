@@ -64,8 +64,7 @@ export class HostExtensionActionHandler implements IActionHandler, IActionHandle
         if (this.actionKinds.includes(action.kind)) {
             const message = {
                 clientId: this.diagramOptions.clientId,
-                action,
-                __localDispatch: true
+                action
             };
             this.glspClient?.sendActionMessage(message);
         }

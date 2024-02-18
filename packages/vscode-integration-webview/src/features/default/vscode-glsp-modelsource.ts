@@ -13,18 +13,24 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Action, ActionMessage, GLSPModelSource, ServerAction } from '@eclipse-glsp/client';
+/* eslint-disable deprecation/deprecation */
+import { Action, GLSPModelSource } from '@eclipse-glsp/client';
 import { injectable } from 'inversify';
 
 /**
  * A helper interface that allows the webview to mark actions that have been received directly from the vscode extension
  * (i.e. they are not forwarded to the GLSP Server).
+ *
+ * @deprecated The concept of marking actions as locally dispatched `ExtensionAction`s is no longer necessary and usage is discouraged.
  */
 export interface ExtensionAction extends Action {
     __localDispatch: true;
 }
 
 export namespace ExtensionAction {
+    /**
+     * @deprecated The concept of marking actions as locally dispatched `ExtensionAction`s is no longer necessary and usage is discouraged.
+     * */
     export function is(object: unknown): object is ExtensionAction {
         return Action.is(object) && '__localDispatch' in object && object.__localDispatch === true;
     }
@@ -32,6 +38,8 @@ export namespace ExtensionAction {
     /**
      * Mark the given action as {@link ServerAction} by attaching the "_receivedFromServer" property
      * @param action The action that should be marked as server action
+     *
+     * @deprecated The concept of marking actions as locally dispatched `ExtensionAction`s is no longer necessary and usage is discouraged.
      */
     export function mark(action: Action): void {
         (action as ExtensionAction).__localDispatch = true;
@@ -41,23 +49,8 @@ export namespace ExtensionAction {
 /**
  * Customization of the default {@link GLSPModelSource} for the vscode integration.
  * Also takes locally dispatched actions (i.e. actions that are originating from or intended for the host extension) into consideration.
+ *
+ * @deprecated A customized model source is no longer necessary. Use the default {@link GLSPModelSource} instead.
  */
 @injectable()
-export class VsCodeGLSPModelSource extends GLSPModelSource {
-    protected override messageReceived(message: ActionMessage): void {
-        if (this.clientId !== message.clientId) {
-            return;
-        }
-        this.checkMessageOrigin(message);
-        const action = message.action;
-        this.logger.log(this, 'receiving', action);
-        this.actionDispatcher.dispatch(action);
-    }
-
-    protected checkMessageOrigin(message: ActionMessage): void {
-        const isLocalDispatch = (message as any)['__localDispatch'] ?? false;
-        if (!isLocalDispatch) {
-            ServerAction.mark(message.action);
-        }
-    }
-}
+export class VsCodeGLSPModelSource extends GLSPModelSource {}

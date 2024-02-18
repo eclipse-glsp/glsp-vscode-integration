@@ -140,8 +140,6 @@ export class WebviewEndpoint implements Disposable {
     }
 
     sendMessage(actionMessage: ActionMessage): void {
-        // Attach a property to mark the actionMessage as locally dispatched (i.e. not received from the serer)
-        (actionMessage as any).__localDispatch = true;
         this.messenger.sendNotification(ActionMessageNotification, this.messageParticipant, actionMessage);
     }
 
