@@ -45,19 +45,19 @@ export function configureDefaultCommands(context: CommandContext): void {
 
     extensionContext.subscriptions.push(
         vscode.commands.registerCommand(`${diagramPrefix}.fit`, () => {
-            connector.sendActionToActiveClient(FitToScreenAction.create(selectionState?.selectedElementsIDs ?? []));
+            connector.dispatchAction(FitToScreenAction.create(selectionState?.selectedElementsIDs ?? []));
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.center`, () => {
-            connector.sendActionToActiveClient(CenterAction.create(selectionState?.selectedElementsIDs ?? []));
+            connector.dispatchAction(CenterAction.create(selectionState?.selectedElementsIDs ?? []));
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.layout`, () => {
-            connector.sendActionToActiveClient(LayoutOperation.create([]));
+            connector.dispatchAction(LayoutOperation.create([]));
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.selectAll`, () => {
-            connector.sendActionToActiveClient(SelectAllAction.create());
+            connector.dispatchAction(SelectAllAction.create());
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.exportAsSVG`, () => {
-            connector.sendActionToActiveClient(RequestExportSvgAction.create());
+            connector.dispatchAction(RequestExportSvgAction.create());
         })
     );
 

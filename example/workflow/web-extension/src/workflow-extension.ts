@@ -67,13 +67,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     context.subscriptions.push(
         vscode.commands.registerCommand('workflow.goToNextNode', () => {
-            glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('next'));
+            glspVscodeConnector.dispatchAction(NavigateAction.create('next'));
         }),
         vscode.commands.registerCommand('workflow.goToPreviousNode', () => {
-            glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('previous'));
+            glspVscodeConnector.dispatchAction(NavigateAction.create('previous'));
         }),
         vscode.commands.registerCommand('workflow.showDocumentation', () => {
-            glspVscodeConnector.sendActionToActiveClient(NavigateAction.create('documentation'));
+            glspVscodeConnector.dispatchAction(NavigateAction.create('documentation'));
         })
     );
 }
