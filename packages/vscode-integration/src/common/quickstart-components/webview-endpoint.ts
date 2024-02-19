@@ -62,9 +62,18 @@ export class WebviewEndpoint implements Disposable {
     protected toDispose = new DisposableCollection();
 
     protected onActionMessageEmitter = new vscode.EventEmitter<ActionMessage>();
-
     get onActionMessage(): vscode.Event<ActionMessage> {
         return this.onActionMessageEmitter.event;
+    }
+
+    protected _serverActions?: string[];
+    get serverActions(): string[] | undefined {
+        return this._serverActions;
+    }
+
+    protected _clientActions?: string[];
+    get clientActions(): string[] | undefined {
+        return this._clientActions;
     }
 
     constructor(options: WebviewEndpointOptions) {
@@ -106,8 +115,8 @@ export class WebviewEndpoint implements Disposable {
      * @returns A {@link Disposable} to dispose the remote connection and all attached listeners
      */
     initialize(glspClient: GLSPClient): Disposable {
-        const result = new DisposableCollection();
-        result.push(
+        const toDispose = new DisposableCollection();
+        toDispose.push(
             this.messenger.onNotification(
                 ActionMessageNotification,
                 msg => {
@@ -118,12 +127,31 @@ export class WebviewEndpoint implements Disposable {
                 }
             ),
             this.messenger.onRequest(StartRequest, () => glspClient.start(), { sender: this.messageParticipant }),
-            this.messenger.onRequest(InitializeServerRequest, params => glspClient.initializeServer(params), {
-                sender: this.messageParticipant
-            }),
-            this.messenger.onRequest(InitializeClientSessionRequest, params => glspClient.initializeClientSession(params), {
-                sender: this.messageParticipant
-            }),
+            this.messenger.onRequest(
+                InitializeServerRequest,
+                async params => {
+                    const result = await glspClient.initializeServer(params);
+                    if (!this._serverActions) {
+                        this._serverActions = result.serverActions[this.diagramIdentifier.diagramType];
+                    }
+                    return result;
+                },
+                {
+                    sender: this.messageParticipant
+                }
+            ),
+            this.messenger.onRequest(
+                InitializeClientSessionRequest,
+                params => {
+                    if (!this._clientActions) {
+                        this._clientActions = params.clientActionKinds;
+                    }
+                    glspClient.initializeClientSession(params);
+                },
+                {
+                    sender: this.messageParticipant
+                }
+            ),
             this.messenger.onRequest(DisposeClientSessionRequest, params => glspClient.disposeClientSession(params), {
                 sender: this.messageParticipant
             }),
@@ -134,9 +162,9 @@ export class WebviewEndpoint implements Disposable {
                 sender: this.messageParticipant
             })
         );
-        this.toDispose.push(result);
+        this.toDispose.push(toDispose);
         this.sendDiagramIdentifier();
-        return result;
+        return toDispose;
     }
 
     sendMessage(actionMessage: ActionMessage): void {
