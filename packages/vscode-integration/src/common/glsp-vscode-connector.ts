@@ -269,6 +269,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     dispatchAction(action: Action, clientId?: string): void {
         const client = clientId ? this.clientMap.get(clientId) : this.getActiveClient();
         if (!client) {
+            console.warn('Could not dispatch action: No client found for clientId or no active client found.', action);
             return;
         }
         const message = { clientId: client.clientId, action };
