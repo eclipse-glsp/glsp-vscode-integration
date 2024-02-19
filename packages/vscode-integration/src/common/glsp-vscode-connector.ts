@@ -220,26 +220,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     }
 
     /**
-     * Send an action to the client/panel that is currently focused. If no registered
-     * panel is focused, the message will not be sent.
-     *
-     * @param action The action to send to the active client.
-     */
-    public sendActionToActiveClient(action: Action): void {
-        this.clientMap.forEach(client => {
-            if (client.webviewEndpoint.webviewPanel.active) {
-                const message = {
-                    clientId: client.clientId,
-                    action: action,
-                    __localDispatch: true
-                };
-                client.webviewEndpoint.sendMessage(message);
-            }
-        });
-    }
-
-    /**
      * Send message to registered client by id.
+     * Note that this method does not consider server-handled actions.
+     * If you want to send an action that is potentially handled by both sides, use {@link dispatchAction} instead.
      *
      * @param clientId Id of client.
      * @param message Message to send.
@@ -256,13 +239,59 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      *
      * @param clientId Id of client.
      * @param action Action to send.
+     *
+     * @deprecated Use  {@link dispatchAction} instead.
      */
     protected sendActionToClient(clientId: string, action: Action): void {
-        this.sendMessageToClient(clientId, {
-            clientId: clientId,
-            action: action,
-            __localDispatch: true
-        });
+        this.dispatchAction(action, clientId);
+    }
+
+    /**
+     * Send an action to the client/panel that is currently focused. If no registered
+     * panel is focused, the message will not be sent.
+     *
+     * @param action The action to send to the active client.
+     * @deprecated Use {@link dispatchAction} instead.
+     */
+    public sendActionToActiveClient(action: Action): void {
+        this.dispatchAction(action);
+    }
+
+    /**
+     * Dispatches an action associated with the given client id. If no id is provided,
+     * the action will be dispatched associated with the client of the active webview panel.
+     * If no client id is passed and no registered panel is focused, the action will not be dispatched.
+     * Dispatching an action will send the action to the client and/or server if
+     * they can handle the action.
+     * @param action The action to dispatch.
+     * @param clientId The id of the client/session associated with the action.
+     */
+    dispatchAction(action: Action, clientId?: string): void {
+        const client = clientId ? this.clientMap.get(clientId) : this.getActiveClient();
+        if (!client) {
+            return;
+        }
+        const message = { clientId: client.clientId, action };
+        if (client.webviewEndpoint.clientActions?.includes(action.kind)) {
+            client.webviewEndpoint.sendMessage(message);
+        }
+        if (client.webviewEndpoint.serverActions?.includes(action.kind)) {
+            this.options.server.onSendToServerEmitter.fire(message);
+        }
+    }
+
+    /**
+     * Returns the currently active {@link GlspVscodeClient} i.e. the client whose webview panel is currently focused.
+     * If no registered panel is focused, the method will return `undefined`.
+     * @returns The active client or `undefined` if no client is active.
+     */
+    protected getActiveClient(): GlspVscodeClient<D> | undefined {
+        for (const client of this.clientMap.values()) {
+            if (client.webviewEndpoint.webviewPanel.active) {
+                return client;
+            }
+        }
+        return undefined;
     }
 
     /**
@@ -431,10 +460,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 this.onDidChangeCustomDocumentEventEmitter.fire({
                     document: client.document,
                     undo: () => {
-                        this.sendActionToClient(client.clientId, UndoAction.create());
+                        this.dispatchAction(UndoAction.create(), client.clientId);
                     },
                     redo: () => {
-                        this.sendActionToClient(client.clientId, RedoAction.create());
+                        this.dispatchAction(RedoAction.create(), client.clientId);
                     }
                 });
             } else if (message.action.isDirty) {
@@ -563,7 +592,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                         resolve();
                     }
                 });
-                this.sendActionToClient(clientId, SaveModelAction.create({ fileUri: destination?.path }));
+                this.dispatchAction(SaveModelAction.create({ fileUri: destination?.path }), clientId);
             });
         } else {
             if (this.options.logging) {
@@ -586,14 +615,14 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         if (clientId) {
             const client = this.clientMap.get(clientId);
             if (client?.webviewEndpoint.webviewPanel.active) {
-                this.sendActionToClient(
-                    clientId,
+                this.dispatchAction(
                     RequestModelAction.create({
                         options: {
                             sourceUri: document.uri.toString(),
                             diagramType
                         }
-                    })
+                    }),
+                    clientId
                 );
             }
         } else {
