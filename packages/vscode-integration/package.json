@@ -47,13 +47,12 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@eclipse-glsp/protocol": "2.1.0",
+    "@eclipse-glsp/protocol": "~2.1.1",
     "vscode-jsonrpc": "^8.0.2",
     "vscode-messenger": "^0.4.5",
     "ws": "^8.13.0"
   },
   "devDependencies": {
-    "@types/node": "^12.12.0",
     "@types/vscode": "^1.54.0",
     "@types/ws": "^8.5.4"
   },
