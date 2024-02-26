@@ -1,9 +1,8 @@
 {
   "name": "workflow-glsp-webview",
+  "version": "2.2.0-next",
   "private": "true",
-  "version": "1.1.0-next",
   "description": "Example of the Workflow GLSP diagram in a VS Code extensions (WebView part)",
-  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "keywords": [
     "vscode",
     "graph",
@@ -13,12 +12,13 @@
   ],
   "homepage": "https://www.eclipse.org/glsp/",
   "bugs": "https://github.com/eclipse-glsp/glsp/issues",
-  "author": {
-    "name": "Eclipse GLSP"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
+  },
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "author": {
+    "name": "Eclipse GLSP"
   },
   "contributors": [
     {
@@ -27,26 +27,30 @@
       "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
+  "scripts": {
+    "build": "tsc -b && yarn bundle",
+    "bundle": "webpack",
+    "bundle:prod": "webpack --config ./webpack.prod.js",
+    "clean": "rimraf lib tsconfig.tsbuildinfo dist",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "prepare": "yarn clean && yarn build",
+    "watch": "tsc -w"
+  },
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-glsp": "next",
-    "@eclipse-glsp/vscode-integration-webview": "1.1.0-next",
+    "@eclipse-glsp/vscode-integration-webview": "2.2.0-next",
     "@vscode/codicons": "^0.0.25",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^6.7.1",
     "ignore-loader": "^0.1.2",
+    "process": "0.11.10",
     "reflect-metadata": "^0.1.13",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.2",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
-  },
-  "scripts": {
-    "build": "tsc -b && webpack --mode=development",
-    "clean": "rimraf lib tsconfig.tsbuildinfo ",
-    "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
-    "prepare": "yarn clean && yarn build",
-    "watch": "tsc -w"
+    "webpack-cli": "^5.0.1",
+    "webpack-merge": "^5.9.0"
   }
 }

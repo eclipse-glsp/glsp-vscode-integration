@@ -1,8 +1,7 @@
 {
   "name": "@eclipse-glsp/vscode-integration-webview",
-  "version": "1.1.0-next",
+  "version": "2.2.0-next",
   "description": "Integration of a GLSP diagram in a VS Code extensions (WebView part)",
-  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "keywords": [
     "vscode",
     "graph",
@@ -12,12 +11,13 @@
   ],
   "homepage": "https://www.eclipse.org/glsp/",
   "bugs": "https://github.com/eclipse-glsp/glsp/issues",
-  "author": {
-    "name": "Eclipse GLSP"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
+  },
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "author": {
+    "name": "Eclipse GLSP"
   },
   "contributors": [
     {
@@ -26,18 +26,13 @@
       "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
+  "main": "lib/index",
+  "types": "lib/index",
   "files": [
     "lib",
     "src",
     "css"
   ],
-  "dependencies": {
-    "@eclipse-glsp/client": "next",
-    "sprotty-vscode-webview": "~0.3.1"
-  },
-  "devDependencies": {
-    "reflect-metadata": "^0.1.13"
-  },
   "scripts": {
     "build": "tsc -b",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
@@ -46,9 +41,14 @@
     "prepare": "yarn clean && yarn build",
     "watch": "tsc -w"
   },
+  "dependencies": {
+    "@eclipse-glsp/client": "next",
+    "vscode-messenger-webview": "^0.4.5"
+  },
+  "devDependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
   "publishConfig": {
     "access": "public"
-  },
-  "main": "lib/index",
-  "types": "lib/index"
+  }
 }
