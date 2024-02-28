@@ -112,9 +112,10 @@ export class WebviewEndpoint implements Disposable {
      * The GLSP client is called remotely from the webview context via the `vscode-messenger` RPC
      * protocol.
      * @param glspClient The client that should be connected
+     * @param relativeDocumentUri The uri which is used to identify the document in a collaborative session
      * @returns A {@link Disposable} to dispose the remote connection and all attached listeners
      */
-    initialize(glspClient: GLSPClient): Disposable {
+    initialize(glspClient: GLSPClient, relativeDocumentUri: string): Disposable {
         const toDispose = new DisposableCollection();
         toDispose.push(
             this.messenger.onNotification(
@@ -146,13 +147,23 @@ export class WebviewEndpoint implements Disposable {
                     if (!this._clientActions) {
                         this._clientActions = params.clientActionKinds;
                     }
-                    glspClient.initializeClientSession(params);
+                    glspClient.initializeClientSession({
+                        ...params,
+                        args: {
+                            relativeDocumentUri
+                        }
+                    });
                 },
                 {
                     sender: this.messageParticipant
                 }
             ),
-            this.messenger.onRequest(DisposeClientSessionRequest, params => glspClient.disposeClientSession(params), {
+            this.messenger.onRequest(DisposeClientSessionRequest, params => glspClient.disposeClientSession({
+                ...params,
+                args: {
+                    relativeDocumentUri
+                }
+            }), {
                 sender: this.messageParticipant
             }),
             this.messenger.onRequest(ShutdownServerNotification, () => glspClient.shutdownServer(), {
