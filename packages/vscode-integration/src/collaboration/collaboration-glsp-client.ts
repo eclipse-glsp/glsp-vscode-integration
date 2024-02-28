@@ -20,8 +20,10 @@ import {
     Args,
     ClientState,
     CollaborationAction,
+    Disposable,
     DisposeClientSessionParameters,
     DisposeSubclientAction,
+    Event,
     GLSPClient,
     hasObjectProp,
     InitializeClientSessionParameters,
@@ -41,13 +43,13 @@ import {
 import { getFullDocumentUri } from './collaboration-util';
 
 interface CollaborativeGlspClientDistributedConfig {
-    commonProvider: CommonCollaborationGlspClientProvider,
-    hostProvider: HostCollaborationGlspClientProvider,
-    guestProvider: GuestCollaborationGlspClientProvider
+    commonProvider: CommonCollaborationGlspClientProvider;
+    hostProvider: HostCollaborationGlspClientProvider;
+    guestProvider: GuestCollaborationGlspClientProvider;
 }
 
 function isDistributedConfig(config: any): config is CollaborativeGlspClientDistributedConfig {
-    return hasObjectProp(config, 'commonProvider') && hasObjectProp(config, 'hostProvider') && hasObjectProp(config, 'guestProvider')
+    return hasObjectProp(config, 'commonProvider') && hasObjectProp(config, 'hostProvider') && hasObjectProp(config, 'guestProvider');
 }
 
 export type CollaborativeGlspClientConfig = CollaborationGlspClientProvider | CollaborativeGlspClientDistributedConfig;
@@ -83,6 +85,14 @@ export class CollaborationGlspClient implements GLSPClient {
             this.hostProvider = config;
             this.guestProvider = config;
         }
+    }
+
+    get initializeResult(): InitializeResult | undefined {
+        return this.glspClient.initializeResult;
+    }
+
+    get onServerInitialized(): Event<InitializeResult> {
+        return this.glspClient.onServerInitialized;
     }
 
     shutdownServer(): void {
@@ -147,8 +157,9 @@ export class CollaborationGlspClient implements GLSPClient {
         }
     }
 
-    onActionMessage(handler: ActionMessageHandler): void {
+    onActionMessage(handler: ActionMessageHandler): Disposable {
         this.actionMessageHandlers.push(handler);
+        return Disposable.empty();
     }
 
     sendActionMessage(message: ActionMessage): void {
@@ -182,6 +193,9 @@ export class CollaborationGlspClient implements GLSPClient {
     }
 
     async start(): Promise<void> {
+        if (this.currentState === ClientState.Running) {
+            return;
+        }
         await this.commonProvider.initialize({ collaborationGlspClient: this });
 
         await this.glspClient.start();
@@ -271,7 +285,7 @@ export class CollaborationGlspClient implements GLSPClient {
         const subclientId = params.args?.subclientId as string;
         const disposeSubclientMessage: ActionMessage<DisposeSubclientAction> = {
             clientId: '',
-            action: DisposeSubclientAction.create({ initialSubclientId: subclientId})
+            action: DisposeSubclientAction.create({ initialSubclientId: subclientId })
         };
         this.handleMultipleMessages(subclientMap, disposeSubclientMessage, actualSubclientId => actualSubclientId !== subclientId);
     }

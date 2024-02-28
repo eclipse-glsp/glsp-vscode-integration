@@ -18,6 +18,8 @@ import 'reflect-metadata';
 import { WorkflowDiagramModule, WorkflowLayoutConfigurator, WorkflowServerModule } from '@eclipse-glsp-examples/workflow-server/node';
 import { configureELKLayoutModule } from '@eclipse-glsp/layout-elk';
 import { GModelStorage, LogLevel, createAppModule } from '@eclipse-glsp/server/node';
+import { configureCollaborationCommands } from '@eclipse-glsp/vscode-integration/lib/collaboration';
+import { LiveshareGlspClientProvider, writeExtensionPermissionsForLiveshare } from '@eclipse-glsp/vscode-integration/lib/liveshare';
 import {
     GlspSocketServerLauncher,
     GlspVscodeConnector,
@@ -69,6 +71,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
               clientId: 'glsp.workflow',
               clientName: 'workflow',
               serverModules: createServerModules()
+              // collaboration: liveshareGlspClientProvider TODO implement collaboration for Node-Server
           })
         : new SocketGlspVscodeServer({
               clientId: 'glsp.workflow',

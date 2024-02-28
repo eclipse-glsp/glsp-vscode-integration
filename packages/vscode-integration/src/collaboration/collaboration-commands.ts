@@ -4,7 +4,7 @@ import {
     ExtensionContext
 } from 'vscode';
 import { MouseMoveAction, ViewportBoundsChangeAction, SelectionChangeAction, ToggleCollaborationFeatureAction, CollaborationActionKinds } from '@eclipse-glsp/protocol';
-import { GlspVscodeConnector } from '../glsp-vscode-connector';
+import { GlspVscodeConnector } from '../common/glsp-vscode-connector';
 import { collaborationFeatureStore } from './collaboration-feature-store';
 
 

@@ -25,12 +25,15 @@ import {
 } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { GlspVscodeServer } from '../types';
+import {CollaborationGlspClient, CollaborativeGlspClientConfig} from '../../collaboration';
 
 export interface GlspVscodeServerOptions {
     /** Client ID to register the jsonRPC client with on the server. */
     readonly clientId: string;
     /** Name to register the client with on the server. */
     readonly clientName: string;
+    /** Config to set if server should be in collaboration mode. */
+    readonly collaboration?: CollaborativeGlspClientConfig;
 }
 
 /**
@@ -39,7 +42,7 @@ export interface GlspVscodeServerOptions {
 export abstract class BaseGlspVscodeServer<C extends GLSPClient = GLSPClient> implements GlspVscodeServer, vscode.Disposable {
     readonly onSendToServerEmitter = new vscode.EventEmitter<unknown>();
 
-    protected readonly onServerSendEmitter = new vscode.EventEmitter<unknown>();
+    readonly onServerSendEmitter = new vscode.EventEmitter<unknown>();
     get onServerMessage(): vscode.Event<unknown> {
         return this.onServerSendEmitter.event;
     }
@@ -68,6 +71,12 @@ export abstract class BaseGlspVscodeServer<C extends GLSPClient = GLSPClient> im
     async start(): Promise<void> {
         try {
             this._glspClient = await this.createGLSPClient();
+            if (this.options.collaboration != null) {
+                this._glspClient = new CollaborationGlspClient(
+                    this._glspClient,
+                    this.options.collaboration
+                ) as unknown as C; // FIXME probably a better solution
+            }
             await this._glspClient.start();
             const parameters = await this.createInitializeParameters();
             this._initializeResult = await this._glspClient.initializeServer(parameters);
