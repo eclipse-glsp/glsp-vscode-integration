@@ -1,9 +1,14 @@
 {
   "extends": "@eclipse-glsp/ts-config",
   "compilerOptions": {
+    "composite": true,
     "rootDir": "src",
-    "outDir": "lib",
-    "resolveJsonModule": true
+    "outDir": "lib"
   },
-  "include": ["src", "dist"]
+  "include": ["src", "dist"],
+  "references": [
+    {
+      "path": "../../../packages/vscode-integration"
+    }
+  ]
 }

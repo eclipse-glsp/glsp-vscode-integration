@@ -30,15 +30,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b && yarn bundle",
+    "build": "yarn compile && yarn bundle",
     "bundle": "webpack",
     "bundle:prod": "webpack --config ./webpack.prod.js",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "compile": "tsc-b",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "package": "vsce package --yarn",
-    "prepare": "yarn clean && yarn build",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "watch:bundle": "webpack --watch"
   },
   "contributes": {
     "commands": [

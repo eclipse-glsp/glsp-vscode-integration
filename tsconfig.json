@@ -1,0 +1,24 @@
+{
+  "extends": "@eclipse-glsp/ts-config",
+  "include": [],
+  "compilerOptions": {
+    "composite": true
+  },
+  "references": [
+    {
+      "path": "./packages/vscode-integration"
+    },
+    {
+      "path": "./packages/vscode-integration-webview"
+    },
+    {
+      "path": "./example/workflow/extension"
+    },
+    {
+      "path": "./example/workflow/web-extension"
+    },
+    {
+      "path": "./example/workflow/webview"
+    }
+  ]
+}
