@@ -1,8 +1,14 @@
 {
   "extends": "@eclipse-glsp/ts-config/tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "rootDir": "src",
     "outDir": "lib"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../../packages/vscode-integration-webview"
+    }
+  ]
 }
