@@ -1,4 +1,5 @@
 {
+  "publisher": "Eclipse-GLSP",
   "private": true,
   "workspaces": [
     "packages/*",

@@ -16,6 +16,8 @@
 import {
     Action,
     ActionMessage,
+    CollaborationAction,
+    CollaborationActionKinds,
     Deferred,
     EndProgressAction,
     ExportSvgAction,
@@ -34,6 +36,8 @@ import {
 import * as vscode from 'vscode';
 import { Disposable } from 'vscode-jsonrpc';
 import { Messenger } from 'vscode-messenger';
+import { collaborationFeatureStore } from '../collaboration/collaboration-feature-store';
+import { getRelativeDocumentUri } from '../collaboration/collaboration-util';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
 // eslint-disable-next-line no-shadow
@@ -77,6 +81,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     protected readonly clientMap = new Map<string, GlspVscodeClient<D>>();
     /** Maps Documents to corresponding clientId. */
     protected readonly documentMap = new Map<D, string>();
+    /** Maps Documents to corresponding relativeDocumentUri. */
+    protected readonly relativeDocumentUriMap = new Map<string, string>();
     /** Maps clientId to selected elementIDs for that client. */
     protected readonly clientSelectionMap = new Map<string, SelectionState>();
 
@@ -129,7 +135,10 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         const serverMessageListener = this.options.server.onServerMessage(message => {
             if (this.options.logging) {
                 if (ActionMessage.is(message)) {
-                    console.log(`Server (${message.clientId}): ${message.action.kind}`, message.action);
+                    // don't log CollaborationActions
+                    if (!CollaborationAction.is(message.action)) {
+                        console.log(`Server (${message.clientId}): ${message.action.kind}`, message.action);
+                    }
                 } else {
                     console.log('Server (no action message):', message);
                 }
@@ -144,6 +153,11 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 // Run message through second user-provided interceptor (pre-send) - processed
                 const filteredMessage = this.options.onBeforePropagateMessageToClient(newMessage, processedMessage, messageChanged);
                 if (typeof filteredMessage !== 'undefined' && ActionMessage.is(filteredMessage)) {
+                    if (CollaborationAction.is(filteredMessage.action)) {
+                        filteredMessage.action.visible = collaborationFeatureStore.getFeature(
+                            filteredMessage.action.kind as CollaborationActionKinds
+                        );
+                    }
                     this.sendMessageToClient(filteredMessage.clientId, filteredMessage);
                 }
             });
@@ -161,11 +175,13 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      *
      */
     public async registerClient(client: GlspVscodeClient<D>): Promise<void> {
+        const relativeDocumentUri = getRelativeDocumentUri(client.document.uri.path);
         const toDispose: Disposable[] = [
             Disposable.create(() => {
                 this.diagnostics.set(client.document.uri, undefined); // this clears the diagnostics for the file
                 this.clientMap.delete(client.clientId);
                 this.documentMap.delete(client.document);
+                this.relativeDocumentUriMap.delete(client.clientId);
                 this.clientSelectionMap.delete(client.clientId);
             })
         ];
@@ -173,16 +189,26 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         const panelOnDisposeListener = client.webviewEndpoint.webviewPanel.onDidDispose(async () => {
             toDispose.forEach(disposable => disposable.dispose());
             panelOnDisposeListener.dispose();
+            await glspClient.disposeClientSession({
+                clientSessionId: client.clientId,
+                args: {
+                    relativeDocumentUri
+                }
+            });
         });
 
         this.clientMap.set(client.clientId, client);
         this.documentMap.set(client.document, client.clientId);
+        this.relativeDocumentUriMap.set(client.clientId, relativeDocumentUri);
 
         toDispose.push(
             client.webviewEndpoint.onActionMessage(message => {
                 if (this.options.logging) {
                     if (ActionMessage.is(message)) {
-                        console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
+                        // don't log CollaborationActions
+                        if (!CollaborationAction.is(message.action)) {
+                            console.log(`Client (${message.clientId}): ${message.action.kind}`, message.action);
+                        }
                     } else {
                         console.log('Client (no action message):', message);
                     }
@@ -197,6 +223,12 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                     const filteredMessage = this.options.onBeforePropagateMessageToServer(newMessage, processedMessage, messageChanged);
 
                     if (typeof filteredMessage !== 'undefined') {
+                        if (ActionMessage.is(filteredMessage)) {
+                            filteredMessage.args = {
+                                ...filteredMessage.args,
+                                relativeDocumentUri
+                            };
+                        }
                         this.options.server.onSendToServerEmitter.fire(filteredMessage);
                     }
                 });
@@ -215,8 +247,17 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
         // Initialize glsp client
         const glspClient = await this.options.server.glspClient;
-        toDispose.push(client.webviewEndpoint.initialize(glspClient));
-        toDispose.unshift(Disposable.create(() => glspClient.disposeClientSession({ clientSessionId: client.clientId })));
+        toDispose.push(client.webviewEndpoint.initialize(glspClient, relativeDocumentUri));
+        toDispose.unshift(
+            Disposable.create(() =>
+                glspClient.disposeClientSession({
+                    clientSessionId: client.clientId,
+                    args: {
+                        relativeDocumentUri
+                    }
+                })
+            )
+        );
     }
 
     /**
@@ -244,6 +285,18 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
      */
     protected sendActionToClient(clientId: string, action: Action): void {
         this.dispatchAction(action, clientId);
+    }
+
+    /**
+     * Send an action to all open clients/panels. If no registered
+     * panel is focused, the message will not be sent.
+     *
+     * @param action The action to send to all the clients.
+     */
+    public sendActionToAllClients(action: Action): void {
+        for (const clientId of this.clientMap.keys()) {
+            this.dispatchAction(action, clientId);
+        }
     }
 
     /**
@@ -277,6 +330,13 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             client.webviewEndpoint.sendMessage(message);
         }
         if (client.webviewEndpoint.serverActions?.includes(action.kind)) {
+            const relativeDocumentUri = this.relativeDocumentUriMap.get(client.clientId) || '';
+            if (ActionMessage.is(message)) {
+                message.args = {
+                    ...message.args,
+                    relativeDocumentUri
+                };
+            }
             this.options.server.onSendToServerEmitter.fire(message);
         }
     }

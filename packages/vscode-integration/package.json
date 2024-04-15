@@ -48,7 +48,8 @@
     "@eclipse-glsp/protocol": "next",
     "vscode-jsonrpc": "^8.0.2",
     "vscode-messenger": "^0.4.5",
-    "ws": "^8.13.0"
+    "ws": "^8.13.0",
+    "vsls": "^1.0.4753"
   },
   "devDependencies": {
     "@types/vscode": "^1.54.0",

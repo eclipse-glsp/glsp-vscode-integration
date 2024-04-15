@@ -40,6 +40,9 @@
     "watch:bundle": "webpack --watch"
   },
   "contributes": {
+    "liveshare.spaces": [
+      "workflow-vscode-example"
+    ],
     "commands": [
       {
         "command": "workflow.fit",
@@ -82,6 +85,11 @@
         "title": "Export as SVG",
         "category": "Workflow Diagram",
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "command": "workflow.liveshare.init",
+        "title": "Initialize Liveshare for Workflow",
+        "category": "Workflow Diagram"
       }
     ],
     "customEditors": [
@@ -191,8 +199,12 @@
     ]
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onCommand:bigUML.liveshare.init"
   ],
+  "dependencies": {
+    "vsls": "^1.0.4753"
+  },
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-server": "next",
     "@eclipse-glsp-examples/workflow-server-bundled": "next",
@@ -205,6 +217,9 @@
     "webpack-merge": "^5.9.0",
     "workflow-glsp-webview": "2.2.0-next"
   },
+  "extensionDependencies": [
+    "ms-vsliveshare.vsliveshare"
+  ],
   "engines": {
     "vscode": "^1.54.0"
   }

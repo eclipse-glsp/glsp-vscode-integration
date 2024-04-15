@@ -18,6 +18,8 @@ import 'reflect-metadata';
 import { WorkflowDiagramModule, WorkflowLayoutConfigurator, WorkflowServerModule } from '@eclipse-glsp-examples/workflow-server/node';
 import { configureELKLayoutModule } from '@eclipse-glsp/layout-elk';
 import { GModelStorage, LogLevel, createAppModule } from '@eclipse-glsp/server/node';
+import { configureCollaborationCommands } from '@eclipse-glsp/vscode-integration/lib/collaboration';
+import { LiveshareGlspClientProvider, writeExtensionPermissionsForLiveshare } from '@eclipse-glsp/vscode-integration/lib/liveshare';
 import {
     GlspSocketServerLauncher,
     GlspVscodeConnector,
@@ -58,12 +60,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         context.subscriptions.push(serverProcess);
         await serverProcess.start();
     }
+
+    writeExtensionPermissionsForLiveshare('Eclipse-GLSP');
+
+    const liveshareGlspClientProvider = new LiveshareGlspClientProvider();
+
     // Wrap server with quickstart component
     const workflowServer = useIntegratedServer
         ? new NodeGlspVscodeServer({
               clientId: 'glsp.workflow',
               clientName: 'workflow',
               serverModules: createServerModules()
+              // collaboration: liveshareGlspClientProvider TODO implement collaboration for Node-Server
           })
         : new SocketGlspVscodeServer({
               clientId: 'glsp.workflow',
@@ -71,7 +79,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
               connectionOptions: {
                   port: serverProcess?.getPort() || JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT),
                   path: process.env.GLSP_WEBSOCKET_PATH
-              }
+              },
+              collaboration: liveshareGlspClientProvider
           });
     // Initialize GLSP-VSCode connector with server wrapper
     const glspVscodeConnector = new GlspVscodeConnector({
@@ -89,9 +98,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 
     context.subscriptions.push(workflowServer, glspVscodeConnector, customEditorProvider);
+
     workflowServer.start();
 
     configureDefaultCommands({ extensionContext: context, connector: glspVscodeConnector, diagramPrefix: 'workflow' });
+
+    configureCollaborationCommands({ extensionContext: context, connector: glspVscodeConnector });
 
     context.subscriptions.push(
         vscode.commands.registerCommand('workflow.goToNextNode', () => {
@@ -102,6 +114,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }),
         vscode.commands.registerCommand('workflow.showDocumentation', () => {
             glspVscodeConnector.dispatchAction(NavigateAction.create('documentation'));
+        }),
+        vscode.commands.registerCommand('workflow.liveshare.init', () => {
+            writeExtensionPermissionsForLiveshare('Eclipse-GLSP', true);
         })
     );
 }
