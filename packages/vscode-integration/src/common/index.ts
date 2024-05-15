@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 EclipseSource and others.
+ * Copyright (c) 2021-2024 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,8 +13,11 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export * from '@eclipse-glsp/protocol';
 export * from './client-actions';
 export * from './glsp-vscode-connector';
-export * from './quickstart-components';
+export * from './quickstart-components/base-glsp-vscode-server';
+export * from './quickstart-components/configuration-util';
+export * from './quickstart-components/glsp-editor-provider';
+export * from './quickstart-components/webview-endpoint';
+export * from './re-export';
 export * from './types';

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 EclipseSource and others.
+ * Copyright (c) 2021-2024 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,7 +13,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { BaseGLSPClient, ContainerConfiguration, GLSPClientProxy, GLSPServer, initializeContainer } from '@eclipse-glsp/protocol';
+import { BaseGLSPClient, GLSPClientProxy, GLSPServer } from '@eclipse-glsp/protocol';
+import { ContainerConfiguration, initializeContainer } from '@eclipse-glsp/protocol/lib/di';
 import { Container, ContainerModule } from 'inversify';
 import { BaseGlspVscodeServer, GlspVscodeServerOptions } from '../../common/quickstart-components/base-glsp-vscode-server';
 
