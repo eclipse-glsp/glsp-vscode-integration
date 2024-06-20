@@ -25,5 +25,5 @@ export const vscodeDefaultModule = new FeatureModule(
         bindAsService(bind, TYPES.IActionHandlerInitializer, HostExtensionActionHandler);
         bind(ExtensionActionKind).toConstantValue(SelectAction.KIND);
     },
-    { requires: defaultModule }
+    { requires: defaultModule, featureId: Symbol('vscodeDefault') }
 );

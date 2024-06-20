@@ -1,5 +1,19 @@
 # Eclipse GLSP VSCode Integration Changelog
 
+## 2.2.0 - active
+
+### Changes
+
+-   [diagram] Fix minor styling and behavioral issues when using `GLSPProjectionView` [#62](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/62)
+
+### Potentially Breaking Changes
+
+-   [protocol] Fix a bug in the client-server action forwarding that prevented proper marking and handling of server received actions [#58](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/58)</br> Following classes and methods are now deprecated:
+    -   `VsCodeGLSPModelSource`: Rebinding to a custom model source is no longer necessary. Use the default `GLSPModelSource` instead.
+    -   `ExtensionAction`: The concept of marking actions as locally dispatched `ExtensionActions` is no longer necessary and usage is discouraged.
+    -   `GlspVscodeConnector.sendToActiveClient`: Use `GlspVscodeConnector.dispatchAction` instead.
+    -   `GlspVscodeConnector.setActionToClient`: Use `GlspVscodeConnector.dispatchAction` instead.
+
 ## [2.1.0 - 24/01/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.1.0)
 
 ## [2.0.0 - 14/10/2023](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.0.0)

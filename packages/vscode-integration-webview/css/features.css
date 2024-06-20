@@ -1,0 +1,54 @@
+/********************************************************************************
+ * Copyright (c) 2024 EclipseSource and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ ********************************************************************************/
+
+/* Debug */
+
+.debug-bounds-decoration {
+    stroke: var(--vscode-editor-foreground);
+}
+
+/* Ghost element */
+
+.sprotty-node.insert-indicator:not(.selected) {
+    stroke: var(--vscode-editor-foreground);
+}
+
+/* Helper lines */
+
+.helper-line {
+    stroke: var(--vscode-focusBorder);
+}
+
+/* Grid */
+body[data-vscode-theme-kind='vscode-dark'] .grid-background .sprotty-graph,
+body[data-vscode-theme-kind='vscode-dark'] .grid-background.sprotty-graph {
+    --grid-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-vscode-theme-kind='vscode-light'] .grid-background .sprotty-graph,
+body[data-vscode-theme-kind='vscode-light'] .grid-background.sprotty-graph {
+    --grid-color: rgba(0, 0, 0, 0.1);
+}
+
+body[data-vscode-theme-kind='vscode-high-contrast'] .grid-background .sprotty-graph,
+body[data-vscode-theme-kind='vscode-high-contrast'] .grid-background.sprotty-graph {
+    --grid-color: rgba(255, 255, 255);
+}
+
+body[data-vscode-theme-kind='vscode-high-contrast-light'] .grid-background .sprotty-graph,
+body[data-vscode-theme-kind='vscode-high-contrast-light'] .grid-background.sprotty-graph {
+    --grid-color: rgba(0, 0, 0);
+}

@@ -24,5 +24,5 @@ export const vscodeCopyPasteModule = new FeatureModule(
         );
         bindAsService(bind, TYPES.IDiagramStartup, CopyPasteStartup);
     },
-    { requires: copyPasteModule }
+    { requires: copyPasteModule, featureId: Symbol('vscodeCopyPaste') }
 );

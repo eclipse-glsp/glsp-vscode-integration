@@ -50,6 +50,8 @@ export abstract class GLSPDiagramWidget {
         return this.diagramOptions.clientId;
     }
 
+    protected containerDiv: HTMLDivElement | undefined;
+
     @postConstruct()
     initialize(): void {
         this.initializeHtml();
@@ -57,7 +59,7 @@ export abstract class GLSPDiagramWidget {
     }
 
     protected initializeHtml(): void {
-        const containerDiv = document.getElementById(this.clientId + '_container');
+        const containerDiv = document.getElementById(this.clientId + '_container') as HTMLDivElement;
         if (containerDiv) {
             const svgContainer = document.createElement('div');
             svgContainer.id = this.viewerOptions.baseDiv;
@@ -66,7 +68,20 @@ export abstract class GLSPDiagramWidget {
             const hiddenContainer = document.createElement('div');
             hiddenContainer.id = this.viewerOptions.hiddenDiv;
             document.body.appendChild(hiddenContainer);
+            this.containerDiv = containerDiv;
+            containerDiv.addEventListener('mouseenter', e => this.handleMouseEnter(e));
+            containerDiv.addEventListener('mouseleave', e => this.handleMouseLeave(e));
         }
+    }
+
+    handleMouseEnter(e: MouseEvent): void {
+        this.containerDiv?.classList.add('mouse-enter');
+        this.containerDiv?.classList.remove('mouse-leave');
+    }
+
+    handleMouseLeave(e: MouseEvent): void {
+        this.containerDiv?.classList.add('mouse-leave');
+        this.containerDiv?.classList.remove('mouse-enter');
     }
 
     protected createDiagramLoadingOptions(): DiagramLoadingOptions | undefined {

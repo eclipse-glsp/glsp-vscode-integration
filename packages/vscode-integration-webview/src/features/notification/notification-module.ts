@@ -17,9 +17,12 @@
 import { EndProgressAction, FeatureModule, MessageAction, StartProgressAction, UpdateProgressAction } from '@eclipse-glsp/client';
 import { ExtensionActionKind } from '../default/extension-action-handler';
 
-export const vscodeNotificationModule = new FeatureModule(bind => {
-    bind(ExtensionActionKind).toConstantValue(MessageAction.KIND);
-    bind(ExtensionActionKind).toConstantValue(StartProgressAction.KIND);
-    bind(ExtensionActionKind).toConstantValue(EndProgressAction.KIND);
-    bind(ExtensionActionKind).toConstantValue(UpdateProgressAction.KIND);
-});
+export const vscodeNotificationModule = new FeatureModule(
+    bind => {
+        bind(ExtensionActionKind).toConstantValue(MessageAction.KIND);
+        bind(ExtensionActionKind).toConstantValue(StartProgressAction.KIND);
+        bind(ExtensionActionKind).toConstantValue(EndProgressAction.KIND);
+        bind(ExtensionActionKind).toConstantValue(UpdateProgressAction.KIND);
+    },
+    { featureId: Symbol('vscodeNotification') }
+);
