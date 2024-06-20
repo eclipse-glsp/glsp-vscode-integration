@@ -21,13 +21,10 @@
     "publish:latest": "lerna publish from-git --no-git-reset --no-git-tag-version --no-push",
     "publish:next": "lerna publish preminor --exact --canary --preid next --dist-tag next --no-git-reset --no-git-tag-version --no-push --ignore-scripts --yes",
     "publish:prepare": "lerna version --ignore-scripts --yes --no-push",
-    "upgrade:next": "glsp upgradeNext",
+    "upgrade:next": "glsp updateNext",
     "watch": "concurrently --kill-others -n tsc,extension,web-extension -c red,yellow.green \"tsc -b -w --preserveWatchOutput\" \"yarn -s workflow watch:bundle\" \"yarn -s workflow:web watch:bundle\"",
     "workflow": "yarn --cwd example/workflow/extension",
     "workflow:web": "yarn --cwd example/workflow/web-extension"
-  },
-  "resolutions": {
-    "snabbdom": "~3.5.1"
   },
   "devDependencies": {
     "@eclipse-glsp/dev": "next",

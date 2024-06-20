@@ -17,6 +17,9 @@
 import { FeatureModule, NavigateToExternalTargetAction, navigationModule } from '@eclipse-glsp/client';
 import { ExtensionActionKind } from '../default/extension-action-handler';
 
-export const vscodeNavigationModule = new FeatureModule(bind => {
-    bind(ExtensionActionKind).toConstantValue(NavigateToExternalTargetAction.KIND);
-}, navigationModule);
+export const vscodeNavigationModule = new FeatureModule(
+    bind => {
+        bind(ExtensionActionKind).toConstantValue(NavigateToExternalTargetAction.KIND);
+    },
+    { requires: navigationModule, featureId: Symbol('vscodeNavigation') }
+);

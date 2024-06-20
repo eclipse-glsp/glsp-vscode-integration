@@ -16,6 +16,7 @@
 
 .tool-palette {
     box-shadow: 0px 1px 6px var(--vscode-widget-shadow);
+    font-size: var(--vscode-ui-font-size1);
 }
 
 .tool-palette :focus-visible {
@@ -30,32 +31,12 @@
     background: var(--vscode-settings-dropdownBackground);
     color: var(--vscode-titleBar-activeForeground);
     border: 0;
-    font-weight: normal;
-    overflow: hidden;
-    padding: 0.2em;
-    line-height: 1.5em;
     box-shadow: none;
     border-top: 2px solid var(--vscode-focusBorder);
 }
 
-.tool-palette .palette-header .header-icon {
-    float: left;
-    padding: 0.2em;
-    font-size: 11px;
-    text-transform: uppercase;
-    font-weight: 400;
-}
-
-.tool-palette .palette-header .header-tools {
-    float: right;
-    font-size: 11px;
-}
-
 .tool-palette .palette-header .header-tools i {
     border: none;
-    width: 1em;
-    text-align: center;
-    border-radius: 5px;
 }
 
 .tool-palette .palette-header .header-tools i:hover:not(.clicked) {
@@ -74,9 +55,6 @@
 }
 
 .tool-palette .palette-body .group-header {
-    font-size: var(--vscode-ui-font-size1);
-    text-transform: uppercase;
-    font-weight: bold;
     background: var(--vscode-editorHoverWidget-statusBarBackground);
     color: var(--vscode-titleBar-activeForeground);
     border: 0;

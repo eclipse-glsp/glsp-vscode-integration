@@ -61,21 +61,24 @@
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
       },
       {
-        "command": "workflow.goToNextNode",
-        "title": "Go to next Node",
+        "command": "workflow.goToPreviousNode",
+        "title": "Go to previous Node",
+        "icon": "$(arrow-circle-left)",
         "category": "Workflow Navigation",
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       },
       {
-        "command": "workflow.goToPreviousNode",
-        "title": "Go to previous Node",
+        "command": "workflow.goToNextNode",
+        "title": "Go to next Node",
+        "icon": "$(arrow-circle-right)",
         "category": "Workflow Navigation",
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       },
       {
         "command": "workflow.showDocumentation",
         "title": "Show documentation...",
-        "category": "Workflow Diagram",
+        "category": "Workflow Navigation",
+        "icon": "$(code-oss)",
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       },
       {
@@ -147,12 +150,12 @@
           "group": "bookmarks"
         },
         {
-          "command": "workflow.goToNextNode",
+          "command": "workflow.goToPreviousNode",
           "group": "navigation",
           "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
         },
         {
-          "command": "workflow.goToPreviousNode",
+          "command": "workflow.goToNextNode",
           "group": "navigation",
           "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
         },

@@ -14,9 +14,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { ExportSvgAction, FeatureModule } from '@eclipse-glsp/client';
+import { ExportSvgAction, FeatureModule, exportModule } from '@eclipse-glsp/client';
 import { ExtensionActionKind } from '../default/extension-action-handler';
 
-export const vscodeExportModule = new FeatureModule(bind => {
-    bind(ExtensionActionKind).toConstantValue(ExportSvgAction.KIND);
-});
+export const vscodeExportModule = new FeatureModule(
+    bind => {
+        bind(ExtensionActionKind).toConstantValue(ExportSvgAction.KIND);
+    },
+    { requires: exportModule, featureId: Symbol('vscodeExport') }
+);

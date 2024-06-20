@@ -18,6 +18,4 @@
 @import 'diagram.css';
 @import 'tool-palette.css';
 @import 'decoration.css';
-.sprotty-resize-handle.active {
-    fill: #0074e8 !important;
-}
+@import 'features.css';
