@@ -150,7 +150,7 @@
         },
         {
           "command": "workflow.goToPreviousNode",
-          "group": "",
+          "group": "navigation",
           "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
         },
         {

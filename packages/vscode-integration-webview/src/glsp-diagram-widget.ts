@@ -18,6 +18,7 @@
 import {
     DiagramLoader,
     DiagramLoadingOptions,
+    FocusStateChangedAction,
     IActionDispatcher,
     IDiagramOptions,
     ModelSource,
@@ -25,7 +26,6 @@ import {
     ViewerOptions
 } from '@eclipse-glsp/client';
 import { inject, injectable, postConstruct } from 'inversify';
-
 export const GLSPDiagramWidgetFactory = Symbol('GLSPDiagramWidgetFactory');
 export type GLSPDiagramWidgetFactory = () => GLSPDiagramWidget;
 
@@ -71,6 +71,8 @@ export abstract class GLSPDiagramWidget {
             this.containerDiv = containerDiv;
             containerDiv.addEventListener('mouseenter', e => this.handleMouseEnter(e));
             containerDiv.addEventListener('mouseleave', e => this.handleMouseLeave(e));
+            window.addEventListener('focus', e => this.handleFocusChange(e, true));
+            window.addEventListener('blur', e => this.handleFocusChange(e, false));
         }
     }
 
@@ -82,6 +84,10 @@ export abstract class GLSPDiagramWidget {
     handleMouseLeave(e: MouseEvent): void {
         this.containerDiv?.classList.add('mouse-leave');
         this.containerDiv?.classList.remove('mouse-enter');
+    }
+
+    handleFocusChange(e: FocusEvent, hasFocus: boolean): void {
+        this.actionDispatcher.dispatch(FocusStateChangedAction.create(hasFocus));
     }
 
     protected createDiagramLoadingOptions(): DiagramLoadingOptions | undefined {
