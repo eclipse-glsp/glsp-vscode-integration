@@ -73,7 +73,15 @@ export abstract class GLSPDiagramWidget {
             containerDiv.addEventListener('mouseleave', e => this.handleMouseLeave(e));
             window.addEventListener('focus', e => this.handleFocusChange(e, true));
             window.addEventListener('blur', e => this.handleFocusChange(e, false));
+            window.addEventListener('contextmenu', e => this.handleContextMenu(e));
         }
+    }
+
+    handleContextMenu(e: MouseEvent): void {
+        // Prevent the default context menu for now
+        // Should be removed once we provide a proper context menu integration
+        e.preventDefault();
+        window.focus();
     }
 
     handleMouseEnter(e: MouseEvent): void {
