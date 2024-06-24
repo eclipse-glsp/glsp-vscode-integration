@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { ModuleConfiguration } from '@eclipse-glsp/client';
+import { ModuleConfiguration, contextMenuModule } from '@eclipse-glsp/client';
 import { vscodeCopyPasteModule } from './features/copyPaste/copy-paste-module';
 import { vscodeDefaultModule } from './features/default/default-module';
 import { vscodeExportModule } from './features/export/export-module';
@@ -30,5 +30,6 @@ export const VSCODE_DEFAULT_MODULES = [
 ] as const;
 
 export const VSCODE_DEFAULT_MODULE_CONFIG: ModuleConfiguration = {
-    add: [...VSCODE_DEFAULT_MODULES]
+    add: [...VSCODE_DEFAULT_MODULES],
+    remove: [contextMenuModule]
 };
