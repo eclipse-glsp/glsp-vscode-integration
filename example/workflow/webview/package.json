@@ -1,6 +1,6 @@
 {
   "name": "workflow-glsp-webview",
-  "version": "2.2.0-next",
+  "version": "2.2.1",
   "private": "true",
   "description": "Example of the Workflow GLSP diagram in a VS Code extensions (WebView part)",
   "keywords": [
@@ -37,8 +37,8 @@
     "watch": "tsc -w"
   },
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-glsp": "next",
-    "@eclipse-glsp/vscode-integration-webview": "2.2.0-next",
+    "@eclipse-glsp-examples/workflow-glsp": "2.2.1",
+    "@eclipse-glsp/vscode-integration-webview": "2.2.1",
     "@vscode/codicons": "^0.0.25",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^6.7.1",
