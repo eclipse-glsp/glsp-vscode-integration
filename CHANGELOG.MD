@@ -1,10 +1,17 @@
 # Eclipse GLSP VSCode Integration Changelog
 
-## 2.2.0 - active
+## 2.3.0 - active
+
+### Changes
+
+### Potentially Breaking Changes
+
+## [2.2.1 - 22/07/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.2.1)
 
 ### Changes
 
 -   [diagram] Fix minor styling and behavioral issues when using `GLSPProjectionView` [#62](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/62)
+-   [diagram] Removed the context menu module from the default integration as it is currently not supported in VS Code [#63](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/63)
 
 ### Potentially Breaking Changes
 

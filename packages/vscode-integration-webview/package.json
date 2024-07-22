@@ -1,6 +1,6 @@
 {
   "name": "@eclipse-glsp/vscode-integration-webview",
-  "version": "2.2.1",
+  "version": "2.3.0-next",
   "description": "Integration of a GLSP diagram in a VS Code extensions (WebView part)",
   "keywords": [
     "vscode",
@@ -41,7 +41,7 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@eclipse-glsp/client": "2.2.1",
+    "@eclipse-glsp/client": "next",
     "vscode-messenger-webview": "^0.4.5"
   },
   "devDependencies": {
