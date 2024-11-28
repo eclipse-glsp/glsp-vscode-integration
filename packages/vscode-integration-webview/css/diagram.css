@@ -118,3 +118,11 @@ body {
 .sprotty-projection-bar.vertical.bordered-projection-bar {
     width: 15px;
 }
+
+.sprotty text {
+    fill: var(--vscode-editor-background);
+}
+
+.sprotty-edge text {
+    fill: var(--vscode-foreground);
+}
