@@ -37,6 +37,7 @@ export interface WebviewGlspClientOptions extends GLSPClient.Options {
 }
 
 export const ActionMessageNotification: NotificationType<ActionMessage> = { method: 'actionMessage' };
+export const ClientStateChangeNotification: NotificationType<ClientState> = { method: 'notifyClientStateChange' };
 export const StartRequest: RequestType<undefined, void> = { method: 'start' };
 export const InitializeServerRequest: RequestType<InitializeParameters, InitializeResult> = { method: 'initializeServer' };
 export const InitializeClientSessionRequest: RequestType<InitializeClientSessionParameters, void> = { method: 'initializeClientSession' };
@@ -54,7 +55,13 @@ export class WebviewGlspClient implements GLSPClient, Disposable {
     protected toDispose = new DisposableCollection();
     protected onActionMessageEmitter = new Emitter<ActionMessage>();
 
-    protected _currentState: ClientState = ClientState.Starting;
+    protected onCurrentStateChangedEmitter = new Emitter<ClientState>();
+    get onCurrentStateChanged(): Event<ClientState> {
+        return this.onCurrentStateChangedEmitter.event;
+    }
+
+    protected _currentState: ClientState = ClientState.Initial;
+
     get currentState(): ClientState {
         return this._currentState;
     }
@@ -72,18 +79,24 @@ export class WebviewGlspClient implements GLSPClient, Disposable {
     constructor(options: WebviewGlspClientOptions) {
         this.id = options.id;
         this.messenger = options.messenger ?? new Messenger();
-        this.toDispose.push(this.onActionMessageEmitter, this.onServerInitializedEmitter);
-        this.messenger.onNotification<ActionMessage>(ActionMessageNotification, msg => this.onActionMessageEmitter.fire(msg));
+        this.toDispose.push(this.onActionMessageEmitter, this.onServerInitializedEmitter, this.onCurrentStateChangedEmitter);
+        this.messenger.onNotification(ActionMessageNotification, msg => this.onActionMessageEmitter.fire(msg));
+        this.messenger.onNotification(ClientStateChangeNotification, state => this.updateState(state));
+    }
+
+    protected updateState(state: ClientState): void {
+        if (this._currentState !== state) {
+            this._currentState = state;
+            this.onCurrentStateChangedEmitter.fire(this._currentState);
+        }
     }
 
     async start(): Promise<void> {
         try {
-            this._currentState = ClientState.Starting;
             await this.messenger.sendRequest(StartRequest, HOST_EXTENSION);
-            this._currentState = ClientState.Running;
         } catch (error) {
             console.error('Failed to start connection to server', error);
-            this._currentState = ClientState.StartFailed;
+            this.updateState(ClientState.StartFailed);
         }
     }
 
@@ -110,12 +123,10 @@ export class WebviewGlspClient implements GLSPClient, Disposable {
     }
 
     async stop(): Promise<void> {
-        if (this._currentState === ClientState.Stopped) {
+        if (this.currentState === ClientState.Stopped) {
             return;
         }
-        this._currentState = ClientState.Stopping;
         await this.messenger.sendRequest(StopRequest, HOST_EXTENSION);
-        this._currentState = ClientState.Stopped;
     }
 
     sendActionMessage(message: ActionMessage<Action>): void {

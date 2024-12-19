@@ -15,6 +15,7 @@
  ********************************************************************************/
 import {
     ActionMessage,
+    ClientState,
     Deferred,
     Disposable,
     DisposableCollection,
@@ -39,6 +40,7 @@ export const WebviewReadyNotification: NotificationType<void> = { method: 'ready
 export const InitializeNotification: NotificationType<GLSPDiagramIdentifier> = { method: 'initialize' };
 
 export const ActionMessageNotification: NotificationType<ActionMessage> = { method: 'actionMessage' };
+export const ClientStateChangeNotification: NotificationType<ClientState> = { method: 'notifyClientStateChange' };
 export const StartRequest: RequestType<undefined, void> = { method: 'start' };
 export const InitializeServerRequest: RequestType<InitializeParameters, InitializeResult> = { method: 'initializeServer' };
 export const InitializeClientSessionRequest: RequestType<InitializeClientSessionParameters, void> = { method: 'initializeClientSession' };
@@ -160,7 +162,10 @@ export class WebviewEndpoint implements Disposable {
             }),
             this.messenger.onRequest(StopRequest, () => glspClient.stop(), {
                 sender: this.messageParticipant
-            })
+            }),
+            glspClient.onCurrentStateChanged(state =>
+                this.messenger.sendNotification(ClientStateChangeNotification, this.messageParticipant, state)
+            )
         );
         this.toDispose.push(toDispose);
         this.sendDiagramIdentifier();
