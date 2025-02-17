@@ -14,15 +14,41 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 import { createWorkflowDiagramContainer } from '@eclipse-glsp-examples/workflow-glsp';
-import { ContainerConfiguration } from '@eclipse-glsp/client';
-import { GLSPStarter } from '@eclipse-glsp/vscode-integration-webview';
+import { ContainerConfiguration, createDiagramOptionsModule, EditMode } from '@eclipse-glsp/client';
+import { GLSPDiagramIdentifier, GLSPDiagramWidget, GLSPStarter, WebviewGlspClient } from '@eclipse-glsp/vscode-integration-webview';
 import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
 import '@vscode/codicons/dist/codicon.css';
-import { Container } from 'inversify';
+import { Container, ContainerModule } from 'inversify';
+import { compareModule } from './features/compare/compare-module';
+import { WorkflowDiagramWidget } from './workflow-diagram-widget';
+
+export interface WorkflowDiagramIdentifier extends GLSPDiagramIdentifier {
+    diff?: {
+        id: string;
+        side: 'left' | 'right';
+        content: string;
+    };
+}
 
 class WorkflowGLSPStarter extends GLSPStarter {
     createContainer(...containerConfiguration: ContainerConfiguration): Container {
-        return createWorkflowDiagramContainer(...containerConfiguration);
+        return createWorkflowDiagramContainer(...containerConfiguration, compareModule);
+    }
+
+    protected override createDiagramOptionsModule(identifier: WorkflowDiagramIdentifier): ContainerModule {
+        const glspClient = new WebviewGlspClient({ id: identifier.diagramType, messenger: this.messenger });
+        return createDiagramOptionsModule({
+            clientId: identifier.clientId,
+            diagramType: identifier.diagramType,
+            glspClientProvider: async () => glspClient,
+            sourceUri: decodeURIComponent(identifier.uri),
+            editMode: identifier.diff ? EditMode.READONLY : EditMode.EDITABLE
+        });
+    }
+
+    protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
+        container.bind(GLSPDiagramIdentifier).toConstantValue(diagramIdentifier);
+        container.rebind(GLSPDiagramWidget).to(WorkflowDiagramWidget).inSingletonScope();
     }
 }
 

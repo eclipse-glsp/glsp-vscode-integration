@@ -6,7 +6,7 @@
     "y": 0
   },
   "id": "sprotty",
-  "revision": 1,
+  "revision": 2,
   "children": [
     {
       "cssClasses": [
@@ -56,18 +56,18 @@
           "cssClasses": [],
           "type": "label:heading",
           "alignment": {
-            "x": 20.6171875,
-            "y": 13
+            "x": 20.618488311767578,
+            "y": 12.5
           },
           "id": "task_ChkTp_label",
           "text": "ChkTp",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 41.4482421875,
-            "height": 16
+            "width": 41.236976623535156,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -121,18 +121,18 @@
           "cssClasses": [],
           "type": "label:heading",
           "alignment": {
-            "x": 15.9609375,
-            "y": 13
+            "x": 15.95703125,
+            "y": 12.5
           },
           "id": "task_Push_label",
           "text": "Push",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 31.921875,
-            "height": 16
+            "width": 31.9140625,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -162,6 +162,12 @@
       "id": "edge_task_Push_fork_1",
       "sourceId": "task_Push",
       "targetId": "fork_1",
+      "args": {
+        "edgeSourcePointX": 142.921875,
+        "edgeSourcePointY": 115,
+        "edgeTargetPointX": 169.5,
+        "edgeTargetPointY": 115
+      },
       "children": []
     },
     {
@@ -171,6 +177,12 @@
       "id": "edge_fork1_task_ChkTp",
       "sourceId": "fork_1",
       "targetId": "task_ChkTp",
+      "args": {
+        "edgeSourcePointX": 179.9129171124612,
+        "edgeSourcePointY": 117.84892269711828,
+        "edgeTargetPointX": 235.356884765625,
+        "edgeTargetPointY": 150
+      },
       "children": []
     },
     {
@@ -199,7 +211,7 @@
         "prefHeight": 30
       },
       "size": {
-        "width": 83.1103515625,
+        "width": 83.26994705200195,
         "height": 30
       },
       "children": [
@@ -221,18 +233,18 @@
           "cssClasses": [],
           "type": "label:heading",
           "alignment": {
-            "x": 21,
-            "y": 13
+            "x": 21.00260353088379,
+            "y": 12.5
           },
           "id": "task_ChkWt_label",
           "text": "ChkWt",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 42.1103515625,
-            "height": 16
+            "width": 42.26994705200195,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -291,6 +303,12 @@
       "id": "edge_task_ChkWt_decision1",
       "sourceId": "task_ChkWt",
       "targetId": "decision_1",
+      "args": {
+        "edgeSourcePointX": 303.26994705200195,
+        "edgeSourcePointY": 65.49350987329842,
+        "edgeTargetPointX": 329.6874655088064,
+        "edgeTargetPointY": 65.80664340221334
+      },
       "children": []
     },
     {
@@ -300,6 +318,12 @@
       "id": "edge_fork1_task_ChkWt",
       "sourceId": "fork_1",
       "targetId": "task_ChkWt",
+      "args": {
+        "edgeSourcePointX": 179.91564220852578,
+        "edgeSourcePointY": 112.16301511476165,
+        "edgeTargetPointX": 235.6444814682007,
+        "edgeTargetPointY": 80
+      },
       "children": []
     },
     {
@@ -309,6 +333,12 @@
       "id": "edge_task_ChkTp_decision2",
       "sourceId": "task_ChkTp",
       "targetId": "decision2",
+      "args": {
+        "edgeSourcePointX": 302.4482421875,
+        "edgeSourcePointY": 165.48627182195702,
+        "edgeTargetPointX": 329.686567408344,
+        "edgeTargetPointY": 165.80756987952083
+      },
       "children": []
     },
     {
@@ -337,7 +367,7 @@
         "prefHeight": 30
       },
       "size": {
-        "width": 92.46875,
+        "width": 92.6266098022461,
         "height": 30
       },
       "children": [
@@ -359,18 +389,18 @@
           "cssClasses": [],
           "type": "label:heading",
           "alignment": {
-            "x": 25.6796875,
-            "y": 13
+            "x": 25.677082061767578,
+            "y": 12.5
           },
           "id": "task_PreHeat_label",
           "text": "PreHeat",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 51.46875,
-            "height": 16
+            "width": 51.626609802246094,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -424,18 +454,18 @@
           "cssClasses": [],
           "type": "label:heading",
           "alignment": {
-            "x": 24.5234375,
-            "y": 13
+            "x": 24.51822853088379,
+            "y": 12.5
           },
           "id": "task_KeepTp_label",
           "text": "KeepTp",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 49.248046875,
-            "height": 16
+            "width": 49.03645706176758,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -467,7 +497,7 @@
         "prefHeight": 30
       },
       "size": {
-        "width": 75.32421875,
+        "width": 75.48526763916016,
         "height": 30
       },
       "children": [
@@ -490,17 +520,17 @@
           "type": "label:heading",
           "alignment": {
             "x": 17.109375,
-            "y": 13
+            "y": 12.5
           },
           "id": "task_RflWt_label",
           "text": "RflWt",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 34.32421875,
-            "height": 16
+            "width": 34.485267639160156,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -554,18 +584,18 @@
           "cssClasses": [],
           "type": "label:heading",
           "alignment": {
-            "x": 18.671875,
-            "y": 13
+            "x": 18.665363311767578,
+            "y": 12.5
           },
           "id": "task_WtOK_label",
           "text": "WtOK",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 37.9931640625,
-            "height": 16
+            "width": 37.98797607421875,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -581,6 +611,12 @@
       "sourceId": "decision_1",
       "targetId": "task_RflWt",
       "probability": "medium",
+      "args": {
+        "edgeSourcePointX": 358.0681093089892,
+        "edgeSourcePointY": 61.423301512349184,
+        "edgeTargetPointX": 390,
+        "edgeTargetPointY": 49.31348115096731
+      },
       "children": []
     },
     {
@@ -593,6 +629,12 @@
       "sourceId": "decision_1",
       "targetId": "task_WtOK",
       "probability": "medium",
+      "args": {
+        "edgeSourcePointX": 358.34775282071627,
+        "edgeSourcePointY": 70.28861664860428,
+        "edgeTargetPointX": 390,
+        "edgeTargetPointY": 81.28206267799604
+      },
       "children": []
     },
     {
@@ -605,6 +647,12 @@
       "sourceId": "decision2",
       "targetId": "task_KeepTp",
       "probability": "medium",
+      "args": {
+        "edgeSourcePointX": 359.4355670963364,
+        "edgeSourcePointY": 162.83422159210613,
+        "edgeTargetPointX": 390,
+        "edgeTargetPointY": 155.6324249695934
+      },
       "children": []
     },
     {
@@ -617,6 +665,12 @@
       "sourceId": "decision2",
       "targetId": "task_PreHeat",
       "probability": "medium",
+      "args": {
+        "edgeSourcePointX": 358.5871383613748,
+        "edgeSourcePointY": 170.04178556946297,
+        "edgeTargetPointX": 390,
+        "edgeTargetPointY": 180.1285938035043
+      },
       "children": []
     },
     {
@@ -651,7 +705,7 @@
         "radiusTopRight": 5
       },
       "position": {
-        "x": 600,
+        "x": 610,
         "y": 100
       },
       "name": "Brew",
@@ -684,18 +738,18 @@
           "cssClasses": [],
           "type": "label:heading",
           "alignment": {
-            "x": 15.953125,
-            "y": 13
+            "x": 15.950520515441895,
+            "y": 12.5
           },
           "id": "task_Brew_label",
           "text": "Brew",
           "position": {
             "x": 31,
-            "y": 7
+            "y": 7.083333492279053
           },
           "size": {
-            "width": 31.90625,
-            "height": 16
+            "width": 31.90104103088379,
+            "height": 15.833333015441895
           },
           "children": []
         }
@@ -754,6 +808,12 @@
       "id": "edge_task_RflWt_merge_1",
       "sourceId": "task_RflWt",
       "targetId": "merge_1",
+      "args": {
+        "edgeSourcePointX": 465.48526763916016,
+        "edgeSourcePointY": 48.25692912719793,
+        "edgeTargetPointX": 503.68732654170316,
+        "edgeTargetPointY": 61.67522923325259
+      },
       "children": []
     },
     {
@@ -763,6 +823,12 @@
       "id": "edge_task_WTOK_merge_1",
       "sourceId": "task_WtOK",
       "targetId": "merge_1",
+      "args": {
+        "edgeSourcePointX": 468.9931640625,
+        "edgeSourcePointY": 81.75889455235128,
+        "edgeTargetPointX": 503.5431283350021,
+        "edgeTargetPointY": 70.17612721864288
+      },
       "children": []
     },
     {
@@ -772,6 +838,12 @@
       "id": "edge_task_KeepTp_merge_2",
       "sourceId": "task_KeepTp",
       "targetId": "merge_2",
+      "args": {
+        "edgeSourcePointX": 480.248046875,
+        "edgeSourcePointY": 156.71676105147495,
+        "edgeTargetPointX": 502.8141762197149,
+        "edgeTargetPointY": 162.576210746933
+      },
       "children": []
     },
     {
@@ -781,6 +853,12 @@
       "id": "edege_task_PreHeat_merge_2",
       "sourceId": "task_PreHeat",
       "targetId": "merge_2",
+      "args": {
+        "edgeSourcePointX": 477.53056098674904,
+        "edgeSourcePointY": 180,
+        "edgeTargetPointX": 503.7992986960137,
+        "edgeTargetPointY": 170.44014320554487
+      },
       "children": []
     },
     {
@@ -790,6 +868,12 @@
       "id": "edge_merge_2_join_1",
       "sourceId": "merge_2",
       "targetId": "join_1",
+      "args": {
+        "edgeSourcePointX": 524.1864130470989,
+        "edgeSourcePointY": 157.4794476448563,
+        "edgeTargetPointX": 560.5150734393876,
+        "edgeTargetPointY": 119.66798478757615
+      },
       "children": []
     },
     {
@@ -799,6 +883,12 @@
       "id": "edge_merge_1_join_1",
       "sourceId": "merge_1",
       "targetId": "join_1",
+      "args": {
+        "edgeSourcePointX": 524.3535533905932,
+        "edgeSourcePointY": 74.35355339059328,
+        "edgeTargetPointX": 560.4797799427402,
+        "edgeTargetPointY": 110.47977994274005
+      },
       "children": []
     },
     {
@@ -808,6 +898,12 @@
       "id": "edge_join_1_task_Brew",
       "sourceId": "join_1",
       "targetId": "task_Brew",
+      "args": {
+        "edgeSourcePointX": 570.5,
+        "edgeSourcePointY": 115,
+        "edgeTargetPointX": 610,
+        "edgeTargetPointY": 115
+      },
       "children": []
     }
   ]

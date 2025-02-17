@@ -85,6 +85,11 @@
         "title": "Export as SVG",
         "category": "Workflow Diagram",
         "enablement": "activeCustomEditorId == 'workflow.glspDiagram'"
+      },
+      {
+        "command": "workflow.compareSelected",
+        "category": "%name%",
+        "title": "Compare selected in Workflow Diagram Editor"
       }
     ],
     "customEditors": [
@@ -143,6 +148,19 @@
       }
     ],
     "menus": {
+      "commandPalette": [
+        {
+          "command": "workflow.compareSelected",
+          "when": "false"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "workflow.compareSelected",
+          "group": "3_compare@30",
+          "when": "listDoubleSelection"
+        }
+      ],
       "editor/title": [
         {
           "submenu": "workflow.editor.title",

@@ -89,7 +89,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     >();
     protected readonly disposables: vscode.Disposable[] = [];
     protected readonly progressReporters: Map<string, ProgressReporter> = new Map();
-    readonly messenger = new Messenger();
+    readonly messenger = new Messenger({ ignoreHiddenViews: false });
 
     /**
      * A subscribable event which fires with an array containing the IDs of all

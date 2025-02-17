@@ -13,8 +13,34 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.01
  ********************************************************************************/
-import { GlspEditorProvider, GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
+import {
+    GLSPDiagramIdentifier,
+    GlspEditorProvider,
+    GlspVscodeConnector,
+    WebviewEndpoint,
+    serializeUri
+} from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
+import { DiffEditorTracker } from './diff-tracker';
+
+export interface WorkflowDiffDocument extends vscode.CustomDocument {
+    readonly diffId: string;
+    readonly side: 'left' | 'right';
+}
+
+export namespace WorkflowDiffDocument {
+    export function is(value: any): value is WorkflowDiffDocument {
+        return value?.diffId && (value.side === 'left' || value.side === 'right');
+    }
+}
+
+export interface WorkflowDiagramIdentifier extends GLSPDiagramIdentifier {
+    diff?: {
+        id: string;
+        side: 'left' | 'right';
+        content: string;
+    };
+}
 
 export default class WorkflowEditorProvider extends GlspEditorProvider {
     diagramType = 'workflow-diagram';
@@ -56,5 +82,48 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
                     <script src="${webviewScriptSourceUri}"></script>
                 </body>
             </html>`;
+    }
+
+    override async openCustomDocument(
+        uri: vscode.Uri,
+        openContext: vscode.CustomDocumentOpenContext,
+        token: vscode.CancellationToken
+    ): Promise<vscode.CustomDocument> {
+        const diffEditorTracker = DiffEditorTracker.get();
+        if (diffEditorTracker.isDiffEditorActive) {
+            const diff = diffEditorTracker.addDiffUri(uri);
+            return <WorkflowDiffDocument>{ uri, dispose: () => undefined, diffId: diff.diffId, side: diff.side };
+        }
+        return super.openCustomDocument(uri, openContext, token);
+    }
+
+    override async resolveCustomEditor(
+        document: vscode.CustomDocument,
+        webviewPanel: vscode.WebviewPanel,
+        token: vscode.CancellationToken
+    ): Promise<void> {
+        // This is used to initialize GLSP for our diagram
+        const diagramIdentifier: WorkflowDiagramIdentifier = {
+            diagramType: this.diagramType,
+            uri: serializeUri(document.uri),
+            clientId: `${this.diagramType}_${this.viewCount++}`
+        };
+        if (WorkflowDiffDocument.is(document)) {
+            const contentBuffer = await vscode.workspace.fs.readFile(document.uri);
+            const content = new TextDecoder().decode(contentBuffer);
+            diagramIdentifier.diff = { id: document.diffId, side: document.side, content };
+        }
+
+        const endpoint = new WebviewEndpoint({ diagramIdentifier, messenger: this.glspVscodeConnector.messenger, webviewPanel });
+
+        // Register document/diagram panel/model in vscode connector
+        this.glspVscodeConnector.registerClient({
+            clientId: diagramIdentifier.clientId,
+            diagramType: diagramIdentifier.diagramType,
+            document: document,
+            webviewEndpoint: endpoint
+        });
+
+        this.setUpWebview(document, webviewPanel, token, diagramIdentifier.clientId);
     }
 }

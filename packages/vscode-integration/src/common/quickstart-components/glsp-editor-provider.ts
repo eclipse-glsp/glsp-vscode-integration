@@ -28,7 +28,7 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
     abstract diagramType: string;
 
     /** Used to generate continuous and unique clientIds - TODO: consider replacing this with uuid. */
-    private viewCount = 0;
+    protected viewCount = 0;
 
     onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent> | vscode.Event<vscode.CustomDocumentContentChangeEvent>;
 
@@ -106,7 +106,7 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
     ): void;
 }
 
-function serializeUri(uri: vscode.Uri): string {
+export function serializeUri(uri: vscode.Uri): string {
     let uriString = uri.toString();
     const match = uriString.match(/file:\/\/\/([a-z])%3A/i);
     if (match) {

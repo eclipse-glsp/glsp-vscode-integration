@@ -29,7 +29,10 @@ import {
 import { ContainerModule } from 'inversify';
 import * as path from 'path';
 import * as process from 'process';
+import { v4 as uuid } from 'uuid';
 import * as vscode from 'vscode';
+import { DiffEditorTracker } from './diff-tracker';
+import { DiffParams, asQueryString, getQueryParams } from './query-util';
 import WorkflowEditorProvider from './workflow-editor-provider';
 
 const DEFAULT_SERVER_PORT = '0';
@@ -102,9 +105,50 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }),
         vscode.commands.registerCommand('workflow.showDocumentation', () => {
             glspVscodeConnector.dispatchAction(NavigateAction.create('documentation'));
-        })
+        }),
+        vscode.commands.registerCommand('workflow.compareSelected', (...args) => {
+            if (args.length !== 2 && !(args[1] instanceof Array)) {
+                return;
+            }
+            const [leftFile, rightFile] = args[1];
+            if (!(leftFile instanceof vscode.Uri && rightFile instanceof vscode.Uri)) {
+                return;
+            }
+            openCompareSelected(leftFile, rightFile);
+        }),
+        DiffEditorTracker.get()
     );
 }
+
+const openCompareSelected = (leftFile: vscode.Uri, rightFile: vscode.Uri) => {
+    const diffId = uuid();
+    const leftDiffParams: DiffParams = {
+        mode: 'diff',
+        side: 'left',
+        diffId
+    };
+    const rightDiffParams: DiffParams = {
+        mode: 'diff',
+        side: 'right',
+        diffId
+    };
+
+    const diffOriginalUri = leftFile.with({
+        query: asQueryString({
+            ...getQueryParams(leftFile),
+            ...leftDiffParams
+        })
+    });
+
+    const diffModifiedUri = rightFile.with({
+        query: asQueryString({
+            ...getQueryParams(leftFile),
+            ...rightDiffParams
+        })
+    });
+
+    vscode.commands.executeCommand('vscode.diff', diffOriginalUri, diffModifiedUri);
+};
 
 function createServerModules(): ContainerModule[] {
     const appModule = createAppModule({ logLevel: LogLevel.info, logDir: LOG_DIR, fileLog: true, consoleLog: false });

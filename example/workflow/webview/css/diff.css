@@ -1,0 +1,64 @@
+.diff .sprotty-node,
+.diff .sprotty-edge {
+    filter: grayscale();
+}
+
+.diff .diff-add > .sprotty-node {
+    filter: none;
+    fill: green !important;
+    opacity: 0.6;
+}
+
+.diff-add.sprotty-edge {
+    filter: none;
+    fill: green !important;
+    stroke: green !important;
+    opacity: 0.6;
+}
+
+.diff-add > .sprotty-edge {
+    filter: none;
+    fill: green !important;
+    stroke: green !important;
+    opacity: 0.6;
+}
+
+.diff-remove > .sprotty-node {
+    filter: none;
+    fill: darkred !important;
+    opacity: 0.6;
+}
+
+.diff-remove.sprotty-edge {
+    filter: none;
+    fill: darkred !important;
+    stroke: darkred !important;
+    opacity: 0.6;
+}
+
+.diff-remove > .sprotty-edge {
+    filter: none;
+    fill: darkred !important;
+    stroke: darkred !important;
+    opacity: 0.6;
+}
+
+.diff-update > .sprotty-node {
+    filter: none;
+    fill: #9c8513 !important;
+    opacity: 0.6;
+}
+
+.diff-update.sprotty-edge {
+    filter: none;
+    fill: #9c8513 !important;
+    stroke: #9c8513 !important;
+    opacity: 0.6;
+}
+
+.diff-update > .sprotty-edge {
+    filter: none;
+    fill: #9c8513 !important;
+    stroke: #9c8513 !important;
+    opacity: 0.6;
+}
