@@ -1,11 +1,17 @@
 # Eclipse GLSP VSCode Integration Changelog
 
+## 2.4.0 -active
+
+### Changes
+
+### Potentially Breaking Changes
+
 ## [2.3.0 - 19/12/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.3.0)
+
+### Changes
 
 -   [diagram] Update default styling to consistently use vscode theme variables [#68](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/68)
 -   [deps] Drop support for node `16`. New minimum version is `18.x` [#69](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/69)
-
-### Changes
 
 ## [2.2.1 - 22/07/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.2.1)
 
