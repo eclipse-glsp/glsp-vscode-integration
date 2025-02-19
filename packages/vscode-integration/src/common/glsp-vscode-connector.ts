@@ -17,6 +17,7 @@ import {
     Action,
     ActionMessage,
     Deferred,
+    Disposable,
     EndProgressAction,
     ExportSvgAction,
     MessageAction,
@@ -32,7 +33,6 @@ import {
     UpdateProgressAction
 } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
-import { Disposable } from 'vscode-jsonrpc';
 import { Messenger } from 'vscode-messenger';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
@@ -79,6 +79,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     protected readonly documentMap = new Map<D, string>();
     /** Maps clientId to selected elementIDs for that client. */
     protected readonly clientSelectionMap = new Map<string, SelectionState>();
+    /** Maps clientId to ongoing progress (reporters) for that client */
+    protected readonly clientProgressMap = new Map<string, Map<string, ProgressReporter>>();
 
     protected readonly options: Required<GlspVscodeConnectorOptions>;
     protected readonly diagnostics = vscode.languages.createDiagnosticCollection();
@@ -88,7 +90,6 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         vscode.CustomDocumentEditEvent<D> | vscode.CustomDocumentContentChangeEvent<D>
     >();
     protected readonly disposables: vscode.Disposable[] = [];
-    protected readonly progressReporters: Map<string, ProgressReporter> = new Map();
     readonly messenger = new Messenger();
 
     /**
@@ -167,6 +168,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                 this.clientMap.delete(client.clientId);
                 this.documentMap.delete(client.document);
                 this.clientSelectionMap.delete(client.clientId);
+                this.clientProgressMap.get(client.clientId)?.forEach(reporter => reporter.deferred.resolve());
+                this.clientProgressMap.delete(client.clientId);
             })
         ];
         // Cleanup when client panel is closed
@@ -177,6 +180,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
         this.clientMap.set(client.clientId, client);
         this.documentMap.set(client.document, client.clientId);
+        this.clientProgressMap.set(client.clientId, new Map());
 
         toDispose.push(
             client.webviewEndpoint.onActionMessage(message => {
@@ -385,7 +389,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             const location = vscode.ProgressLocation.Notification;
             vscode.window.withProgress({ title, location }, progress => {
                 const reporterId = this.progressReporterId(client, progressId);
-                this.progressReporters.set(reporterId, { deferred, progress, currentPercentage: initialPercentage });
+                const progressReporters = this.clientProgressMap.get(client.clientId);
+                progressReporters?.set(reporterId, { deferred, progress, currentPercentage: initialPercentage });
                 progress.report({ message, increment: percentage });
                 return deferred.promise;
             });
@@ -403,7 +408,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         if (client) {
             const { progressId, message, percentage } = actionMessage.action;
             const reporterId = this.progressReporterId(client, progressId);
-            const reporter = this.progressReporters.get(reporterId);
+            const reporter = this.clientProgressMap.get(client.clientId)?.get(reporterId);
             if (reporter) {
                 const currentPercentage = reporter.currentPercentage ?? 0;
                 const newPercentage = (percentage ?? -1) >= 0 ? percentage : undefined;
@@ -427,10 +432,11 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         if (client) {
             const { progressId } = actionMessage.action;
             const reporterId = this.progressReporterId(client, progressId);
-            const reporter = this.progressReporters.get(reporterId);
-            if (reporter) {
+            const progressReporters = this.clientProgressMap.get(client.clientId);
+            const reporter = progressReporters?.get(reporterId);
+            if (progressReporters && reporter) {
                 reporter.deferred.resolve();
-                this.progressReporters.delete(reporterId);
+                progressReporters.delete(reporterId);
             }
         }
 
