@@ -16,7 +16,7 @@
 
 :root {
     --glsp-error-foreground: var(--vscode-inputValidation-errorBorder);
-    --glsp-warning-foreground: var(--vscode-inputValidation-warningBorderd);
+    --glsp-warning-foreground: var(--vscode-inputValidation-warningBorder);
     --glsp-info-foreground: var(--vscode-inputValidation-infoBorder);
 }
 
