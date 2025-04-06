@@ -1,8 +1,11 @@
 # Eclipse GLSP VSCode Integration Changelog
 
-## 2.4.0 -active
+## [2.4.0 - 04/04/2025](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.4.0)
 
 ### Changes
+
+-   [diagram] Dispose pending progress reporters on diagram close [#72](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/72)
+-   [diagram] Fix wrong CSS for `--glsp-warning-foreground` [#73](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/73)
 
 ### Potentially Breaking Changes
 
