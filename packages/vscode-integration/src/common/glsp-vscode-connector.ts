@@ -90,7 +90,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         vscode.CustomDocumentEditEvent<D> | vscode.CustomDocumentContentChangeEvent<D>
     >();
     protected readonly disposables: vscode.Disposable[] = [];
-    readonly messenger = new Messenger();
+    get messenger(): Messenger {
+        return this.options.messenger;
+    }
 
     /**
      * A subscribable event which fires with an array containing the IDs of all
@@ -121,6 +123,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             },
             onBeforePropagateMessageToClient: (_originalMessage, processedMessage) => processedMessage,
             onBeforePropagateMessageToServer: (_originalMessage, processedMessage) => processedMessage,
+            messenger: new Messenger({ ignoreHiddenViews: false }),
             ...options
         };
 

@@ -15,7 +15,8 @@
  ********************************************************************************/
 import { AnyObject, GLSPClient, InitializeResult, hasStringProp } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
-import { WebviewEndpoint } from '.';
+import { Messenger } from 'vscode-messenger';
+import { WebviewEndpoint } from './quickstart-components/webview-endpoint';
 
 /**
  * Any clients registered on the GLSP VSCode integration need to implement this
@@ -189,6 +190,11 @@ export interface GlspVscodeConnectorOptions {
      * is `undefined` the propagation will be cancelled.
      */
     onBeforePropagateMessageToClient?(originalMessage: unknown, processedMessage: unknown, messageChanged: boolean): unknown | undefined;
+
+    /**
+     * Optional property to provide a {@link Messenger} instance that should be used by the connector.
+     */
+    messenger?: Messenger;
 }
 
 export const GLSPDiagramIdentifier = Symbol('GLSPDiagramIdentifier');
