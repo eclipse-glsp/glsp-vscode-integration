@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { CenterAction, FitToScreenAction, LayoutOperation, RequestExportSvgAction, SelectAllAction } from '@eclipse-glsp/protocol';
+import { CenterAction, FitToScreenAction, RequestExportSvgAction, SelectAllAction, TriggerLayoutAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { GlspVscodeConnector, SelectionState } from '../glsp-vscode-connector';
 
@@ -51,7 +51,7 @@ export function configureDefaultCommands(context: CommandContext): void {
             connector.dispatchAction(CenterAction.create(selectionState?.selectedElementsIDs ?? []));
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.layout`, () => {
-            connector.dispatchAction(LayoutOperation.create([]));
+            connector.dispatchAction(TriggerLayoutAction.create());
         }),
         vscode.commands.registerCommand(`${diagramPrefix}.selectAll`, () => {
             connector.dispatchAction(SelectAllAction.create());
