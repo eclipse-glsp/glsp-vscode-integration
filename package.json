@@ -29,14 +29,14 @@
   },
   "devDependencies": {
     "@eclipse-glsp/dev": "next",
-    "@types/node": "18.x",
+    "@types/node": "20.x",
     "@types/vscode": "^1.54.0",
     "concurrently": "^8.2.2",
     "lerna": "^7.0.0",
-    "typescript": "^5.0.4"
+    "typescript": "5.9.2"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=20",
     "yarn": ">=1.7.0 <2"
   }
 }

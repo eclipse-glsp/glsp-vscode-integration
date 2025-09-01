@@ -4,7 +4,12 @@
 
 ### Changes
 
+-   [api] Allow configuration of messenger instance in `GLSPVscodeConnector` [#75](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/75)
+-   [diagram] Update layout command to dispatch new `TriggerLayoutAction` [#77](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/77)
+
 ### Potentially Breaking Changes
+
+-[node] Update minimum requirements for Node to >=20 [#78](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/78)
 
 ## [2.4.0 - 04/04/2025](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.4.0)
 
