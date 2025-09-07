@@ -197,8 +197,8 @@
     "onStartupFinished"
   ],
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-server": "next",
-    "@eclipse-glsp-examples/workflow-server-bundled": "next",
+    "@eclipse-glsp-examples/workflow-server": "2.5.0",
+    "@eclipse-glsp-examples/workflow-server-bundled": "2.5.0",
     "@eclipse-glsp/vscode-integration": "2.5.0",
     "@vscode/vsce": "^2.19.0",
     "copy-webpack-plugin": "^11.0.0",

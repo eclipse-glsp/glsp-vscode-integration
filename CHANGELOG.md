@@ -1,6 +1,6 @@
 # Eclipse GLSP VSCode Integration Changelog
 
-## 2.5.0 - active
+## [v2.5.0 - 07/09/2025](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.5.0)
 
 ### Changes
 
@@ -11,7 +11,7 @@
 
 -[node] Update minimum requirements for Node to >=20 [#78](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/78)
 
-## [2.4.0 - 04/04/2025](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.4.0)
+## [v2.4.0 - 04/04/2025](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.4.0)
 
 ### Changes
 
@@ -20,14 +20,14 @@
 
 ### Potentially Breaking Changes
 
-## [2.3.0 - 19/12/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.3.0)
+## [v2.3.0 - 19/12/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.3.0)
 
 ### Changes
 
 -   [diagram] Update default styling to consistently use vscode theme variables [#68](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/68)
 -   [deps] Drop support for node `16`. New minimum version is `18.x` [#69](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/69)
 
-## [2.2.1 - 22/07/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.2.1)
+## [v2.2.1 - 22/07/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.2.1)
 
 ### Changes
 
@@ -42,9 +42,9 @@
     -   `GlspVscodeConnector.sendToActiveClient`: Use `GlspVscodeConnector.dispatchAction` instead.
     -   `GlspVscodeConnector.setActionToClient`: Use `GlspVscodeConnector.dispatchAction` instead.
 
-## [2.1.0 - 24/01/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.1.0)
+## [v2.1.0 - 24/01/2024](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.1.0)
 
-## [2.0.0 - 14/10/2023](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.0.0)
+## [v2.0.0 - 14/10/2023](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.0.0)
 
 ### Changes
 

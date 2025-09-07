@@ -198,7 +198,7 @@
     "onStartupFinished"
   ],
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-server": "next",
+    "@eclipse-glsp-examples/workflow-server": "2.5.0",
     "@eclipse-glsp/vscode-integration": "2.5.0",
     "@types/node": "16.x",
     "@vscode/vsce": "^2.19.0",
