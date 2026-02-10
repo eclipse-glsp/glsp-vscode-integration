@@ -1,4 +1,4 @@
-# Eclipse GLSP VS Code Integration [![Build Status](https://ci.eclipse.org/glsp/job/eclipse-glsp/job/glsp-vscode-integration/job/master/badge/icon)](https://ci.eclipse.org/glsp/job/eclipse-glsp/job/glsp-vscode-integration/job/master/)
+# Eclipse GLSP VS Code Integration [![CI](https://github.com/eclipse-glsp/glsp-vscode-integration/actions/workflows/ci.yml/badge.svg)](https://github.com/eclipse-glsp/glsp-vscode-integration/actions/workflows/ci.yml)
 
 This project contains the glue code necessary to diagram editors built with the [graphical language server platform (GLSP)](https://github.com/eclipse-glsp/glsp) with VS Code, as well as an example VS Code extension for the workflow diagram example for testing purposes.
 
