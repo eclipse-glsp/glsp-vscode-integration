@@ -1,6 +1,6 @@
 # Eclipse GLSP VSCode Integration Changelog
 
-## v2.6.0 - active
+## [v2.6.0 - 10/02/2026](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.6.0)
 
 ## [v2.5.0 - 07/09/2025](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.5.0)
 
