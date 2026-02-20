@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 EclipseSource and others.
+ * Copyright (c) 2021-2026 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -92,7 +92,6 @@ export class GlspSocketServerLauncher implements vscode.Disposable {
                         } else {
                             if (this.options.socketConnectionOptions.port !== port) {
                                 throw new Error(
-                                    // eslint-disable-next-line max-len
                                     `The configured port ${this.options.socketConnectionOptions.port} does not match the port in the startup message: ${data}`
                                 );
                             }
