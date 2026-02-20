@@ -7,3 +7,8 @@ dist
 tsconfig.tsbuildinfo
 eslint.xml
 *.vsix
+
+.claude/local.settings.json
+.claude/CLAUDE.local.md
+.claude/plans
+.reviews

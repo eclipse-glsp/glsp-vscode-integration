@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2023-2024 EclipseSource and others.
+ * Copyright (c) 2023-2026 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -12,8 +12,8 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- ********************************************************************************/
-/* eslint-disable deprecation/deprecation */
+ */
+
 import { Action, GLSPModelSource } from '@eclipse-glsp/client';
 import { injectable } from 'inversify';
 
@@ -31,6 +31,7 @@ export namespace ExtensionAction {
     /**
      * @deprecated The concept of marking actions as locally dispatched `ExtensionAction`s is no longer necessary and usage is discouraged.
      * */
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     export function is(object: unknown): object is ExtensionAction {
         return Action.is(object) && '__localDispatch' in object && object.__localDispatch === true;
     }
@@ -42,6 +43,7 @@ export namespace ExtensionAction {
      * @deprecated The concept of marking actions as locally dispatched `ExtensionAction`s is no longer necessary and usage is discouraged.
      */
     export function mark(action: Action): void {
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         (action as ExtensionAction).__localDispatch = true;
     }
 }

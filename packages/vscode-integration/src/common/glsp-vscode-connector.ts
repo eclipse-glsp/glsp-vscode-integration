@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2025 EclipseSource and others.
+ * Copyright (c) 2021-2026 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -36,7 +36,6 @@ import * as vscode from 'vscode';
 import { Messenger } from 'vscode-messenger';
 import { GlspVscodeClient, GlspVscodeConnectorOptions } from './types';
 
-// eslint-disable-next-line no-shadow
 export enum MessageOrigin {
     CLIENT,
     SERVER
@@ -548,7 +547,6 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
         }
 
         if (origin === MessageOrigin.CLIENT) {
-            // eslint-disable-next-line max-len
             // Do not propagate action if it comes from client to avoid an infinite loop, as both, client and server will mirror the Selection action
             return { processedMessage: undefined, messageChanged: true };
         } else {
