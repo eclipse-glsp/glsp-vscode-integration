@@ -39,7 +39,7 @@
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-glsp": "next",
     "@eclipse-glsp/vscode-integration-webview": "2.7.0-next",
-    "@vscode/codicons": "^0.0.25",
+    "@vscode/codicons": "^0.0.44",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^6.7.1",
     "ignore-loader": "^0.1.2",
