@@ -13,6 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+export * from './glsp-mcp-server-provider';
 export * from './quickstart-components/glsp-socket-server-launcher';
 export * from './quickstart-components/node-glsp-vscode-server';
 export * from './quickstart-components/socket-glsp-vscode-server';

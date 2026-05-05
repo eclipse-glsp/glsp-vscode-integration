@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 EclipseSource and others.
+ * Copyright (c) 2021-2026 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -48,6 +48,7 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
                     <meta name="viewport" content="width=device-width, height=device-height">
 					<meta http-equiv="Content-Security-Policy" content="
                 default-src http://*.fontawesome.com  ${webview.cspSource} 'unsafe-inline' 'unsafe-eval';
+                img-src ${webview.cspSource} blob:;
                 ">
 
                 </head>

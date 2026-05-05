@@ -191,6 +191,12 @@
         "id": "workflow.editor.title",
         "label": "Diagram"
       }
+    ],
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "glsp-workflow",
+        "label": "GLSP Workflow"
+      }
     ]
   },
   "activationEvents": [
@@ -209,6 +215,6 @@
     "workflow-glsp-webview": "2.7.0-next"
   },
   "engines": {
-    "vscode": "^1.54.0"
+    "vscode": "^1.99.0"
   }
 }

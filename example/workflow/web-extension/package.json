@@ -34,7 +34,7 @@
     "bundle": "webpack",
     "bundle:prod": "webpack --config ./webpack.prod.js",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
-    "compile": "tsc-b",
+    "compile": "tsc -b",
     "lint": "eslint ./src",
     "package": "vsce package --yarn",
     "watch": "tsc -w",

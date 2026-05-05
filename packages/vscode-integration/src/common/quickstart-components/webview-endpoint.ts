@@ -157,7 +157,7 @@ export class WebviewEndpoint implements Disposable {
             this.messenger.onRequest(DisposeClientSessionRequest, params => glspClient.disposeClientSession(params), {
                 sender: this.messageParticipant
             }),
-            this.messenger.onRequest(ShutdownServerNotification, () => glspClient.shutdownServer(), {
+            this.messenger.onRequest(ShutdownServerNotification, () => Promise.resolve(glspClient.shutdownServer()), {
                 sender: this.messageParticipant
             }),
             this.messenger.onRequest(StopRequest, () => glspClient.stop(), {

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2024 EclipseSource and others.
+ * Copyright (c) 2021-2026 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,10 +15,17 @@
  ********************************************************************************/
 import 'reflect-metadata';
 
-import { WorkflowDiagramModule, WorkflowLayoutConfigurator, WorkflowServerModule } from '@eclipse-glsp-examples/workflow-server/node';
-import { configureELKLayoutModule } from '@eclipse-glsp/layout-elk';
+import {
+    WorkflowDiagramModule,
+    WorkflowLayoutConfigurator,
+    WorkflowMcpDiagramModule,
+    WorkflowMcpServerModule,
+    WorkflowServerModule
+} from '@eclipse-glsp-examples/workflow-server/node';
+import { ElkLayoutModule } from '@eclipse-glsp/layout-elk';
 import { GModelStorage, LogLevel, createAppModule } from '@eclipse-glsp/server/node';
 import {
+    GlspMcpServerProvider,
     GlspSocketServerLauncher,
     GlspVscodeConnector,
     NavigateAction,
@@ -58,12 +65,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         context.subscriptions.push(serverProcess);
         await serverProcess.start();
     }
+    // Presence of `mcpServer` (even an empty `{}`) opts the GLSP server into starting an
+    // embedded MCP HTTP server. The custom `name` groups multiple GLSP-based MCP servers
+    // in the IDE's MCP server list and matches the `mcpServerDefinitionProviders` id below.
+    const mcpServer = { name: 'glsp-workflow' };
     // Wrap server with quickstart component
     const workflowServer = useIntegratedServer
         ? new NodeGlspVscodeServer({
               clientId: 'glsp.workflow',
               clientName: 'workflow',
-              serverModules: createServerModules()
+              serverModules: createServerModules(),
+              mcpServer
           })
         : new SocketGlspVscodeServer({
               clientId: 'glsp.workflow',
@@ -71,8 +83,26 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
               connectionOptions: {
                   port: serverProcess?.getPort() || JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT),
                   path: process.env.GLSP_WEBSOCKET_PATH
-              }
+              },
+              mcpServer
           });
+
+    // Bridge the embedded MCP server's announced URL into VS Code's built-in MCP host. The
+    // `glsp-workflow` provider id matches the `mcpServerDefinitionProviders` contribution in
+    // this extension's `package.json` and the `mcpServer.name` above.
+    const mcpProvider = new GlspMcpServerProvider();
+    context.subscriptions.push(mcpProvider, vscode.lm.registerMcpServerDefinitionProvider(mcpServer.name, mcpProvider));
+    workflowServer.initializeResult.then(
+        result => {
+            const server = mcpProvider.addServer(result);
+            if (server) {
+                notifyMcpConnected(server.name, server.url);
+            }
+        },
+        () => {
+            /* GLSP startup error already surfaced by the connector; no MCP server to register. */
+        }
+    );
     // Initialize GLSP-VSCode connector with server wrapper
     const glspVscodeConnector = new GlspVscodeConnector({
         server: workflowServer,
@@ -106,9 +136,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 }
 
+/** Info notification with a `Copy URL` action; stays until the user dismisses it. */
+function notifyMcpConnected(name: string, url: string): void {
+    const COPY_URL_ACTION = 'Copy URL';
+    vscode.window.showInformationMessage(`MCP server '${name}' auto-registered at ${url}`, COPY_URL_ACTION).then(action => {
+        if (action === COPY_URL_ACTION) {
+            vscode.env.clipboard.writeText(url);
+        }
+    });
+}
+
 function createServerModules(): ContainerModule[] {
     const appModule = createAppModule({ logLevel: LogLevel.info, logDir: LOG_DIR, fileLog: true, consoleLog: false });
-    const elkLayoutModule = configureELKLayoutModule({ algorithms: ['layered'], layoutConfigurator: WorkflowLayoutConfigurator });
-    const mainModule = new WorkflowServerModule().configureDiagramModule(new WorkflowDiagramModule(() => GModelStorage), elkLayoutModule);
-    return [appModule, mainModule];
+    const elkLayoutModule = new ElkLayoutModule({ algorithms: ['layered'], layoutConfigurator: WorkflowLayoutConfigurator });
+    const mainModule = new WorkflowServerModule().configureDiagramModule(
+        new WorkflowDiagramModule(() => GModelStorage),
+        elkLayoutModule,
+        new WorkflowMcpDiagramModule()
+    );
+    return [appModule, mainModule, new WorkflowMcpServerModule()];
 }

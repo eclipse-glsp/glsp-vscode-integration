@@ -118,8 +118,9 @@ export class WebviewGlspClient implements GLSPClient, Disposable {
         return this.messenger.sendRequest(DisposeClientSessionRequest, HOST_EXTENSION, params);
     }
 
-    shutdownServer(): void {
-        this.messenger.sendNotification(ShutdownServerNotification, HOST_EXTENSION);
+    async shutdownServer(): Promise<void> {
+        // Await the send so callers can dispose without racing the wire flush.
+        await this.messenger.sendNotification(ShutdownServerNotification, HOST_EXTENSION);
     }
 
     async stop(): Promise<void> {
