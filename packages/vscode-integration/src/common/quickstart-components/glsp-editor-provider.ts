@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2024 EclipseSource and others.
+ * Copyright (c) 2021-2026 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -30,10 +30,25 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
     /** Used to generate continuous and unique clientIds - TODO: consider replacing this with uuid. */
     private viewCount = 0;
 
-    onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent> | vscode.Event<vscode.CustomDocumentContentChangeEvent>;
+    protected readonly ownedDocuments = new Set<vscode.CustomDocument>();
+    protected readonly disposables: vscode.Disposable[] = [];
+
+    protected readonly onDidChangeCustomDocumentEmitter = new vscode.EventEmitter<
+        vscode.CustomDocumentEditEvent | vscode.CustomDocumentContentChangeEvent
+    >();
+    get onDidChangeCustomDocument(): vscode.Event<vscode.CustomDocumentEditEvent> | vscode.Event<vscode.CustomDocumentContentChangeEvent> {
+        return this.onDidChangeCustomDocumentEmitter.event;
+    }
 
     constructor(protected readonly glspVscodeConnector: GlspVscodeConnector) {
-        this.onDidChangeCustomDocument = glspVscodeConnector.onDidChangeCustomDocument;
+        this.disposables.push(
+            this.onDidChangeCustomDocumentEmitter,
+            glspVscodeConnector.onDidChangeCustomDocument(e => {
+                if (this.ownedDocuments.has(e.document)) {
+                    this.onDidChangeCustomDocumentEmitter.fire(e);
+                }
+            })
+        );
     }
 
     saveCustomDocument(document: vscode.CustomDocument, _cancellation: vscode.CancellationToken): Thenable<void> {
@@ -66,8 +81,14 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         _openContext: vscode.CustomDocumentOpenContext,
         _token: vscode.CancellationToken
     ): vscode.CustomDocument | Thenable<vscode.CustomDocument> {
-        // Return the most basic implementation possible.
-        return { uri, dispose: () => undefined };
+        const document: vscode.CustomDocument = {
+            uri,
+            dispose: () => {
+                this.ownedDocuments.delete(document);
+            }
+        };
+        this.ownedDocuments.add(document);
+        return document;
     }
 
     async resolveCustomEditor(
@@ -104,6 +125,10 @@ export abstract class GlspEditorProvider implements vscode.CustomEditorProvider 
         token: vscode.CancellationToken,
         clientId: string
     ): void;
+
+    dispose(): void {
+        this.disposables.forEach(disposable => disposable.dispose());
+    }
 }
 
 function serializeUri(uri: vscode.Uri): string {
