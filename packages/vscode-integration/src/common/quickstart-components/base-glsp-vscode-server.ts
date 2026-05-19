@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2023 EclipseSource and others.
+ * Copyright (c) 2023-2026 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -21,7 +21,8 @@ import {
     GLSPClient,
     InitializeParameters,
     InitializeResult,
-    MaybePromise
+    MaybePromise,
+    McpServerConfiguration
 } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import { GlspVscodeServer } from '../types';
@@ -31,6 +32,8 @@ export interface GlspVscodeServerOptions {
     readonly clientId: string;
     /** Name to register the client with on the server. */
     readonly clientName: string;
+    /** MCP-server configuration sent on the GLSP `initialize` request; presence opts in. */
+    readonly mcpServer?: McpServerConfiguration;
 }
 
 /**
@@ -85,7 +88,8 @@ export abstract class BaseGlspVscodeServer<C extends GLSPClient = GLSPClient> im
     protected async createInitializeParameters(): Promise<InitializeParameters> {
         return {
             applicationId: ApplicationIdProvider.get(),
-            protocolVersion: GLSPClient.protocolVersion
+            protocolVersion: GLSPClient.protocolVersion,
+            ...(this.options.mcpServer ? { mcpServer: this.options.mcpServer } : {})
         };
     }
 
