@@ -20,6 +20,7 @@ import {
     Disposable,
     EndProgressAction,
     ExportSvgAction,
+    MarkersReason,
     MessageAction,
     NavigateToExternalTargetAction,
     RedoAction,
@@ -83,6 +84,8 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
     protected readonly options: Required<GlspVscodeConnectorOptions>;
     protected readonly diagnostics = vscode.languages.createDiagnosticCollection();
+    /** Diagnostics grouped by URI and marker reason to support selective removal on editor close. */
+    protected readonly markersByReason = new Map<string, Map<string, vscode.Diagnostic[]>>();
     protected readonly selectionUpdateEmitter = new vscode.EventEmitter<SelectionState>();
     protected readonly onDocumentSavedEmitter = new vscode.EventEmitter<D>();
     protected readonly onDidChangeCustomDocumentEventEmitter = new vscode.EventEmitter<
@@ -166,7 +169,9 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
     public async registerClient(client: GlspVscodeClient<D>): Promise<void> {
         const toDispose: Disposable[] = [
             Disposable.create(() => {
-                this.diagnostics.set(client.document.uri, undefined); // this clears the diagnostics for the file
+                // Keep live markers visible after close — the server reissues them on reopen.
+                // Only batch markers (from explicit validation runs) are removed. See #990.
+                this.clearMarkersOnClose(client.document.uri);
                 this.clientMap.delete(client.clientId);
                 this.documentMap.delete(client.document);
                 this.clientSelectionMap.delete(client.clientId);
@@ -494,7 +499,7 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
             severityMap.set('warning', vscode.DiagnosticSeverity.Warning);
             severityMap.set('error', vscode.DiagnosticSeverity.Error);
 
-            const updatedDiagnostics = message.action.markers.map(
+            const incoming = message.action.markers.map(
                 marker =>
                     new vscode.Diagnostic(
                         new vscode.Range(0, 0, 0, 0), // Must have be defined as such - no workarounds
@@ -503,11 +508,43 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
                     )
             );
 
-            this.diagnostics.set(client.document.uri, updatedDiagnostics);
+            const reason = message.action.reason ?? MarkersReason.BATCH;
+            const uriKey = client.document.uri.toString();
+            if (!this.markersByReason.has(uriKey)) {
+                this.markersByReason.set(uriKey, new Map());
+            }
+            this.markersByReason.get(uriKey)!.set(reason, incoming);
+
+            const merged = Array.from(this.markersByReason.get(uriKey)!.values()).flat();
+            this.diagnostics.set(client.document.uri, merged);
         }
 
         // Propagate unchanged message
         return { processedMessage: message, messageChanged: false };
+    }
+
+    /**
+     * Removes only batch markers when a diagram editor is closed, keeping live markers visible.
+     * Aligns VS Code behaviour with Theia's `TheiaMarkerManager`. See eclipse-glsp/glsp#990.
+     */
+    protected clearMarkersOnClose(uri: vscode.Uri): void {
+        const uriKey = uri.toString();
+        const reasonMap = this.markersByReason.get(uriKey);
+
+        if (!reasonMap) {
+            this.diagnostics.set(uri, undefined);
+            return;
+        }
+
+        reasonMap.delete(MarkersReason.BATCH);
+
+        if (reasonMap.size === 0) {
+            this.markersByReason.delete(uriKey);
+            this.diagnostics.set(uri, undefined);
+        } else {
+            const remaining = Array.from(reasonMap.values()).flat();
+            this.diagnostics.set(uri, remaining);
+        }
     }
 
     protected handleNavigateToExternalTargetAction(
@@ -643,5 +680,6 @@ export class GlspVscodeConnector<D extends vscode.CustomDocument = vscode.Custom
 
     public dispose(): void {
         this.disposables.forEach(disposable => disposable.dispose());
+        this.markersByReason.clear();
     }
 }
