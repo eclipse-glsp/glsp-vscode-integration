@@ -142,6 +142,12 @@
         "when": "activeCustomEditorId == 'workflow.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       }
     ],
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "glsp-workflow",
+        "label": "GLSP Workflow"
+      }
+    ],
     "menus": {
       "editor/title": [
         {
@@ -191,12 +197,6 @@
         "id": "workflow.editor.title",
         "label": "Diagram"
       }
-    ],
-    "mcpServerDefinitionProviders": [
-      {
-        "id": "glsp-workflow",
-        "label": "GLSP Workflow"
-      }
     ]
   },
   "activationEvents": [
@@ -215,6 +215,6 @@
     "workflow-glsp-webview": "2.7.0-next"
   },
   "engines": {
-    "vscode": "^1.99.0"
+    "vscode": "^1.101.0"
   }
 }
