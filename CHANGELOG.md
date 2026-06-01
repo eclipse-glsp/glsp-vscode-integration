@@ -1,5 +1,21 @@
 # Eclipse GLSP VSCode Integration Changelog
 
+## v2.7.0 - active
+
+### Changes
+
+-   [build] Switch to ESLint 9.x [#87](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/87)
+-   [example] Align the codicon version used in the example with the version expected by `@eclipse-glsp/client` [#90](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/90)
+-   [diagram] Fix spurious "No Custom Document found" errors by forwarding `onDidChangeCustomDocument` events only for documents owned by the provider when multiple `GlspEditorProvider` instances share a `GlspVscodeConnector` [#92](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/92)
+-   [mcp] Add support for Model Context Protocol integration, bridging the GLSP-announced MCP server into the VS Code MCP definition provider API [#91](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/91)
+    -   Opt-in via an MCP server configuration on the connector; the announced endpoint is registered on startup and deregistered on extension dispose.
+    -   The Workflow example demonstrates the end-to-end wiring, including a copy-URL action and client-side PNG export.
+
+### Potentially Breaking Changes
+
+-   [deps] Update the minimum required Node version to `22` [#88](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/88)
+-   [deps] Raise the minimum required VS Code version to `1.101`, needed for the stabilized MCP definition provider API; installing in earlier versions will fail [#95](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/95)
+
 ## [v2.6.0 - 10/02/2026](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.6.0)
 
 ## [v2.5.0 - 07/09/2025](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.5.0)
