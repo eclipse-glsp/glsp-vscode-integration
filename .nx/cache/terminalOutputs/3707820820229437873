@@ -1,0 +1,28 @@
+[2K[1G[2m$ webpack[22m
+assets by status 22.5 MiB [1m[32m[emitted][39m[22m
+  asset [1m[33mwebview.js[39m[22m [1m[33m9.97 MiB[39m[22m [1m[32m[emitted][39m[22m [from: ../webview/dist/webview.js] [1m[32m[copied][39m[22m [1m[33m[big][39m[22m
+  asset [1m[33mworkflow-extension.js[39m[22m [1m[33m6.33 MiB[39m[22m [1m[32m[emitted][39m[22m [1m[33m[big][39m[22m (name: main) 1 related asset
+  asset [1m[33mwf-glsp-server-node.js[39m[22m [1m[33m6.08 MiB[39m[22m [1m[32m[emitted][39m[22m [from: ../../../node_modules/@eclipse-glsp-examples/workflow-server-bundled/wf-glsp-server-node.js] [1m[32m[copied][39m[22m [1m[33m[big][39m[22m
+  asset [1m[32m1486698f10561040d3f7.ttf[39m[22m 120 KiB [1m[32m[emitted][39m[22m [from: ../webview/dist/1486698f10561040d3f7.ttf] [1m[32m[copied][39m[22m
+assets by status 3.34 KiB [1m[33m[compared for emit][39m[22m
+  assets by path [1m[32m../lib/*.ts[39m[22m 2.46 KiB
+    asset [1m[32m../lib/workflow-editor-provider.d.ts[39m[22m 1.46 KiB [1m[33m[compared for emit][39m[22m
+    asset [1m[32m../lib/workflow-extension.d.ts[39m[22m 1 KiB [1m[33m[compared for emit][39m[22m
+  assets by path [1m[32m../lib/*.map[39m[22m 901 bytes
+    asset [1m[32m../lib/workflow-editor-provider.d.ts.map[39m[22m 605 bytes [1m[33m[compared for emit][39m[22m
+    asset [1m[32m../lib/workflow-extension.d.ts.map[39m[22m 296 bytes [1m[33m[compared for emit][39m[22m
+runtime modules 793 bytes 4 modules
+modules by path [1m../../../node_modules/[39m[22m 5.68 MiB
+  javascript modules 5.67 MiB 818 modules
+  json modules 6.13 KiB
+    modules by path [1m../../../node_modules/@modelcontextprotocol/sdk/[39m[22m 3.07 KiB 2 modules
+    + 2 modules
+modules by path [1m../../../packages/vscode-integration/[39m[22m 70 KiB
+  modules by path [1m../../../packages/vscode-integration/lib/common/[39m[22m 47.7 KiB 9 modules
+  modules by path [1m../../../packages/vscode-integration/lib/node/[39m[22m 21.5 KiB 6 modules
+  [1m../../../packages/vscode-integration/node.js[39m[22m 892 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+modules by path [1m./src/*.ts[39m[22m 8.85 KiB
+  [1m./src/workflow-extension.ts[39m[22m 6.4 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1m./src/workflow-editor-provider.ts[39m[22m 2.45 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
++ 22 modules
+webpack 5.91.0 compiled [1m[32msuccessfully[39m[22m in 7769 ms
