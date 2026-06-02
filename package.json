@@ -1,5 +1,5 @@
 {
-  "version": "2.7.0",
+  "version": "2.8.0-next",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -30,7 +30,7 @@
     "workflow:web": "yarn --cwd example/workflow/web-extension"
   },
   "devDependencies": {
-    "@eclipse-glsp/dev": "2.7.0",
+    "@eclipse-glsp/dev": "next",
     "@types/node": "22.x",
     "@types/vscode": "^1.101.0",
     "concurrently": "^8.2.2",
