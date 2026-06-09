@@ -80,4 +80,3 @@ export class GlspMcpServerProvider implements vscode.McpServerDefinitionProvider
         this.didChangeEmitter.dispose();
     }
 }
-

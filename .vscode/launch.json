@@ -22,9 +22,6 @@
         "${workspaceRoot}/node_modules/vscode-messenger-common/*/lib/**/*.js"
       ],
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack://workflow-vscode-example/(.+)": "${workspaceFolder}/example/workflow/extension/$1"
-      },
       "env": {
         "GLSP_LOG_DIR": "${workspaceFolder}/logs"
       }
@@ -45,9 +42,6 @@
         "${workspaceRoot}/node_modules/@eclipse-glsp/*/lib/**/*.js"
       ],
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack://workflow-vscode-example/(.+)": "${workspaceFolder}/example/workflow/extension/$1"
-      },
       "env": {
         "GLSP_SERVER_DEBUG": "true",
         "GLSP_SERVER_PORT": "5007"
@@ -69,9 +63,6 @@
         "${workspaceRoot}/node_modules/@eclipse-glsp/*/lib/**/*.js"
       ],
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack://workflow-vscode-example/(.+)": "${workspaceFolder}/example/workflow/extension/$1"
-      },
       "env": {
         "GLSP_INTEGRATED_SERVER": "true"
       }
@@ -92,9 +83,6 @@
         "${workspaceRoot}/node_modules/@eclipse-glsp/*/lib/**/*.js"
       ],
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack://workflow-vscode-example/(.+)": "${workspaceFolder}/example/workflow/extension/$1"
-      },
       "env": {
         "GLSP_LOG_DIR": "${workspaceFolder}/logs",
         "GLSP_WEBSOCKET_PATH": "workflow"
@@ -116,9 +104,6 @@
         "${workspaceRoot}/node_modules/@eclipse-glsp/*/lib/**/*.js"
       ],
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack://workflow-vscode-example/(.+)": "${workspaceFolder}/example/workflow/extension/$1"
-      },
       "env": {
         "GLSP_LOG_DIR": "${workspaceFolder}/logs",
         "GLSP_SERVER_DEBUG": "true",
