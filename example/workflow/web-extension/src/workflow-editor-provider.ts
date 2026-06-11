@@ -35,6 +35,7 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
         const webview = webviewPanel.webview;
         const extensionUri = this.extensionContext.extensionUri;
         const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
+        const webviewStyleSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.css'));
 
         webviewPanel.webview.options = {
             enableScripts: true
@@ -50,7 +51,7 @@ export default class WorkflowEditorProvider extends GlspEditorProvider {
                 default-src http://*.fontawesome.com  ${webview.cspSource} 'unsafe-inline' 'unsafe-eval';
                 img-src ${webview.cspSource} blob:;
                 ">
-
+                    <link rel="stylesheet" href="${webviewStyleSourceUri}" />
                 </head>
                 <body>
                     <div id="${clientId}_container" style="height: 100%;"></div>

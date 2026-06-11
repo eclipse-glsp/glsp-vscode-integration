@@ -3,6 +3,7 @@ node_modules
 lib/
 src/
 tsconfig.json
-webpack.config.js
+esbuild.js
+process-shim.js
 tsconfig.tsbuildinfo
 .eslintrc.js

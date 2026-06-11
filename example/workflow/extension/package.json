@@ -30,14 +30,14 @@
   ],
   "scripts": {
     "build": "yarn compile && yarn bundle",
-    "bundle": "webpack",
-    "bundle:prod": "webpack --config ./webpack.prod.js",
+    "bundle": "node esbuild.js",
+    "bundle:prod": "node esbuild.js --production",
     "clean": "rimraf lib tsconfig.tsbuildinfo dist",
     "compile": "tsc -b",
     "lint": "eslint ./src",
     "package": "vsce package --yarn",
     "watch": "tsc -w",
-    "watch:bundle": "webpack --watch"
+    "watch:bundle": "node esbuild.js --watch"
   },
   "contributes": {
     "commands": [
@@ -207,11 +207,7 @@
     "@eclipse-glsp-examples/workflow-server-bundled": "next",
     "@eclipse-glsp/vscode-integration": "2.8.0-next",
     "@vscode/vsce": "^2.19.0",
-    "copy-webpack-plugin": "^11.0.0",
-    "ts-loader": "^9.4.4",
-    "webpack": "^5.88.2",
-    "webpack-cli": "^5.1.4",
-    "webpack-merge": "^5.9.0",
+    "esbuild": "~0.28.0",
     "workflow-glsp-webview": "2.8.0-next"
   },
   "engines": {
