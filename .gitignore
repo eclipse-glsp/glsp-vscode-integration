@@ -6,6 +6,7 @@ lib
 dist
 tsconfig.tsbuildinfo
 eslint.xml
+eslint_report.json
 *.vsix
 
 .claude/local.settings.json

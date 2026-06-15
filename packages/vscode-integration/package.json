@@ -43,17 +43,28 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "generate:index": "glsp generateIndex src/browser src/common src/node -s -f",
     "lint": "eslint ./src",
+    "prepublishOnly": "pnpm build",
     "watch": "tsc -w"
   },
   "dependencies": {
     "@eclipse-glsp/protocol": "next",
     "vscode-jsonrpc": "8.2.0",
     "vscode-messenger": "^0.4.5",
+    "vscode-messenger-common": "^0.4.5",
     "ws": "^8.13.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.101.0",
     "@types/ws": "^8.5.4"
+  },
+  "peerDependencies": {
+    "inversify": "^6.1.3",
+    "reflect-metadata": "^0.2.2"
+  },
+  "peerDependenciesMeta": {
+    "reflect-metadata": {
+      "optional": true
+    }
   },
   "engines": {
     "vscode": "^1.101.0"

@@ -1,46 +1,41 @@
 {
   "version": "2.8.0-next",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "example/workflow/*"
-  ],
   "scripts": {
-    "build": "yarn compile && yarn bundle",
-    "bundle": " lerna run bundle",
-    "bundle:prod": "lerna run bundle:prod",
-    "check:all": "yarn install && yarn lint && yarn format:check && yarn headers:check",
-    "clean": "lerna run clean && rimraf logs/*.log",
+    "build": "pnpm compile && pnpm bundle",
+    "bundle": "pnpm -r bundle",
+    "bundle:prod": "pnpm -r bundle:prod",
+    "check:all": "pnpm build && pnpm lint && pnpm format:check && pnpm headers:check",
+    "clean": "pnpm -r run clean && rimraf logs/*.log",
     "compile": "tsc -b",
-    "fix:all": "yarn lint:fix && yarn format && yarn headers:fix",
+    "fix:all": "pnpm lint:fix && pnpm format && pnpm headers:fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "generate:index": "lerna run generate:index && yarn lint:fix",
+    "generate:index": "pnpm -r generate:index && pnpm lint:fix",
     "headers:check": "glsp checkHeaders .",
     "headers:fix": "glsp checkHeaders . --autoFix",
     "lint": "eslint .",
-    "lint:ci": "yarn lint --output-file eslint_report.json --format json",
-    "lint:fix": "yarn lint --fix",
-    "prepare": "yarn build",
-    "publish:latest": "lerna publish from-package --no-git-reset -y",
-    "publish:next": "lerna publish preminor --exact --canary --preid next --dist-tag next --no-git-reset --no-git-tag-version --no-push --ignore-scripts --yes",
+    "lint:ci": "pnpm lint --output-file eslint_report.json --format json",
+    "lint:fix": "pnpm lint --fix",
+    "publish:latest": "glsp releng publish latest",
+    "publish:next": "glsp releng publish next",
     "upgrade:next": "glsp updateNext",
-    "watch": "concurrently --kill-others -n tsc,webview,extension,web-extension -c red,blue,yellow,green \"tsc -b -w --preserveWatchOutput\" \"yarn -s workflow:webview watch:bundle\" \"yarn -s workflow watch:bundle\" \"yarn -s workflow:web watch:bundle\"",
-    "workflow": "yarn --cwd example/workflow/extension",
-    "workflow:web": "yarn --cwd example/workflow/web-extension",
-    "workflow:webview": "yarn --cwd example/workflow/webview"
+    "watch": "concurrently --kill-others -n tsc,webview,extension,web-extension -c red,blue,yellow,green \"tsc -b -w --preserveWatchOutput\" \"pnpm -s workflow:webview watch:bundle\" \"pnpm -s workflow watch:bundle\" \"pnpm -s workflow:web watch:bundle\"",
+    "workflow": "pnpm -C example/workflow/extension",
+    "workflow:web": "pnpm -C example/workflow/web-extension",
+    "workflow:webview": "pnpm -C example/workflow/webview"
   },
   "devDependencies": {
     "@eclipse-glsp/dev": "next",
     "@types/node": "22.x",
     "@types/vscode": "^1.101.0",
     "concurrently": "^8.2.2",
-    "lerna": "^9.0.0",
     "mocha-ctrf-json-reporter": "0.0.9",
     "typescript": "5.9.2"
   },
+  "packageManager": "pnpm@11.7.0",
   "engines": {
     "node": ">=22",
-    "yarn": ">=1.7.0 <2"
+    "pnpm": ">=11"
   }
 }

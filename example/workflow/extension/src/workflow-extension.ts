@@ -50,7 +50,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     if (!useIntegratedServer && process.env.GLSP_SERVER_DEBUG !== 'true') {
         const additionalArgs = [];
         if (LOG_DIR) {
-            additionalArgs.push('--fileLog', 'true', '--logDir', LOG_DIR);
+            additionalArgs.push('--fileLog', '--logDir', LOG_DIR);
         }
         if (process.env.GLSP_WEBSOCKET_PATH) {
             additionalArgs.push('--webSocket');
