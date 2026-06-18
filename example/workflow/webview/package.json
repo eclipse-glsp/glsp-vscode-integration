@@ -28,7 +28,7 @@
     }
   ],
   "scripts": {
-    "build": "yarn compile && yarn bundle",
+    "build": "pnpm compile && pnpm bundle",
     "bundle": "node esbuild.js",
     "bundle:prod": "node esbuild.js --production",
     "clean": "rimraf lib tsconfig.tsbuildinfo dist",
@@ -39,9 +39,11 @@
   },
   "devDependencies": {
     "@eclipse-glsp-examples/workflow-glsp": "next",
-    "@eclipse-glsp/vscode-integration-webview": "2.8.0-next",
+    "@eclipse-glsp/client": "next",
+    "@eclipse-glsp/vscode-integration-webview": "workspace:*",
     "@vscode/codicons": "^0.0.44",
     "esbuild": "~0.28.0",
-    "reflect-metadata": "^0.1.13"
+    "inversify": "^6.1.3",
+    "reflect-metadata": "^0.2.2"
   }
 }

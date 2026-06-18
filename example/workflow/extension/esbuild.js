@@ -21,7 +21,6 @@ const fs = require('fs');
 const production = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
 
-const nodeModules = path.resolve(__dirname, '../../../node_modules');
 const distDir = path.resolve(__dirname, 'dist');
 
 /**
@@ -58,7 +57,7 @@ const copyAssetsPlugin = {
         build.onEnd(() => {
             fs.mkdirSync(distDir, { recursive: true });
             fs.copyFileSync(
-                path.resolve(nodeModules, '@eclipse-glsp-examples/workflow-server-bundled/wf-glsp-server-node.js'),
+                require.resolve('@eclipse-glsp-examples/workflow-server-bundled/wf-glsp-server-node.js'),
                 path.join(distDir, 'wf-glsp-server-node.js')
             );
             fs.cpSync(path.resolve(__dirname, '..', 'webview', 'dist'), distDir, { recursive: true });

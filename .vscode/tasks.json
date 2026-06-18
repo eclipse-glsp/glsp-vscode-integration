@@ -10,7 +10,7 @@
         "kind": "build",
         "isDefault": true
       },
-      "command": "yarn",
+      "command": "pnpm build",
       "presentation": {
         "reveal": "always",
         "panel": "new"
@@ -21,7 +21,7 @@
       "label": "Watch all packages",
       "type": "shell",
       "group": "build",
-      "command": "yarn watch",
+      "command": "pnpm watch",
       "presentation": {
         "reveal": "always",
         "panel": "new"

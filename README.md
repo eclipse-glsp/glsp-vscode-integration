@@ -2,6 +2,29 @@
 
 This project contains the glue code necessary to diagram editors built with the [graphical language server platform (GLSP)](https://github.com/eclipse-glsp/glsp) with VS Code, as well as an example VS Code extension for the workflow diagram example for testing purposes.
 
+## Structure
+
+- `@eclipse-glsp/vscode-integration`: Glue code to integrate GLSP diagrams in VS Code extensions (extension/host part)
+- `@eclipse-glsp/vscode-integration-webview`: Glue code to integrate a GLSP diagram into a VS Code webview (webview part)
+- `example/workflow`: Example VS Code (web) extension implementing the workflow diagram example
+
+## Developer Documentation
+
+### First time setup
+
+- Install [node.js](https://nodejs.org/) (requires Node v22+)
+- Install pnpm: <https://pnpm.io/installation> (use pnpm 11+); a recent pnpm automatically switches to the version pinned in the `packageManager` field
+- Clone this repository
+- Install dependencies: `pnpm i` or `pnpm i --frozen-lockfile`
+
+### Build & Testing
+
+- Build (all packages): `pnpm build`
+- Watch (rebuild on change): `pnpm watch`
+- Lint (all packages): `pnpm lint`
+- Clean (all packages): `pnpm clean`
+- Full validation: `pnpm check:all`
+
 ## Workflow Diagram Example
 
 The workflow diagram is a consistent example provided by all GLSP components.
@@ -20,7 +43,7 @@ See [our project website](https://www.eclipse.org/glsp/documentation/#workflowov
 Clone this repository and build the VS Code integration packages:
 
 ```bash
-yarn install
+pnpm build
 ```
 
 Now you can start the VS Code extension by opening this repository in VS Code and executing the `Workflow GLSP Example Extension` launch configuration, provided with this project.
@@ -65,7 +88,7 @@ The `vsce` CLI tool can be used to package/publish a vscode extension.
 Before packaging it's recommended to execute a `production build` with
 
 ```bash
-yarn bundle:prod
+pnpm bundle:prod
 ```
 
 This ensures that the extension sources are bundled efficiently without development overhead like source maps.
@@ -73,22 +96,22 @@ Both example extension (normal & web) have a `package` utility script that will 
 To package the normal extension use
 
 ```bash
-yarn workflow package
+pnpm workflow package
 ```
 
 and for the web extension use
 
 ```bash
-yarn workflow:web package
+pnpm workflow:web package
 ```
 
 ### Where to find the sources?
 
 In addition to this repository, the related source code can be found here:
 
--   <https://github.com/eclipse-glsp/glsp-server>
--   <https://github.com/eclipse-glsp/glsp-server-node>
--   <https://github.com/eclipse-glsp/glsp-client>
+- <https://github.com/eclipse-glsp/glsp-server>
+- <https://github.com/eclipse-glsp/glsp-server-node>
+- <https://github.com/eclipse-glsp/glsp-client>
 
 ## More information
 
