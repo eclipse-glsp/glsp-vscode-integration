@@ -4,6 +4,10 @@
 
 ### Changes
 
+- [build] Switch bundling from webpack to esbuild [#105](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/105)
+- [build] Migrate the build from yarn and lerna to pnpm workspaces [#107](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/107)
+- [example] Fix the workflow server launch, where `--fileLog` was passed as a key/value pair instead of a boolean flag, and resolve the bundled server via `require.resolve` so bundling no longer relies on hoisting [#107](https://github.com/eclipse-glsp/glsp-vscode-integration/pull/107)
+
 ### Potentially Breaking Changes
 
 ## [v2.7.0 - 02/06/2026](https://github.com/eclipse-glsp/glsp-vscode-integration/releases/tag/v2.7.0)
