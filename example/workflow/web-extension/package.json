@@ -1,7 +1,7 @@
 {
   "name": "workflow-vscode-example-web",
   "displayName": "Workflow GLSP Example (Web)",
-  "version": "2.8.0-next",
+  "version": "2.8.0",
   "private": "true",
   "description": "An example graphical language used for modeling workflows",
   "categories": [
@@ -194,8 +194,8 @@
     "onStartupFinished"
   ],
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-server": "next",
-    "@eclipse-glsp/server": "next",
+    "@eclipse-glsp-examples/workflow-server": "2.8.0",
+    "@eclipse-glsp/server": "2.8.0",
     "@eclipse-glsp/vscode-integration": "workspace:*",
     "@types/node": "16.x",
     "@vscode/vsce": "^2.19.0",
