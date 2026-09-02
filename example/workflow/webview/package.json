@@ -1,6 +1,6 @@
 {
   "name": "workflow-glsp-webview",
-  "version": "2.8.0",
+  "version": "2.9.0-next",
   "private": "true",
   "description": "Example of the Workflow GLSP diagram in a VS Code extensions (WebView part)",
   "keywords": [
@@ -38,8 +38,8 @@
     "watch:bundle": "node esbuild.js --watch"
   },
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-glsp": "2.8.0",
-    "@eclipse-glsp/client": "2.8.0",
+    "@eclipse-glsp-examples/workflow-glsp": "next",
+    "@eclipse-glsp/client": "next",
     "@eclipse-glsp/vscode-integration-webview": "workspace:*",
     "@vscode/codicons": "^0.0.44",
     "esbuild": "~0.28.0",
