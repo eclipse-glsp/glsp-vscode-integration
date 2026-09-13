@@ -1,2 +1,7 @@
 pnpm-lock.yaml
 eslint_report.json
+
+# E2E run artifacts
+**/.vscode-test/
+**/playwright-report/
+**/test-results/

@@ -1,0 +1,13 @@
+{
+  "extends": "@eclipse-glsp/ts-config",
+  "compilerOptions": {
+    // `rootDir: "."` keeps the tests/configs split in the output, i.e. `tests/**` -> `lib/tests/**`.
+    // The Playwright projects point at `lib/tests`.
+    "composite": true,
+    "rootDir": ".",
+    "outDir": "lib",
+    "declarationMap": true
+  },
+  "include": ["tests", "playwright.config.ts", "./configs/*.ts"],
+  "references": [{ "path": "../playwright-vscode" }]
+}

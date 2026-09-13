@@ -13,3 +13,14 @@ eslint_report.json
 .claude/CLAUDE.local.md
 .claude/plans
 .reviews
+.worktrees/
+
+# Local registry redirects (e.g. a verdaccio instance serving unreleased @eclipse-glsp packages)
+.npmrc
+
+# E2E: local environment overrides, VS Code download/install state and Playwright run output
+e2e/.env
+.vscode-test/
+**/playwright/.storage/*.json
+playwright-report/
+test-results/

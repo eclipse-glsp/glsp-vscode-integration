@@ -19,6 +19,12 @@
     },
     {
       "path": "./example/workflow/webview"
+    },
+    {
+      "path": "./e2e/playwright-vscode"
+    },
+    {
+      "path": "./e2e/workflow-vscode-e2e"
     }
   ]
 }

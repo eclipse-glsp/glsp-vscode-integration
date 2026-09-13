@@ -4,5 +4,13 @@
     "noEmit": true
   },
   "exclude": ["**/node_modules"],
-  "include": ["packages/*/src", "example/**/*/src", "**/scripts/"]
+  "include": [
+    "packages/*/src",
+    "example/**/*/src",
+    "**/scripts/",
+    "e2e/*/src",
+    "e2e/*/tests",
+    "e2e/*/configs",
+    "e2e/*/playwright.config.ts"
+  ]
 }
