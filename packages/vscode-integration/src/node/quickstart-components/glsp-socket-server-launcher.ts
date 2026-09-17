@@ -35,7 +35,7 @@ export interface SocketServerLauncherOptions {
  * This component can be used to bootstrap your extension when using the default
  * GLSP server implementations, which you can find here:
  * https://github.com/eclipse-glsp/glsp-server
- * https://github.com/eclipse-glsp/glsp-server-node
+ * https://github.com/eclipse-glsp/glsp-core/tree/main/packages/server/server
  *
  * It simply starts up a server executable (JAR or node module) located at a specified path on a specified port.
  * You can pass additional launch arguments through the options.

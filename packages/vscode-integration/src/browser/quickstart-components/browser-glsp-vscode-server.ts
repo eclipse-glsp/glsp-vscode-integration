@@ -26,7 +26,7 @@ export interface BrowserGlspVscodeServerOptions extends GlspVscodeServerOptions 
 /**
  * This component can be used to bootstrap your extension when using the typescript
  * GLSP server implementation directly in a web extension without a dedicated webworker, which you can find here:
- * https://github.com/eclipse-glsp/glsp-server-node
+ * https://github.com/eclipse-glsp/glsp-core/tree/main/packages/server/server
  *
  * It sets up a a server running directly in the extension context and
  * provides an interface, ready to be used by the `GlspVscodeConnector` for the
