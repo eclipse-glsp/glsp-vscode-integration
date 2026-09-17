@@ -16,7 +16,7 @@
     "headers:check": "glsp checkHeaders .",
     "headers:fix": "glsp checkHeaders . --autoFix",
     "lint": "oxlint .",
-    "lint:ci": "oxlint . --format github",
+    "lint:ci": "node ./scripts/lint-report.mjs",
     "lint:fix": "pnpm lint --fix",
     "package:examples": "pnpm workflow package && pnpm workflow:web package",
     "publish:latest": "glsp releng publish latest",

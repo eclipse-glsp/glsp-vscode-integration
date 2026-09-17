@@ -49,7 +49,6 @@ jobs:
           cache: pnpm
       - name: Build
         run: pnpm compile
-      # oxlint's `github` formatter emits workflow annotations directly, so findings show up
-      # inline on the diff without a separate report-to-markdown conversion.
+      # Emits inline annotations for every finding and writes a Markdown table to the job summary.
       - name: Lint
         run: pnpm lint:ci
