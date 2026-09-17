@@ -173,7 +173,7 @@ importers:
   .:
     devDependencies:
       '@eclipse-glsp/dev':
-        specifier: next
+        specifier: 2.9.0-next.4
         version: 2.9.0-next.4(@types/node@24.13.4)(eslint@10.5.0(supports-color@8.1.1))(typescript@7.0.2)(vite@8.2.2(@types/node@24.13.4)(esbuild@0.28.1))
       '@types/node':
         specifier: 24.x
@@ -191,7 +191,7 @@ importers:
   e2e/playwright-vscode:
     dependencies:
       '@eclipse-glsp/playwright':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(@playwright/test@1.63.0)(playwright-core@1.63.0)
       '@vscode/test-electron':
         specifier: ^2.3.2
@@ -210,13 +210,13 @@ importers:
   e2e/workflow-vscode-e2e:
     devDependencies:
       '@eclipse-glsp-examples/workflow-e2e':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(@playwright/test@1.63.0)(playwright-core@1.63.0)
       '@eclipse-glsp-examples/workflow-server-bundled':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3
       '@eclipse-glsp/playwright':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(@playwright/test@1.63.0)(playwright-core@1.63.0)
       '@eclipse-glsp/playwright-vscode':
         specifier: workspace:*
@@ -234,16 +234,16 @@ importers:
   example/workflow/extension:
     devDependencies:
       '@eclipse-glsp-examples/workflow-server':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(hono@4.12.25)(supports-color@8.1.1)
       '@eclipse-glsp-examples/workflow-server-bundled':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3
       '@eclipse-glsp/layout-elk':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
       '@eclipse-glsp/server':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
       '@eclipse-glsp/vscode-integration':
         specifier: workspace:*
@@ -267,10 +267,10 @@ importers:
   example/workflow/web-extension:
     devDependencies:
       '@eclipse-glsp-examples/workflow-server':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(hono@4.12.25)(supports-color@8.1.1)
       '@eclipse-glsp/server':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
       '@eclipse-glsp/vscode-integration':
         specifier: workspace:*
@@ -297,10 +297,10 @@ importers:
   example/workflow/webview:
     devDependencies:
       '@eclipse-glsp-examples/workflow-glsp':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
       '@eclipse-glsp/client':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
       '@eclipse-glsp/vscode-integration-webview':
         specifier: workspace:*
@@ -321,7 +321,7 @@ importers:
   packages/vscode-integration:
     dependencies:
       '@eclipse-glsp/protocol':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
       inversify:
         specifier: ^6.1.3
@@ -352,7 +352,7 @@ importers:
   packages/vscode-integration-webview:
     dependencies:
       '@eclipse-glsp/client':
-        specifier: next
+        specifier: 2.9.0-next.3
         version: 2.9.0-next.3(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
       inversify:
         specifier: ^6.1.3

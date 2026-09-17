@@ -39,9 +39,9 @@
     "watch": "tsc -w"
   },
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-e2e": "next",
-    "@eclipse-glsp-examples/workflow-server-bundled": "next",
-    "@eclipse-glsp/playwright": "next",
+    "@eclipse-glsp-examples/workflow-e2e": "2.9.0-next.3",
+    "@eclipse-glsp-examples/workflow-server-bundled": "2.9.0-next.3",
+    "@eclipse-glsp/playwright": "2.9.0-next.3",
     "@eclipse-glsp/playwright-vscode": "workspace:*",
     "@estruyf/github-actions-reporter": "^1.7.0",
     "@playwright/test": "^1.59.1",

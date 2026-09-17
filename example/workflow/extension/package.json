@@ -36,10 +36,10 @@
     "watch:bundle": "node esbuild.js --watch"
   },
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-server": "next",
-    "@eclipse-glsp-examples/workflow-server-bundled": "next",
-    "@eclipse-glsp/layout-elk": "next",
-    "@eclipse-glsp/server": "next",
+    "@eclipse-glsp-examples/workflow-server": "2.9.0-next.3",
+    "@eclipse-glsp-examples/workflow-server-bundled": "2.9.0-next.3",
+    "@eclipse-glsp/layout-elk": "2.9.0-next.3",
+    "@eclipse-glsp/server": "2.9.0-next.3",
     "@eclipse-glsp/vscode-integration": "workspace:*",
     "@vscode/vsce": "^2.19.0",
     "esbuild": "~0.28.0",
