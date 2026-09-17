@@ -10,10 +10,24 @@ This project contains the glue code necessary to diagram editors built with the 
 
 ## Developer Documentation
 
+### Structure
+
+| Package                                                                      | Description                                                                                      |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [`packages/vscode-integration`](packages/vscode-integration)                 | `@eclipse-glsp/vscode-integration`: the glue code that embeds a GLSP diagram editor in VS Code   |
+| [`packages/vscode-integration-webview`](packages/vscode-integration-webview) | `@eclipse-glsp/vscode-integration-webview`: the webview-side counterpart hosting the GLSP client |
+| [`example/workflow/extension`](example/workflow/extension)                   | VS Code extension for the Workflow example diagram language                                      |
+| [`example/workflow/web-extension`](example/workflow/web-extension)           | Web extension variant of the same example                                                        |
+| [`example/workflow/webview`](example/workflow/webview)                       | Webview bundle used by both example extensions                                                   |
+| [`e2e/playwright-vscode`](e2e/playwright-vscode)                             | `@eclipse-glsp/playwright-vscode`: VS Code integration for the GLSP Playwright framework         |
+| [`e2e/workflow-vscode-e2e`](e2e/workflow-vscode-e2e)                         | Playwright end-to-end tests for the Workflow example running in VS Code                          |
+
+The GLSP client, protocol, Node server, and the integration-agnostic parts of the Workflow example and of the Playwright framework are developed in [glsp-core](https://github.com/eclipse-glsp/glsp-core) and consumed here as published packages.
+
 ### First time setup
 
-- Install [node.js](https://nodejs.org/) (requires Node v22+)
-- Install pnpm: <https://pnpm.io/installation> (use pnpm 11+); a recent pnpm automatically switches to the version pinned in the `packageManager` field
+- Install [node.js](https://nodejs.org/) (requires Node v24+)
+- Install pnpm: <https://pnpm.io/installation> (use pnpm 12+); a recent pnpm automatically switches to the version pinned in the `packageManager` field
 - Clone this repository
 - Install dependencies: `pnpm i` or `pnpm i --frozen-lockfile`
 
@@ -24,6 +38,7 @@ This project contains the glue code necessary to diagram editors built with the 
 - Lint (all packages): `pnpm lint`
 - Clean (all packages): `pnpm clean`
 - Full validation: `pnpm check:all`
+- End-to-end tests: `pnpm test:e2e` (packages both example extensions and runs the Playwright suites, see [`e2e/workflow-vscode-e2e`](e2e/workflow-vscode-e2e/README.md))
 
 ## Workflow Diagram Example
 
@@ -54,7 +69,7 @@ Now you can start the VS Code extension by opening this repository in VS Code an
 ### How to start the Workflow Diagram example server from the sources
 
 If you want to explore or change the Workflow Diagram Server too, you can clone, build and start the Java or Node variant of the `workflow example glsp-server` from your IDE instead of using the pre-built version of the Workflow Diagram Server.
-Checkout the [`glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) or [`glsp-server-node`](https://github.com/eclipse-glsp/glsp-server-node#workflow-diagram-example) repo for instructions on building and running the Workflow Diagram Server example.
+Checkout the [`glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) repo for the Java variant, or [`glsp-core`](https://github.com/eclipse-glsp/glsp-core) for the Node variant, for instructions on building and running the Workflow Diagram Server example.
 
 To test the VS Code extension with an external server (e.g started from your IDE) the launch configuration `Workflow GLSP Example Extension (External GLSP Server)` can be used.
 
@@ -109,9 +124,8 @@ pnpm workflow:web package
 
 In addition to this repository, the related source code can be found here:
 
+- <https://github.com/eclipse-glsp/glsp-core>
 - <https://github.com/eclipse-glsp/glsp-server>
-- <https://github.com/eclipse-glsp/glsp-server-node>
-- <https://github.com/eclipse-glsp/glsp-client>
 
 ## More information
 
