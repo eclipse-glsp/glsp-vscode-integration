@@ -1,8 +1,0 @@
-{
-  "extends": "@eclipse-glsp/ts-config/tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
-  "exclude": ["**/node_modules"],
-  "include": ["packages/*/src", "example/**/*/src", "**/scripts/"]
-}

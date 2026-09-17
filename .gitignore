@@ -5,11 +5,17 @@ lib
 *.jar
 dist
 tsconfig.tsbuildinfo
-eslint.xml
-eslint_report.json
 *.vsix
 
 .claude/local.settings.json
 .claude/CLAUDE.local.md
 .claude/plans
 .reviews
+.worktrees/
+
+# E2E: local environment overrides, VS Code download/install state and Playwright run output
+e2e/.env
+.vscode-test/
+**/playwright/.storage/*.json
+playwright-report/
+test-results/

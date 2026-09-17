@@ -17,6 +17,11 @@ on:
         required: false
         type: string
         default: 'next'
+      full:
+        description: 'Publish all packages, ignoring the affected-only baseline (next only)'
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       ref:
@@ -31,6 +36,11 @@ on:
           - next
           - latest
         default: 'next'
+      full:
+        description: 'Publish all packages, ignoring the affected-only baseline (next only)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -48,42 +58,27 @@ jobs:
           # Fetch all history to determine the canary version
           fetch-depth: 0
 
-      - name: Check for changes in "packages" directory
-        id: check_changes
-        run: |
-          DIST_TAG="${{ inputs.dist-tag || github.event.inputs.dist-tag || 'next' }}"
-          # For 'next' dist-tag: check for changes when triggered by workflow_run or workflow_call
-          # For 'latest' dist-tag or workflow_dispatch: always publish
-          if [[ "$DIST_TAG" == "next" ]] && [[ "${{ github.event_name }}" != "workflow_dispatch" ]]; then
-            if git diff --name-only HEAD^ HEAD | grep -qE '^packages'; then
-              echo "should_publish=true" >> $GITHUB_OUTPUT
-            else
-              echo "should_publish=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "should_publish=true" >> $GITHUB_OUTPUT
-          fi
-
-      - uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
-        if: steps.check_changes.outputs.should_publish == 'true'
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        if: steps.check_changes.outputs.should_publish == 'true'
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: 'https://registry.npmjs.org'
           cache: pnpm
 
       - name: Build
-        if: steps.check_changes.outputs.should_publish == 'true'
         run: pnpm compile
       - name: Publish to NPM
-        if: steps.check_changes.outputs.should_publish == 'true'
         run: |
           DIST_TAG="${{ inputs.dist-tag || github.event.inputs.dist-tag || 'next' }}"
           if [[ "$DIST_TAG" == "next" ]]; then
-             pnpm publish:next
+            FULL_FLAG=""
+            if [[ "${{ inputs.full }}" == "true" ]]; then
+              FULL_FLAG="--full"
+            fi
+            # affected-only publish: the CLI publishes the package groups changed by the last commit
+            pnpm publish:next $FULL_FLAG
           elif [[ "$DIST_TAG" == "latest" ]]; then
-             pnpm publish:latest
+            pnpm publish:latest
           else
             echo "Unknown dist-tag: $DIST_TAG"
             exit 1

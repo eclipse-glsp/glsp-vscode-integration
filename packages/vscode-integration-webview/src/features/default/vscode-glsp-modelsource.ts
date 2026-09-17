@@ -31,7 +31,6 @@ export namespace ExtensionAction {
     /**
      * @deprecated The concept of marking actions as locally dispatched `ExtensionAction`s is no longer necessary and usage is discouraged.
      * */
-    // eslint-disable-next-line @typescript-eslint/no-deprecated
     export function is(object: unknown): object is ExtensionAction {
         return Action.is(object) && '__localDispatch' in object && object.__localDispatch === true;
     }
@@ -43,7 +42,6 @@ export namespace ExtensionAction {
      * @deprecated The concept of marking actions as locally dispatched `ExtensionAction`s is no longer necessary and usage is discouraged.
      */
     export function mark(action: Action): void {
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
         (action as ExtensionAction).__localDispatch = true;
     }
 }

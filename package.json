@@ -8,34 +8,37 @@
     "check:all": "pnpm build && pnpm lint && pnpm format:check && pnpm headers:check",
     "clean": "pnpm -r run clean && rimraf logs/*.log",
     "compile": "tsc -b",
+    "e2e": "pnpm -C e2e/workflow-vscode-e2e",
     "fix:all": "pnpm lint:fix && pnpm format && pnpm headers:fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "generate:index": "pnpm -r generate:index && pnpm lint:fix",
     "headers:check": "glsp checkHeaders .",
     "headers:fix": "glsp checkHeaders . --autoFix",
-    "lint": "eslint .",
-    "lint:ci": "pnpm lint --output-file eslint_report.json --format json",
+    "lint": "oxlint .",
+    "lint:ci": "node ./scripts/lint-report.mjs",
     "lint:fix": "pnpm lint --fix",
+    "package:examples": "pnpm workflow package && pnpm workflow:web package",
     "publish:latest": "glsp releng publish latest",
     "publish:next": "glsp releng publish next",
+    "test:e2e": "pnpm build && pnpm package:examples && pnpm e2e test",
+    "test:e2e:headless": "pnpm build && pnpm package:examples && pnpm e2e test:headless",
     "upgrade:next": "glsp updateNext",
-    "watch": "concurrently --kill-others -n tsc,webview,extension,web-extension -c red,blue,yellow,green \"tsc -b -w --preserveWatchOutput\" \"pnpm -s workflow:webview watch:bundle\" \"pnpm -s workflow watch:bundle\" \"pnpm -s workflow:web watch:bundle\"",
+    "watch": "concurrently --kill-others -n tsc,webview,extension,web-extension -c red,blue,yellow,green \"tsc -b -w --preserveWatchOutput\" \"pnpm --silent workflow:webview watch:bundle\" \"pnpm --silent workflow watch:bundle\" \"pnpm --silent workflow:web watch:bundle\"",
     "workflow": "pnpm -C example/workflow/extension",
     "workflow:web": "pnpm -C example/workflow/web-extension",
     "workflow:webview": "pnpm -C example/workflow/webview"
   },
   "devDependencies": {
-    "@eclipse-glsp/dev": "next",
-    "@types/node": "22.x",
+    "@eclipse-glsp/dev": "2.9.0-next.4",
+    "@types/node": "24.x",
     "@types/vscode": "^1.101.0",
     "concurrently": "^8.2.2",
-    "mocha-ctrf-json-reporter": "0.0.9",
-    "typescript": "5.9.2"
+    "typescript": "^7.0.2"
   },
-  "packageManager": "pnpm@11.7.0",
   "engines": {
-    "node": ">=22",
-    "pnpm": ">=11"
-  }
+    "node": ">=24",
+    "pnpm": ">=12"
+  },
+  "packageManager": "pnpm@12.4.0"
 }

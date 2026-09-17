@@ -6,9 +6,8 @@ This package helps you to implement a [VS Code Webview](https://code.visualstudi
 
 In addition to this repository, the related source code can be found here:
 
+- <https://github.com/eclipse-glsp/glsp-core>
 - <https://github.com/eclipse-glsp/glsp-server>
-- <https://github.com/eclipse-glsp/glsp-server-node>
-- <https://github.com/eclipse-glsp/glsp-client>
 
 ## More information
 

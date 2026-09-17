@@ -1,0 +1,51 @@
+{
+  "name": "@eclipse-glsp-examples/workflow-vscode-e2e",
+  "version": "2.9.0-next",
+  "private": true,
+  "description": "VS Code integration tests for the GLSP workflow example",
+  "keywords": [
+    "diagram",
+    "e2e",
+    "example",
+    "glsp",
+    "playwright",
+    "vscode",
+    "workflow"
+  ],
+  "homepage": "https://www.eclipse.org/glsp/",
+  "bugs": "https://github.com/eclipse-glsp/glsp/issues",
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "author": {
+    "name": "Eclipse GLSP"
+  },
+  "contributors": [
+    {
+      "name": "Eclipse GLSP Project",
+      "email": "glsp-dev@eclipse.org",
+      "url": "https://projects.eclipse.org/projects/ecd.glsp"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
+  },
+  "scripts": {
+    "browsers": "playwright install chromium",
+    "build": "tsc -b",
+    "clean": "rimraf --glob lib tsconfig.tsbuildinfo playwright-report test-results .vscode-test",
+    "test": "pnpm browsers && playwright test",
+    "test:desktop": "pnpm test --project=vscode",
+    "test:headless": "GLSP_VSCODE_ISOLATED_DISPLAYS=true xvfb-run -a pnpm test",
+    "test:web": "pnpm test --project=vscode-web",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "@eclipse-glsp-examples/workflow-e2e": "2.9.0-next.3",
+    "@eclipse-glsp-examples/workflow-server-bundled": "2.9.0-next.3",
+    "@eclipse-glsp/playwright": "2.9.0-next.3",
+    "@eclipse-glsp/playwright-vscode": "workspace:*",
+    "@estruyf/github-actions-reporter": "^1.7.0",
+    "@playwright/test": "^1.59.1",
+    "dotenv": "^16.0.3"
+  }
+}
