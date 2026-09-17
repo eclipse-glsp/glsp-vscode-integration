@@ -22,8 +22,9 @@
     "publish:latest": "glsp releng publish latest",
     "publish:next": "glsp releng publish next",
     "test:e2e": "pnpm build && pnpm package:examples && pnpm e2e test",
+    "test:e2e:headless": "pnpm build && pnpm package:examples && pnpm e2e test:headless",
     "upgrade:next": "glsp updateNext",
-    "watch": "concurrently --kill-others -n tsc,webview,extension,web-extension -c red,blue,yellow,green \"tsc -b -w --preserveWatchOutput\" \"pnpm -s workflow:webview watch:bundle\" \"pnpm -s workflow watch:bundle\" \"pnpm -s workflow:web watch:bundle\"",
+    "watch": "concurrently --kill-others -n tsc,webview,extension,web-extension -c red,blue,yellow,green \"tsc -b -w --preserveWatchOutput\" \"pnpm --silent workflow:webview watch:bundle\" \"pnpm --silent workflow watch:bundle\" \"pnpm --silent workflow:web watch:bundle\"",
     "workflow": "pnpm -C example/workflow/extension",
     "workflow:web": "pnpm -C example/workflow/web-extension",
     "workflow:webview": "pnpm -C example/workflow/webview"

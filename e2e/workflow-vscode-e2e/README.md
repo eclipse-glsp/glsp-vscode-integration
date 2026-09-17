@@ -45,7 +45,12 @@ pnpm e2e test:desktop    # only `vscode`
 pnpm e2e test:web        # only `vscode-web`
 ```
 
-On a headless machine, wrap the run in `xvfb-run -a`.
+On a headless machine, use the `:headless` variants, which wrap the run in `xvfb-run -a`:
+
+```console
+pnpm test:e2e:headless   # build, package and run
+pnpm e2e test:headless   # run only
+```
 
 Playwright starts the bundled Workflow Node server; the extension is run with `GLSP_SERVER_DEBUG`,
 so it attaches to that server instead of spawning one of its own.

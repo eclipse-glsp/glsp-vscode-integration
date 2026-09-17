@@ -38,7 +38,7 @@ The GLSP client, protocol, Node server, and the integration-agnostic parts of th
 - Lint (all packages): `pnpm lint`
 - Clean (all packages): `pnpm clean`
 - Full validation: `pnpm check:all`
-- End-to-end tests: `pnpm test:e2e` (packages both example extensions and runs the Playwright suites, see [`e2e/workflow-vscode-e2e`](e2e/workflow-vscode-e2e/README.md))
+- End-to-end tests: `pnpm test:e2e` (packages both example extensions and runs the Playwright suites, see [`e2e/workflow-vscode-e2e`](e2e/workflow-vscode-e2e/README.md)); on a headless machine use `pnpm test:e2e:headless`
 
 ## Workflow Diagram Example
 
