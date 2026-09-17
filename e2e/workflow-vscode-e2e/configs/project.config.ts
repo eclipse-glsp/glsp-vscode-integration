@@ -44,11 +44,6 @@ const VARIANTS: Record<ProjectName, Variant> = {
     }
 };
 
-/** Whether Playwright is discovering tests without executing them. */
-function isPlaywrightTestListing(): boolean {
-    return process.argv.includes('--list');
-}
-
 /**
  * The VSIX of a variant, packaged by its own `package` script into the extension directory.
  *
@@ -75,9 +70,10 @@ function buildIntegrationOptions(configDir: string, project: ProjectName): VSCod
         workspace: '../../example/workflow/workspace',
         file: 'example1.wf',
         vsixId: variant.vsixId,
-        // Discovery must not require a packaged extension. The setup project consumes this path
-        // only when tests actually execute.
-        vsixPath: isPlaywrightTestListing() ? '' : findVsixPath(configDir, variant),
+        // Resolved on demand, by the setup project of the variant that runs. Building the path here
+        // would require a packaged extension for every variant the configuration declares — also
+        // when the run was filtered to one of them, and also for plain test discovery.
+        vsixPath: () => findVsixPath(configDir, variant),
         // Both variants contribute the same custom editor, so they cannot share an extensions
         // directory: whichever VS Code picked would decide what the tests actually exercise.
         extensionsDir: path.join(configDir, '.vscode-test', project, 'extensions'),
@@ -88,17 +84,17 @@ function buildIntegrationOptions(configDir: string, project: ProjectName): VSCod
 /**
  * The VS Code projects, one `<name>-setup` plus one `<name>` pair per variant.
  *
- * Takes the project list as a parameter so that a further variant is a new entry rather than a
- * restructuring of this function.
+ * Every variant is always declared; restricting a run to one of them is Playwright's `--project`,
+ * which also skips the setup project of the variants it filtered out.
  *
  * @param configDir Directory of the calling `playwright.config.ts`, i.e. `__dirname`
- * @param activeProjects Variants the run was started for
+ * @param variants Variants to declare projects for
  */
 export function buildProjects(
     configDir: string,
-    activeProjects: ProjectName[] = ['vscode', 'vscode-web']
+    variants: ProjectName[] = Object.keys(VARIANTS) as ProjectName[]
 ): Project<PlaywrightTestOptions & GLSPPlaywrightOptions, PlaywrightWorkerOptions>[] {
-    return activeProjects.flatMap(project => {
+    return variants.flatMap(project => {
         const integrationOptions = buildIntegrationOptions(configDir, project);
         const setupName = `${project}-setup`;
 
@@ -122,30 +118,4 @@ export function buildProjects(
             }
         ];
     });
-}
-
-/**
- * Projects requested on the command line, or every variant when none was given.
- *
- * A `--project` naming a test project implies its setup project, which Playwright pulls in through
- * the declared dependency.
- */
-export function getActiveProjects(): ProjectName[] {
-    const all = Object.keys(VARIANTS) as ProjectName[];
-    const requested = parseRequestedProjects().filter((name): name is ProjectName => all.includes(name as ProjectName));
-    return requested.length > 0 ? [...new Set(requested)] : all;
-}
-
-function parseRequestedProjects(): string[] {
-    const args = process.argv;
-    const projects: string[] = [];
-    for (let i = 0; i < args.length; i++) {
-        if (args[i] === '--project' && i + 1 < args.length) {
-            projects.push(args[i + 1]);
-        } else if (args[i].startsWith('--project=')) {
-            projects.push(args[i].slice('--project='.length));
-        }
-    }
-    // A requested setup project keeps its own variant active.
-    return projects.map(name => name.replace(/-setup$/, ''));
 }

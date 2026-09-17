@@ -29,7 +29,7 @@ is a compile error.
 | --------------- | -------- | ----------------------------------------------------------------------- |
 | `workspace`     | yes      | Path to the workspace directory VS Code opens                           |
 | `vsixId`        | yes      | Extension identifier, i.e. `<publisher>.<name>` lowercased              |
-| `vsixPath`      | yes      | Path to the packaged `.vsix` to install                                 |
+| `vsixPath`      | yes      | Path to the packaged `.vsix` to install, or a function resolving it     |
 | `storagePath`   | yes      | File the setup project writes the VS Code executable path to            |
 | `file`          | no       | File in the workspace to open; when omitted no editor is opened         |
 | `extensionsDir` | no       | Directory to install into and launch against; defaults to VS Code's own |
@@ -44,6 +44,15 @@ tests exercise. Give each variant its own directory instead:
 
 ```ts
 extensionsDir: path.join(configDir, '.vscode-test', project, 'extensions');
+```
+
+Declare every variant and let Playwright's `--project` pick, rather than building the project list
+from the command line: the configuration is re-loaded in every worker process, whose `process.argv`
+carries none of the run's arguments. Pass `vsixPath` as a function in that case, so that a run
+restricted to one variant does not require the others to be packaged:
+
+```ts
+vsixPath: () => findVsixPath(configDir, variant);
 ```
 
 ## Webview nesting

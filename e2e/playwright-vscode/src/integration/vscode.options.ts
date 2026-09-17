@@ -24,7 +24,15 @@ export interface VSCodeIntegrationOptions extends BaseIntegrationOptions {
     integrationFactory: IntegrationFactory<VSCodeIntegrationOptions>;
     workspace: string;
     vsixId: string;
-    vsixPath: string;
+    /**
+     * Path to the packaged `.vsix`, or a function resolving it.
+     *
+     * Pass a function when the file is produced by the run itself or when only some of the
+     * configured variants are packaged: Playwright re-loads the configuration in every worker, so a
+     * path computed eagerly has to exist for *all* projects, even the ones the run filtered out.
+     * The function is called by the setup project, i.e. only for a project that actually runs.
+     */
+    vsixPath: string | (() => string);
     storagePath: string;
     file?: string;
     /**
@@ -56,6 +64,14 @@ declare global {
 export namespace VSCodeIntegrationOptions {
     export function is(options?: IntegrationOptions): options is VSCodeIntegrationOptions {
         return options?.type === 'VSCode';
+    }
+
+    /**
+     * The path of the packaged extension under test, calling {@link VSCodeIntegrationOptions.vsixPath}
+     * when it was given as a function.
+     */
+    export function resolveVsixPath(options: Pick<VSCodeIntegrationOptions, 'vsixPath'>): string {
+        return typeof options.vsixPath === 'function' ? options.vsixPath() : options.vsixPath;
     }
 
     /**

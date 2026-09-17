@@ -80,6 +80,9 @@ export class VSCodeSetup {
      */
     async install(options: { vscodeExecutablePath: string }): Promise<void> {
         const [cli] = resolveCliArgsFromVSCodeExecutablePath(options.vscodeExecutablePath);
+        // Resolved here rather than when the options were built: only the variant that runs needs a
+        // packaged extension.
+        const vsixPath = VSCodeIntegrationOptions.resolveVsixPath(this.integrationOptions);
 
         // Must match the directory the integration launches VS Code against, so that what is
         // installed here is what the tests actually run.
@@ -95,10 +98,10 @@ export class VSCodeSetup {
             const entry = installedExtensions.find(e => e.identifier.id === this.integrationOptions.vsixId);
 
             if (entry === undefined) {
-                const spawn = this.installExtension(cli, extensionArg, this.integrationOptions.vsixPath);
+                const spawn = this.installExtension(cli, extensionArg, vsixPath);
                 status = spawn.status ?? -1;
             } else {
-                const stat = await fs.stat(this.integrationOptions.vsixPath);
+                const stat = await fs.stat(vsixPath);
                 if (entry.metadata.installedTimestamp < stat.birthtimeMs) {
                     this.log(
                         '[Extension] Older installation detected.',
@@ -106,7 +109,7 @@ export class VSCodeSetup {
                         new Date(stat.birthtimeMs).toISOString()
                     );
                     this.deleteExtension(cli, extensionArg, this.integrationOptions.vsixId);
-                    const spawn = this.installExtension(cli, extensionArg, this.integrationOptions.vsixPath);
+                    const spawn = this.installExtension(cli, extensionArg, vsixPath);
                     status = spawn.status ?? -1;
                 } else {
                     this.log('[Extension] Extension is already installed. Skipping install.');
@@ -115,7 +118,7 @@ export class VSCodeSetup {
         } catch (ex) {
             this.log('[Extension] Proceed with clean install.');
             this.deleteExtension(cli, extensionArg, this.integrationOptions.vsixId);
-            const spawn = this.installExtension(cli, extensionArg, this.integrationOptions.vsixPath);
+            const spawn = this.installExtension(cli, extensionArg, vsixPath);
             status = spawn.status ?? -1;
         }
 

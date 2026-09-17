@@ -20,7 +20,7 @@ import { type PlaywrightTestConfig, type ReporterDescription } from '@playwright
 import * as os from 'os';
 import * as path from 'path';
 import { GLSP_WEBSOCKET_PATH } from './configs/env';
-import { buildProjects, getActiveProjects } from './configs/project.config';
+import { buildProjects } from './configs/project.config';
 import { buildWebServers } from './configs/webserver.config';
 
 // The `.env` is shared by every e2e package in this repository, so it lives one level up.
@@ -67,7 +67,7 @@ const config: PlaywrightTestConfig<GLSPPlaywrightOptions> = {
     testDir: 'lib/tests',
     // VS Code launches Electron itself, so only the GLSP server is needed.
     webServer: buildWebServers(),
-    projects: buildProjects(__dirname, getActiveProjects())
+    projects: buildProjects(__dirname)
 };
 
 export default config;
