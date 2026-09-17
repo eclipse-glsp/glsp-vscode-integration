@@ -52,6 +52,24 @@ The diagram is rendered two frames deep, and `prefixRootSelector` resolves the o
 (`iframe.webview`) rather than by tag. A _web_ extension is hosted in an additional hidden
 worker-host iframe, so a bare `iframe` selector is ambiguous in that configuration.
 
+## Parallel workers need a display each
+
+Every Playwright worker launches a VS Code window of its own, and windows that share a display
+interfere with each other: the enter and leave events of a window that opens or closes cancel a hover
+another worker is waiting on, so the hover-driven tests time out waiting for a popup. Sharing a
+display therefore limits a run to one worker.
+
+Setting `GLSP_VSCODE_ISOLATED_DISPLAYS=true` makes the integration start one `Xvfb` per worker
+process and launch that worker's VS Code on it, which removes the interference. The configuration
+asks `supportsDisplayIsolation()` — Linux plus an `Xvfb` binary — for how many workers it may use:
+
+```ts
+workers: supportsDisplayIsolation() ? 4 : 1;
+```
+
+The displays are invisible, so a run that should be watched is one without isolation, and therefore
+single-worker. macOS and Windows have no equivalent mechanism and always run with one worker.
+
 ## Launching the GLSP server
 
 The extension decides for itself whether to spawn a GLSP server. The Workflow example skips spawning

@@ -22,6 +22,7 @@ import * as platformPath from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import type { DiagramShortcutIntegration, DiagramShortcuts, IntegrationArgs } from '@eclipse-glsp/playwright';
 import { hostDiagramShortcuts, Integration, SVGMetadataUtils } from '@eclipse-glsp/playwright';
+import { acquireIsolatedDisplay } from './vscode.display';
 import { VSCodeWorkbenchActivitybar } from './po/workbench-activitybar.po';
 import type { VSCodeIntegrationConfig, VSCodeIntegrationOptions } from './vscode.options';
 import { VSCodeStorage } from './vscode.storage';
@@ -101,8 +102,13 @@ export class VSCodeIntegration extends Integration implements DiagramShortcutInt
     }
 
     protected override async launch(): Promise<void> {
+        // Concurrent workers each get a display of their own; without isolation this is `undefined`
+        // and VS Code inherits the caller's.
+        const display = await acquireIsolatedDisplay();
+
         this.electronApp = await electron.launch({
             executablePath: this.storage.vscodeExecutablePath,
+            env: display ? { ...VSCodeIntegrationUtils.definedEnv(), DISPLAY: display } : undefined,
             args: [
                 ...VSCodeIntegrationUtils.pathArgs(this.runConfig),
                 '--new-window',
@@ -179,6 +185,17 @@ export namespace VSCodeIntegrationUtils {
         }
         const [, ...defaultArgs] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
         return defaultArgs[0].split(/=(.*)/s)[1];
+    }
+
+    /**
+     * The current environment without the unset entries.
+     *
+     * Playwright replaces the whole environment when `env` is given, so the variables the extension
+     * under test reads — the GLSP server port and the debug flag among them — have to be carried
+     * over explicitly.
+     */
+    export function definedEnv(): Record<string, string> {
+        return Object.fromEntries(Object.entries(process.env).filter((entry): entry is [string, string] => entry[1] !== undefined));
     }
 
     export function fullPath(config: VSCodeRunConfig, path: keyof RunPaths): string {

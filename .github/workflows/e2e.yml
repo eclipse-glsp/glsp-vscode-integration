@@ -24,9 +24,21 @@ on:
 
 jobs:
   playwright:
-    name: E2E Tests
+    name: E2E Tests (${{ matrix.variant }})
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    # One job per packaged variant: they share no state, so running them side by side halves the
+    # wall-clock time. `fail-fast: false` keeps a failure in one variant from hiding the other's result.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: desktop
+            project: vscode
+            package: pnpm workflow package
+          - variant: web
+            project: vscode-web
+            package: pnpm workflow:web package
     env:
       GLSP_SERVER_PORT: '8081'
       GLSP_SERVER_TYPE: 'node'
@@ -40,18 +52,18 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      # Builds the extensions and the e2e packages, then packages both variants of the Workflow
+      # Builds the extensions and the e2e packages, then packages this job's variant of the Workflow
       # example as VSIX. The Workflow GLSP server comes from
       # `@eclipse-glsp-examples/workflow-server-bundled` and needs no build of its own.
       - name: Build components
         run: |
           pnpm build
-          pnpm package:examples
+          ${{ matrix.package }}
       - name: Run Playwright tests
-        run: pnpm e2e test:headless
+        run: pnpm e2e test:headless --project=${{ matrix.project }}
       - name: Upload Playwright report
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.variant }}
           path: e2e/workflow-vscode-e2e/playwright-report/

@@ -35,7 +35,7 @@
     "clean": "rimraf --glob lib tsconfig.tsbuildinfo playwright-report test-results .vscode-test",
     "test": "pnpm browsers && playwright test",
     "test:desktop": "pnpm test --project=vscode",
-    "test:headless": "xvfb-run -a pnpm test",
+    "test:headless": "GLSP_VSCODE_ISOLATED_DISPLAYS=true xvfb-run -a pnpm test",
     "test:web": "pnpm test --project=vscode-web",
     "watch": "tsc -w"
   },
