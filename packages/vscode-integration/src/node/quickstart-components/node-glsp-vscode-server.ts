@@ -26,7 +26,7 @@ export interface NodeGlspVscodeServerOptions extends GlspVscodeServerOptions {
 /**
  * This component can be used to bootstrap your extension when using the node
  * GLSP server implementation directly in an extension without a dedicated process, which you can find here:
- * https://github.com/eclipse-glsp/glsp-server-node
+ * https://github.com/eclipse-glsp/glsp-core/tree/main/packages/server/server
  *
  * It sets up a a server running directly in the extension context and
  * provides an interface, ready to be used by the `GlspVscodeConnector` for the

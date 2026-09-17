@@ -2,12 +2,6 @@
 
 This project contains the glue code necessary to diagram editors built with the [graphical language server platform (GLSP)](https://github.com/eclipse-glsp/glsp) with VS Code, as well as an example VS Code extension for the workflow diagram example for testing purposes.
 
-## Structure
-
-- `@eclipse-glsp/vscode-integration`: Glue code to integrate GLSP diagrams in VS Code extensions (extension/host part)
-- `@eclipse-glsp/vscode-integration-webview`: Glue code to integrate a GLSP diagram into a VS Code webview (webview part)
-- `example/workflow`: Example VS Code (web) extension implementing the workflow diagram example
-
 ## Developer Documentation
 
 ### Structure
@@ -69,7 +63,7 @@ Now you can start the VS Code extension by opening this repository in VS Code an
 ### How to start the Workflow Diagram example server from the sources
 
 If you want to explore or change the Workflow Diagram Server too, you can clone, build and start the Java or Node variant of the `workflow example glsp-server` from your IDE instead of using the pre-built version of the Workflow Diagram Server.
-Checkout the [`glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) repo for the Java variant, or [`glsp-core`](https://github.com/eclipse-glsp/glsp-core) for the Node variant, for instructions on building and running the Workflow Diagram Server example.
+Checkout the [`glsp-server`](https://github.com/eclipse-glsp/glsp-server#workflow-diagram-example) repo for the Java variant, or [`glsp-core`](https://github.com/eclipse-glsp/glsp-core#workflow-diagram-example) for the Node variant, for instructions on building and running the Workflow Diagram Server example.
 
 To test the VS Code extension with an external server (e.g started from your IDE) the launch configuration `Workflow GLSP Example Extension (External GLSP Server)` can be used.
 
