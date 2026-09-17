@@ -10,13 +10,13 @@
     "compile": "tsc -b",
     "e2e": "pnpm -C e2e/workflow-vscode-e2e",
     "fix:all": "pnpm lint:fix && pnpm format && pnpm headers:fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "generate:index": "pnpm -r generate:index && pnpm lint:fix",
     "headers:check": "glsp checkHeaders .",
     "headers:fix": "glsp checkHeaders . --autoFix",
-    "lint": "eslint .",
-    "lint:ci": "pnpm lint --output-file eslint_report.json --format json",
+    "lint": "oxlint .",
+    "lint:ci": "oxlint . --format github",
     "lint:fix": "pnpm lint --fix",
     "package:examples": "pnpm workflow package && pnpm workflow:web package",
     "publish:latest": "glsp releng publish latest",
@@ -30,15 +30,14 @@
   },
   "devDependencies": {
     "@eclipse-glsp/dev": "next",
-    "@types/node": "22.x",
+    "@types/node": "24.x",
     "@types/vscode": "^1.101.0",
     "concurrently": "^8.2.2",
-    "mocha-ctrf-json-reporter": "0.0.9",
-    "typescript": "5.9.2"
+    "typescript": "^7.0.2"
   },
-  "packageManager": "pnpm@11.7.0",
   "engines": {
-    "node": ">=22",
-    "pnpm": ">=11"
-  }
+    "node": ">=24",
+    "pnpm": ">=12"
+  },
+  "packageManager": "pnpm@12.4.0"
 }

@@ -3,24 +3,20 @@
   "version": "2.9.0-next",
   "description": "VS Code integration for the GLSP Playwright testing framework",
   "keywords": [
-    "eclipse",
-    "graphics",
     "diagram",
-    "modeling",
-    "visualization",
-    "glsp",
     "diagram editor",
-    "vscode",
+    "e2e",
+    "eclipse",
+    "glsp",
+    "graphics",
+    "modeling",
     "playwright",
     "testing",
-    "e2e"
+    "visualization",
+    "vscode"
   ],
   "homepage": "https://www.eclipse.org/glsp/",
   "bugs": "https://github.com/eclipse-glsp/glsp/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
-  },
   "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "author": {
     "name": "Eclipse GLSP"
@@ -32,6 +28,17 @@
       "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse-glsp/glsp-vscode-integration.git"
+  },
+  "files": [
+    "lib",
+    "src",
+    "docs"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
@@ -39,19 +46,14 @@
     },
     "./package.json": "./package.json"
   },
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "files": [
-    "lib",
-    "src",
-    "docs"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "pnpm compile",
     "clean": "rimraf lib tsconfig.tsbuildinfo coverage",
     "compile": "tsc -b",
     "generate:index": "glsp generateIndex src -f",
-    "lint": "eslint ./src",
     "prepublishOnly": "pnpm build",
     "watch": "tsc -w"
   },
@@ -67,8 +69,5 @@
   "peerDependencies": {
     "@playwright/test": "^1.47.0",
     "playwright-core": "^1.47.0"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }
