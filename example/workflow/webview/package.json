@@ -1,7 +1,7 @@
 {
   "name": "workflow-glsp-webview",
   "version": "2.9.0-next",
-  "private": "true",
+  "private": true,
   "description": "Example of the Workflow GLSP diagram in a VS Code extensions (WebView part)",
   "keywords": [
     "diagram",

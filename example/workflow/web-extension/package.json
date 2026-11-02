@@ -2,7 +2,7 @@
   "name": "workflow-vscode-example-web",
   "displayName": "Workflow GLSP Example (Web)",
   "version": "2.9.0-next",
-  "private": "true",
+  "private": true,
   "description": "An example graphical language used for modeling workflows",
   "categories": [
     "Programming Languages"
