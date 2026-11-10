@@ -1,6 +1,9 @@
 name: 'Publish to NPM'
 
 on:
+  # a pushed release tag v<version> publishes that version under 'latest'
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
   workflow_run:
     workflows: ['CI']
     types:
@@ -44,13 +47,16 @@ on:
 
 permissions:
   contents: read
+  actions: read
   id-token: write
 
 jobs:
   publish:
     name: Build & Publish
     runs-on: ubuntu-22.04
-    if: github.repository == 'eclipse-glsp/glsp-vscode-integration' && (github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'))
+    env:
+      DIST_TAG: ${{ inputs.dist-tag || github.event.inputs.dist-tag || (github.event_name == 'push' && 'latest' || 'next') }}
+    if: github.repository == 'eclipse-glsp/glsp-vscode-integration' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'))
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
@@ -58,18 +64,59 @@ jobs:
           # Fetch all history to determine the canary version
           fetch-depth: 0
 
+      - name: Check release tag
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # a lightweight tag has no tag object and therefore no signature
+        run: |
+          [[ $GITHUB_REF_NAME =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] \
+            || { echo "::error::Tag $GITHUB_REF_NAME is not a final release tag (v<major>.<minor>.<patch>)"; exit 1; }
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$GITHUB_REF_NAME" != "v$VERSION" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match the version $VERSION in package.json"
+            exit 1
+          fi
+          TAG_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$GITHUB_REF_NAME" --jq 'select(.object.type == "tag") | .object.sha')
+          if [[ -z "$TAG_SHA" || $(gh api "repos/$GITHUB_REPOSITORY/git/tags/$TAG_SHA" --jq .verification.verified) != "true" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME is not a signed tag verified by GitHub"
+            exit 1
+          fi
+
+      - name: Check that CI passed on the tagged commit
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          CI=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$GITHUB_SHA" --event push --json conclusion --jq '.[0].conclusion')
+          [[ "$CI" == "success" ]] || { echo "::error::ci.yml has not passed on $GITHUB_SHA. Re-run this job once it has."; exit 1; }
+
+      - name: Check for a next version
+        id: check_version
+        # a merged release PR puts a release version on master; releases publish from their tag
+        run: |
+          if [[ "$DIST_TAG" == "next" && ! "$(node -p "require('./package.json').version")" =~ -next$ ]]; then
+            echo "::notice::Not on a next version. Skipping the next publish."
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
+
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        if: steps.check_version.outputs.should_publish == 'true'
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        if: steps.check_version.outputs.should_publish == 'true'
         with:
           node-version: 24.x
           registry-url: 'https://registry.npmjs.org'
           cache: pnpm
 
       - name: Build
+        if: steps.check_version.outputs.should_publish == 'true'
         run: pnpm compile
       - name: Publish to NPM
+        if: steps.check_version.outputs.should_publish == 'true'
         run: |
-          DIST_TAG="${{ inputs.dist-tag || github.event.inputs.dist-tag || 'next' }}"
           if [[ "$DIST_TAG" == "next" ]]; then
             FULL_FLAG=""
             if [[ "${{ inputs.full }}" == "true" ]]; then
